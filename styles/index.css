@@ -1,10 +1,13 @@
-// file created on May 10th
-// contains the .css style specification for index.html
+/* File created on May 10th
+ * stylesheet for index.html
+ */
 
-.screen {
+canvas {
     width: 800px;
     height: 400px;
-    border: 2px solid green;
+    border: 2px solid orange;
 }
 
-
+h1 {
+    color: grey;
+}

@@ -11,7 +11,7 @@ class Minesweeper {
     constructor(canvasContext) {
         // the internal game states will be rendered inside the
         // canvas element
-        this.canvas = canvasElement;
+        this.screen = canvasContext;
         this.mines = Minesweeper.INITIAL_MINES;
         this.data = [];
         this.state = [];
@@ -103,6 +103,9 @@ class Minesweeper {
     }
 
 
+    mark(i, j, val) {
+        // mark the cell at (i, j) as specified val
+    }
 
 
 }

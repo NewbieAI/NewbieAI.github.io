@@ -6,3 +6,4 @@ document.body.append(gameScreen);
 
 let game = new Minesweeper(gameScreen.getContext("2d"));
 
+

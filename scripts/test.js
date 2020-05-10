@@ -1,9 +1,8 @@
-"use strict"
+"use strict";
 
-let game = new Minesweeper(null);
+let gameScreen = document.createElement("canvas");
+gameScreen.setAttribute("class", "screen");
+document.body.append(gameScreen);
 
-for (let i = 0; i < game.state.length; i++) {
-    let ele = document.createElement("p");
-    ele.innerHTML = String(game.state[i]);
-    document.body.append(ele);
-}
+let game = new Minesweeper(gameScreen.getContext("2d"));
+

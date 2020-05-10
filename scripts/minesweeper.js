@@ -1,23 +1,26 @@
-"use strict"
+"use strict";
 
 // simple class that creates a representation of minesweeper game
 // the game will be rendered in an html canvas element
 
 class Minesweeper {
-    const ROW = 25;
-    const COL = 40;
-    const INITIAL_MINES = 75;
+    static ROW = 25;
+    static COL = 50;
+    static INITIAL_MINES = 250;
 
-    constructor(canvasElement) {
+    constructor(canvasContext) {
         // the internal game states will be rendered inside the
         // canvas element
         this.canvas = canvasElement;
-        this.mines = INITIAL_MINES;
+        this.mines = Minesweeper.INITIAL_MINES;
+        this.data = [];
         this.state = [];
-        for (let i = 0; i < ROW; i++) {
-            this.state.append([]);
-            for (let j = 0; j < COL; j++) {
-                this.state[i].append(0);
+        for (let i = 0; i < Minesweeper.ROW; i++) {
+            this.data[i] = [];
+            this.state[i] = [];
+            for (let j = 0; j < Minesweeper.COL; j++) {
+                this.data[i][j] = 0;
+                this.state[i][j] = 0;
             }
         }
         this.reset();
@@ -25,27 +28,39 @@ class Minesweeper {
     }
 
     reset() {
-
-        let mineCount = INITIAL_MINES;
-        let k = 0;
-        for (let i = 0; i < ROW; i++) {
-            for (let j = 0; j < COL; j++) {
-                val = Math.random() * (1000 - k);
-                if (val < mineCount) {
-                    this.state[i][j] = -1;
-                }
-                this.runAound(
-                    i,
-                    j,
-                    () => this.state[i][j]++,
-                );
-                k++;
-
-                this.cover(i, j);
-            }
+        let spaces = [];
+        let totalSize = Minesweeper.COL * Minesweeper.ROW;
+        for (let k = 0; k < totalSize; k++) {
+            spaces[k] = k;
         }
 
+        let index, tmp, x, y;
+        for (let m = 0; m < Minesweeper.INITIAL_MINES; m++) {
+            index = m + (Math.random() * (totalSize - m) | 0);
+            tmp = spaces[index];
 
+            x = (tmp / Minesweeper.COL) | 0;
+            y = tmp % Minesweeper.COL;
+            this.state[x][y] = -1;
+            this.runAround(
+                x, y,
+                (a, b) => {
+                    if (this.state[a][b] >= 0) {
+                        this.state[a][b]++;
+                    }
+                }
+            );
+
+            spaces[index] = spaces[m];
+            spaces[m] = tmp;
+        }
+
+        let k = 0;
+        for (let i = 0; i < Minesweeper.ROW; i++) {
+            for (let j = 0; j < Minesweeper.COL; j++) {
+                this.hide(i, j);
+            }
+        }
     }
 
     runAround(i, j, func) {
@@ -56,7 +71,8 @@ class Minesweeper {
             }
             a = i - 1 + (k / 3 | 0);
             b = j - 1 + k % 3;
-            if (a > 0 && a < ROW && b > 0 && b < COL) {
+            if (a >= 0 && a < Minesweeper.ROW && 
+                b >= 0 && b < Minesweeper.COL) {
                 func(a, b);
             }
         }
@@ -64,10 +80,26 @@ class Minesweeper {
 
     reveal(i, j) {
         // reveals the cell at (i, j)
+        // uses dfs to recursive reveal
+        // adjacent cells. however if the 
+        // grid is very large, iterative
+        // technique will be preferred.
+        if (this.state[i][j] > 0) {
+            return;
+        }
+
+        this.state[i][j] = 1;
+        if (this.data[i][j] == 0) {
+            this.runAround(
+                i, j,
+                this.reveal
+            );
+        }
     }
 
-    cover(i, j) {
+    hide(i, j) {
         // covers the cell at (i, j)
+        this.state[i][j] = 0;
     }
 
 

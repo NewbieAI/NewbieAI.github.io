@@ -8,19 +8,24 @@ class Minesweeper {
     static COL = 50;
     static INITIAL_MINES = 250;
 
-    constructor(canvasContext) {
+    constructor() {
         // the internal game states will be rendered inside the
         // canvas element
-        this.screen = canvasContext;
+
+        this.canvas = document.createElement("canvas");
+        this.canvas.setAttribute("class", "screen");
+        this.canvas.setAttribute("width", "1600");
+        this.canvas.setAttribute("height", "800");
+        this.screen = this.canvas.getContext("2d");
+        document.body.append(this.canvas);
+	
         this.mines = Minesweeper.INITIAL_MINES;
-        this.data = [];
         this.state = [];
         for (let i = 0; i < Minesweeper.ROW; i++) {
-            this.data[i] = [];
             this.state[i] = [];
             for (let j = 0; j < Minesweeper.COL; j++) {
-                this.data[i][j] = 0;
                 this.state[i][j] = 0;
+                this.render(i, j);
             }
         }
         this.reset();
@@ -54,13 +59,6 @@ class Minesweeper {
             spaces[index] = spaces[m];
             spaces[m] = tmp;
         }
-
-        let k = 0;
-        for (let i = 0; i < Minesweeper.ROW; i++) {
-            for (let j = 0; j < Minesweeper.COL; j++) {
-                this.hide(i, j);
-            }
-        }
     }
 
     runAround(i, j, func) {
@@ -80,32 +78,55 @@ class Minesweeper {
 
     reveal(i, j) {
         // reveals the cell at (i, j)
-        // uses dfs to recursive reveal
-        // adjacent cells. however if the 
-        // grid is very large, iterative
-        // technique will be preferred.
-        if (this.state[i][j] > 0) {
+        this.state[i][j] -= 10;
+        if (this.state[i][j] != -10) {
+            return this.state[i][j] < -10 ? true : false;
+        }
+
+        queue = [i, j];
+        let k = 0;
+        let a, b;
+        while (queue.length > k) {
+            a = queue[k];
+            b = queue[k + 1];
+            k += 2;
+            if (this.data[i][j] == -10) {
+                this.runAround(
+                    a, 
+                    b,
+                    (x, y) => {
+                        this.state[x][y] -= 10;
+                        queue.push(x, y);
+                    }
+                );
+            }
+        }
+        return false;
+    }
+
+    render(i, j) {
+        if (this.state[i][j] >= -1) {
+            this.screen.fillStyle = (
+                "rgba(" + 
+                String(0 + ((Math.random() * 20) | 0)) + ", " +
+                String(125 + ((Math.random() * 25) | 0)) + ", " +
+                String(200 + ((Math.random() * 50) | 0)) + ", " +
+                String(0.5 + (Math.random() * 0.2)) +
+                ")"
+            );
+            this.screen.fillRect(
+                j * 32,
+                i * 32,
+                32,
+                32,
+            );
             return;
         }
-
-        this.state[i][j] = 1;
-        if (this.data[i][j] == 0) {
-            this.runAround(
-                i, j,
-                this.reveal
-            );
+        if (this.state[i][j] < -10) {
+            // mines, flags, or question mark
+        } else {
+            // numbers
         }
     }
-
-    hide(i, j) {
-        // covers the cell at (i, j)
-        this.state[i][j] = 0;
-    }
-
-
-    mark(i, j, val) {
-        // mark the cell at (i, j) as specified val
-    }
-
-
+    
 }

@@ -4,9 +4,9 @@
 // the game will be rendered in an html canvas element
 
 class Minesweeper {
-    static ROW = 25;
-    static COL = 50;
-    static INITIAL_MINES = 250;
+    static ROW = 20;
+    static COL = 40;
+    static INITIAL_MINES = 160;
 
     constructor() {
         // the internal game states will be rendered inside the
@@ -20,30 +20,28 @@ class Minesweeper {
         this.canvas.setAttribute("class", "screen");
         this.canvas.setAttribute("width", "1600");
         this.canvas.setAttribute("height", "800");
+        this.cellWidth = 1600 / Minesweeper.COL;
+        this.cellHeight = 800 / Minesweeper.ROW;
         this.canvas.addEventListener(
             "mousedown",
             (e) => {
+                let rect = this.canvas.getBoundingClientRect();
+                let j = 0 | (e.clientX - rect.x) / (this.cellWidth / 2);
+                let i = 0 | (e.clientY - rect.y) / (this.cellHeight / 2);
+
                 if (e.button == 0) {
                     this.leftMouseDown = true;
+                    this.screen.save();
+                    if (this.rightMouseDown) {
+                    }
                 }
                 if (e.button == 2) {
                     this.rightMouseDown = true;
+                    if (this.leftMouseDown) {
+                    }
                 }
             },
         );
-        /*
-        this.canvas.addEventListener(
-            "mouseup",
-            (e) => {
-                if (e.button == 0) {
-                    this.leftMouseDown = false;
-                }
-                if (e.button == 2) {
-                    this.rightMouseDown = false;
-                }
-            },
-        );
-        */
         this.canvas.addEventListener(
             "click",
             this.clickHandler.bind(this),
@@ -56,10 +54,12 @@ class Minesweeper {
         this.screen = this.canvas.getContext("2d");
         document.body.append(this.canvas);
 	
-        this.mines = Minesweeper.INITIAL_MINES;
         this.state = [];
+        this.mines = new Set();
         this.flags = new Set();
         this.qMarks = new Set();
+        this.flagTotal = 0;
+        this.flagCorrect = 0;
         
         this.reset();
 
@@ -72,6 +72,7 @@ class Minesweeper {
     reset() {
         this.flags.clear();
         this.qMarks.clear();
+        this.mines.length = 0;
 
         for (let i = 0; i < Minesweeper.ROW; i++) {
             this.state[i] = [];
@@ -92,8 +93,8 @@ class Minesweeper {
         for (let m = 0; m < Minesweeper.INITIAL_MINES; m++) {
             index = m + (Math.random() * (totalSize - m) | 0);
             tmp = spaces[index];
-
-            x = (tmp / Minesweeper.COL) | 0;
+            this.mines.add(tmp);
+            x = 0 | tmp / Minesweeper.COL;
             y = tmp % Minesweeper.COL;
             this.state[x][y] = -1;
             this.runAround(
@@ -110,8 +111,25 @@ class Minesweeper {
         }
     }
 
-    endGame() {
-        alert("Game Over");
+    endGame(isWin = false) {
+        if (isWin) {
+            alert("Congratulations! You won.");
+        } else {
+            for (let key of this.mines.keys()) {
+                let i = 0 | key / Minesweeper.COL;
+                let j = key % Minesweeper.COL;
+                if (key in this.qMarks) {
+                    this.flags.delete(key);
+                    this.renderCell(i, j);
+                }
+                this.renderMine(i, j);
+            }
+            for (let key of this.flags.keys()) {
+                let i = 0 | key / Minesweeper.COL;
+                let j = key % Minesweeper.COL;
+                this.renderCheck(i, j);
+            }
+        }
     }
 
     runAround(i, j, func) {
@@ -131,9 +149,9 @@ class Minesweeper {
 
     reveal(i, j) {
         // reveals the cell at (i, j)
-
-        this.flags.delete(`(${i}, ${j})`);
-        this.qMarks.delete(`(${i}, ${j})`);
+        let key = i * Minesweeper.COL + j;
+        this.flags.delete(key);
+        this.qMarks.delete(key);
         this.state[i][j] -= 10;
         this.renderCell(i, j);
         if (this.state[i][j] != -10) {
@@ -154,8 +172,9 @@ class Minesweeper {
                     b,
                     (x, y) => {
                         if (this.state[x][y] >= -1) {
-                            this.flags.delete(`(${x}, ${y})`);
-                            this.qMarks.delete(`(${x}, ${y})`);
+                            key = x * Minesweeper.COL + y;
+                            this.flags.delete(key);
+                            this.qMarks.delete(key);
                             this.state[x][y] -= 10;
                             this.renderCell(x, y);
                             queue.push(x, y);
@@ -172,7 +191,7 @@ class Minesweeper {
             return;
         }
 
-        let key = `(${i}, ${j})`;
+        let key = i * Minesweeper.COL + j;
         if ( this.flags.has(key) ) {
             this.flags.delete(key);
             this.qMarks.add(key);
@@ -189,10 +208,10 @@ class Minesweeper {
 
         if (this.state[i][j] >= -1) {
             this.screen.clearRect(
-                j * 32,
-                i * 32,
-                32,
-                32,
+                j * this.cellWidth,
+                i * this.cellHeight,
+                this.cellWidth,
+                this.cellHeight,
             );
             this.screen.fillStyle = (
                 "rgba(" + 
@@ -203,26 +222,33 @@ class Minesweeper {
                 ")"
             );
             this.screen.fillRect(
-                j * 32,
-                i * 32,
-                32,
-                32,
+                j * this.cellWidth,
+                i * this.cellHeight,
+                this.cellWidth,
+                this.cellHeight,
             );
-            let key = `(${i}, ${j})`;
+            let key = i * Minesweeper.COL + j;
             if ( this.flags.has(key) ) {
                 this.renderFlag(i, j);
             }
             if ( this.qMarks.has(key) ) {
                 this.renderQMark(i, j);
             }
-            return;
-        }
-
-        if (this.state[i][j] == -11) {
-            this.renderMine(i, j);
         } else {
-            this.renderDigit(i, j);
+
+            if (this.state[i][j] == -11) {
+                this.renderMine(i, j);
+            } else {
+                this.renderDigit(i, j);
+            }
         }
+        this.screen.strokeStyle = "white";
+        this.screen.strokeRect(
+            j * this.cellWidth,
+            i * this.cellHeight,
+            this.cellWidth,
+            this.cellHeight,
+        );
     }
 
     renderDigit(i, j) {
@@ -241,103 +267,219 @@ class Minesweeper {
 
         this.screen.fillStyle = color[0];
         this.screen.fillRect(
-            j * 32,
-            i * 32,
-            32,
-            32,
+            j * this.cellWidth,
+            i * this.cellHeight,
+            this.cellWidth,
+            this.cellHeight,
         );
 
         let n = this.state[i][j] + 10;
         if (n > 0) {
             this.screen.fillStyle = color[n];
-            this.screen.font = "36px bold serif";
+            this.screen.font = "40px bold arial";
             this.screen.textAlign = "center";
             this.screen.textBaseline = "middle";
             this.screen.fillText(
                 String(n),
-                j * 32 + 16,
-                i * 32 + 16,
+                (j + 0.5) * this.cellWidth,
+                (i + 0.5) * this.cellHeight + 2,
             );
         }
     }
 
-    renderMine(i, j) {
-        let x = j * 32;
-        let y = i * 32;
+    renderMine(i, j, triggered = false) {
+        let x = j * this.cellWidth;
+        let y = i * this.cellHeight;
+        let mineRadius = this.cellWidth * 0.3;
+        let spikeRadius = this.cellWidth * 0.45;
+        let spikeLength = this.cellWidth * 0.2;
+        let shadowDiff = this.cellWidth * 0.05;
+        let shadowLength = this.cellWidth * 0.2;
         
         if (this.state[i][j] < -1) {
-            this.screen.fillStyle = "rgb(255, 0, 0)";
-            this.screen.fillRect(x, y, 32, 32);
+            this.screen.fillStyle = `rgb(255, 0, 0)`;
+            this.screen.fillRect(x, y, this.cellWidth, this.cellHeight);
         }
 
+        x += this.cellWidth / 2;
+        y += this.cellHeight / 2;
         this.screen.fillStyle = "rgb(0, 0, 0)";
         this.screen.beginPath();
-        this.screen.arc(x + 16, y + 16, 10, 0, 2 * Math.PI);
+        this.screen.arc(x, y, mineRadius, 0, 2 * Math.PI);
         this.screen.fill();
 
-   };
+        this.screen.fillStyle = "rgb(100, 100, 100)";
+        this.screen.beginPath();
+        this.screen.arc(x, y, mineRadius / 5, 0, 2 * Math.PI);
+        this.screen.fill();
+        
+        for (let i = 0; i < 8; i++) {
+            let theta = i * Math.PI / 4;
+            let delta = Math.PI / 9;
+            let a = x + spikeRadius * Math.cos(theta);
+            let b = y + spikeRadius * Math.sin(theta);
+            
+            this.screen.fillStyle = "rgb(0, 0, 0)";
+            this.screen.beginPath();
+            this.screen.moveTo(a, b);
+            this.screen.lineTo(
+                a - spikeLength * Math.cos(theta + delta),
+                b - spikeLength * Math.sin(theta + delta),
+            );
+            this.screen.lineTo(
+                a - spikeLength * Math.cos(theta - delta),
+                b - spikeLength * Math.sin(theta - delta),
+            );
+            this.screen.fill();
+
+            if (i % 2 == 0) {
+                continue;
+            }
+            this.screen.fillStyle = "rgb(100, 100, 100)";
+            a -= shadowDiff * Math.cos(theta);
+            b -= shadowDiff * Math.sin(theta);
+
+            this.screen.beginPath();
+            this.screen.moveTo(a, b);
+            this.screen.lineTo(
+                a - shadowLength * Math.cos(theta + delta),
+                b - shadowLength * Math.sin(theta + delta),
+            );
+            this.screen.lineTo(
+                a - shadowLength * Math.cos(theta - delta),
+                b - shadowLength * Math.sin(theta - delta),
+            );
+            this.screen.fill();
+        }
+    };
 
     renderFlag(i, j) {
-        let x = j * 32;
-        let y = i * 32;
+        let x = j * this.cellWidth;
+        let y = i * this.cellHeight;
+
+        let margin = this.cellHeight * 0.1;
+        let poleTip = this.cellWidth * 0.3;
+        let poleHeight = this.cellHeight * 0.55;
+        let poleWidth = this.cellWidth * 0.06;
+        let baseHeight = this.cellHeight * 0.18;
+        let baseWidth = this.cellWidth * 0.7;
+        let flagLength = this.cellHeight * 0.45;
+        let flagWidth = this.cellWidth * 0.4;
 
         this.screen.beginPath();
         this.screen.fillStyle = "rgb(0, 0, 0)";
-        this.screen.moveTo(x + 10, y + 2);
-        this.screen.lineTo(x + 10, y + 20);
-        this.screen.lineTo(x + 3, y + 25);
-        this.screen.lineTo(x + 25, y + 25);
-        this.screen.lineTo(x + 12, y + 20);
-        this.screen.lineTo(x + 12, y + 2);
+        this.screen.moveTo(
+            x + poleTip, 
+            y + margin,
+        );
+        this.screen.lineTo(
+            x + poleTip, 
+            y + margin + poleHeight,
+        );
+        this.screen.lineTo(
+            x + margin, 
+            y + margin + poleHeight + baseHeight,
+        );
+        this.screen.lineTo(
+            x + margin + baseWidth, 
+            y + margin + poleHeight + baseHeight,
+        );
+        this.screen.lineTo(
+            x + poleTip + poleWidth, 
+            y + margin + poleHeight,
+        );
+        this.screen.lineTo(
+            x + poleTip + poleWidth, 
+            y + margin,
+        );
         this.screen.fill();
         this.screen.beginPath();
-        this.screen.fillStyle = "rgb(255, 0, 0)";
-        this.screen.moveTo(x + 12, y + 2);
-        this.screen.lineTo(x + 25, y + 15);
-        this.screen.lineTo(x + 12, y + 15);
+        this.screen.fillStyle = "rgb(255, 55, 0)";
+        this.screen.moveTo(
+            x + poleTip + poleWidth, 
+            y + margin,
+        );
+        this.screen.lineTo(
+            x + poleTip + poleWidth + flagWidth, 
+            y + margin + flagLength,
+        );
+        this.screen.lineTo(
+            x + poleTip + poleWidth, 
+            y + margin + flagLength,
+        );
         this.screen.fill();
 
     }
 
     renderQMark(i, j) {
         this.screen.fillStyle = "rgb(0, 0, 45)";
-        this.screen.font = "32px bold serif";
+        this.screen.font = "36px bold arial";
         this.screen.textAlign = "center";
         this.screen.textBaseline = "middle";
         this.screen.fillText(
             "?",
-            j * 32 + 16,
-            i * 32 + 16,
+            (j + 0.5) * this.cellWidth,
+            (i + 0.5) * this.cellHeight + 2,
         );
 
+    }
+
+    renderCheck(i, j) {
+        this.screen.lineWidth = 2;
+        let x = j * this.cellWidth;
+        let y = i * this.cellHeight;
+        //this.screen.beginPath();
+        if (this.state[i][j] == -1) {
+            this.screen.strokeStyle = "green";
+        } else {
+            this.screen.strokeStyle = "red";
+        }
+        //this.screen.stroke();
+        this.screen.lineWidth = 1;
+    }
+
+    highlight(i, j) {
+        this.screen.strokeStyle = "orange";
+        this.screen.strokeRect(
+            this.cellWidth * j,
+            this.cellHeight * i,
+            this.cellWidth,
+            this.cellHeight,
+        );
     }
     
     clickHandler(e) {
         e.preventDefault();
         let rect = this.canvas.getBoundingClientRect();
-        let j = 0 | (e.clientX - rect.x) / 16;
-        let i = 0 | (e.clientY - rect.y) / 16;
+        let j = 0 | (e.clientX - rect.x) / (this.cellWidth / 2);
+        let i = 0 | (e.clientY - rect.y) / (this.cellHeight / 2);
 
         if (this.leftMouseDown && this.rightMouseDown) {
             // most complicated action in the game
-            //
 
             if (this.state[i][j] >= -1) {
                 return;
             }
 
+            let triggered = false;
             this.runAround(
                 i,
                 j,
                 (a, b) => {
-                    let key = `(${a}, ${b})`;
+                    let key = a * Minesweeper.COL + b;
                     if (this.state[a][b] >= -1 &&
                         !this.flags.has(key) &&
                         !this.qMarks.has(key)) {
-                        this.reveal(a, b);
+                        if ( this.reveal(a, b) ) {
+                            triggered = true;
+                        }
                     }
                 },
             );
+            if (triggered) {
+                this.endGame();
+            }
+
         } else if (this.leftMouseDown) {
             if (this.state[i][j] >= -1) {
                 if ( this.reveal(i, j) ) {

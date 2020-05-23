@@ -507,12 +507,27 @@ class Minesweeper {
     }
     
     removeHighlight() {
+        if (this.clickedCell.j >= Minesweeper.COL) {
+            return;
+        }
         this.screen.strokeStyle = "rgb(255, 255, 255)";
         this.screen.strokeRect(
             this.cellWidth * this.clickedCell.j,
             this.cellHeight * this.clickedCell.i,
             this.cellWidth,
             this.cellHeight,
+        );
+        this.runAround(
+            this.clickedCell.i,
+            this.clickedCell.j,
+            (a, b) => {
+                this.screen.strokeRect(
+                    this.cellWidth * b,
+                    this.cellHeight * a,
+                    this.cellWidth,
+                    this.cellHeight,
+                );
+            },
         );
     }
 
@@ -560,7 +575,9 @@ class Minesweeper {
         this.renderEmoji();
         this.renderMineCounter();
         this.renderTimer();
-        this.renderButtons();
+        for (let i = 0; i < 5; i++) {
+            this.renderButtons(i, false, false);
+        }
         
         this.screen.fillStyle = "rgb(0, 0, 0)";
         this.screen.font = "small-caps bold 18px/1 cursive";
@@ -577,7 +594,7 @@ class Minesweeper {
             670,
         );
         this.screen.fillText(
-            "All rights reserved",
+            "All Rights Reserved",
             1700,
             690,
         );
@@ -591,8 +608,6 @@ class Minesweeper {
         let w = 100, h = 100;
         this.screen.strokeRect(x, y, w, h);
     }
-
-    
 
     renderMineCounter() {
         let x = 1620, y = 150;
@@ -739,13 +754,21 @@ class Minesweeper {
         );
     }
 
-    renderButtons(selected = -1) {
+    renderButtons(buttonNumber, isHighlight, isPressed) {
+
+        let x = 1625, y = 400 + 50 * buttonNumber;
+
+        this.screen.clearRect(x, y + 50, 250, 50);
+        this.screen.fillStyle = "rgba(255, 155, 0, 0.4)";
+        this.screen.fillRect(x, y + 50, 250, 50);
+
+        this.screen.shadowColor = "rgb(55, 55, 55)";
+        this.screen.font = "bold small-caps 36px serif";
+        this.screen.textAlign = "left";
+        this.screen.textBaseline = "bottom";
         this.screen.shadowOffsetX = 10;
         this.screen.shadowOffsetY = 5;
         this.screen.shadowBlur = 5;
-        this.screen.shadowColor = "rgb(55, 55, 55)";
-        this.screen.textAlign = "left";
-        this.screen.textBaseline = "bottom";
 
         let buttons = [
             "New Game",
@@ -756,20 +779,20 @@ class Minesweeper {
         ];
 
 
-        for (let i = 0; i < 5; i++) {
-            if (i == selected) {
+        if (isHighlight) {
+            this.screen.fillStyle = "rgb(100, 100, 150)";
+            if (isPressed) {
                 this.screen.fillStyle = "rgb(100, 100, 150)";
-                this.screen.font = "bold small-caps 36px serif";
-            } else {
-                this.screen.fillStyle = "rgb(0, 0, 0)";
-                this.screen.font = "bold small-caps 36px serif";
+                this.screen.shadowOffsetX = 0;
+                this.screen.shadowOffsetY = 0;
+                this.screen.shadowBlur = 2;
+                x += 10;
+                y += 5;
             }
-            this.screen.fillText(
-                buttons[i],
-                1625,
-                400 + 50 * i,
-            );
+        } else {
+            this.screen.fillStyle = "rgb(0, 0, 0)";
         }
+        this.screen.fillText(buttons[buttonNumber], x, y);
 
         this.screen.shadowOffsetX = 0;
         this.screen.shadowOffsetY = 0;
@@ -950,6 +973,11 @@ class Minesweeper {
                 e.clientX - rect.x,
                 e.clientY - rect.y,
             );
+            this.leftMouseDown = false;
+            this.rightMouseDown = false;
+            this.removeHighlight();
+            this.clickedCell.i = -1;
+            this.clickedCell.j = -1;
             return;
         }
 
@@ -990,11 +1018,17 @@ class Minesweeper {
         let j = 0 | (e.clientX - rect.x) / (this.cellWidth / 2);
         let i = 0 | (e.clientY - rect.y) / (this.cellHeight / 2);
 
-        this.clickedCell.i = i;
-        this.clickedCell.j = j;
+        if (this.clickedCell.i == -1 && 
+            this.clickedCell.j == -1) {
+            this.clickedCell.i = i;
+            this.clickedCell.j = j;
+        }
         if (e.button == 0) {
             this.leftMouseDown = true;
-            if (this.state[i][j] < -1 && this.rightMouseDown) {
+            if (this.state[i][j] < -1 && 
+                this.rightMouseDown && 
+                this.clickedCell.i == i && 
+                this.clickedCell.j == j) {
                 this.runAround(
                     i,
                     j,
@@ -1014,7 +1048,10 @@ class Minesweeper {
         }
         if (e.button == 2) {
             this.rightMouseDown = true;
-            if (this.state[i][j] < -1 && this.leftMouseDown) {
+            if (this.state[i][j] < -1 && 
+                this.leftMouseDown && 
+                this.clickedCell.i == i && 
+                this.clickedCell.j == j) {
                 this.runAround(
                     i,
                     j,
@@ -1037,25 +1074,21 @@ class Minesweeper {
     leftClickCell(i, j) {
         if (!this.leftMouseDown || 
             i != this.clickedCell.i || 
-            j != this.clickedCell.j) {
+            j != this.clickedCell.j || 
+            this.state[i][j] < -1) {
             return;
         }
 
-        if (this.state[i][j] >= -1) {
-            if ( this.reveal(i, j) ) {
-                this.endGame();
-            }
+        if ( this.reveal(i, j) ) {
+            this.endGame();
         }
     }
 
     rightClickCell(i, j) {
         if (!this.rightMouseDown || 
             i != this.clickedCell.i || 
-            j != this.clickedCell.j) {
-            return;
-        }
-
-        if (this.state[i][j] < -1) {
+            j != this.clickedCell.j || 
+            this.state[i][j] < -1) {
             return;
         }
 
@@ -1064,15 +1097,30 @@ class Minesweeper {
     }
 
     dualClickCell(i, j) {
-        if (!this.leftMouseDown || !this.rightMouseDown) {
-            return;
-        }
-
-        if (this.state[i][j] >= -1) {
+        if (!this.leftMouseDown || 
+            !this.rightMouseDown || 
+            i != this.clickedCell.i ||
+            j != this.clickedCell.j || 
+            this.state[i][j] >= -1) {
             return;
         }
 
         let triggered = false;
+        let mines = this.state[i][j] + 10;
+        let spaces = 0;
+        this.runAround(
+            i,
+            j,
+            (a, b) => {
+                let key = a * Minesweeper.COL + b;
+                if ( this.flags.has(key) ) {
+                    mines -= 1;
+                } else {
+                    spaces += this.state[a][b] >= -1;
+                }
+            }
+        );
+
         this.runAround(
             i,
             j,
@@ -1081,12 +1129,18 @@ class Minesweeper {
                 if (this.state[a][b] >= -1 &&
                     !this.flags.has(key) &&
                     !this.qMarks.has(key)) {
-                    if ( this.reveal(a, b) ) {
-                        triggered = true;
+                    if (mines == 0) {
+                        if ( this.reveal(a, b) ) {
+                            triggered = true;
+                        }
+                    } else if (mines == spaces) {
+                        this.mark(a, b);
                     }
                 }
             },
         );
+
+        this.renderMineCounter();
         if (triggered) {
             this.endGame();
         }

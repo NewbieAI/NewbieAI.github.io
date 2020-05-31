@@ -3,11 +3,17 @@
  */
 
 canvas {
+    position: absolute;
     width: 900px;
     height: 400px;
+    left: 50%;
+    top: 50%;
+    margin-left: -450px;
+    margin-top: -200px;
     border: 1px solid grey;
 }
 
 h1 {
     color: grey;
+    text-align: center;
 }

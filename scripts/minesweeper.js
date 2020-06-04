@@ -1,12 +1,13 @@
 "use strict";
 
-// simple class that creates a representation of minesweeper game
-// the game will be rendered in an html canvas element
-
 class Minesweeper {
     static ROW = 20;
     static COL = 40;
-    static INITIAL_MINES = 160;
+
+    static EASY = 80;
+    static MEDIUM = 120;
+    static HARD = 160;
+    static INSANE = 200;
 
     static IDLE = 0;
     static GAME = 1;
@@ -18,12 +19,15 @@ class Minesweeper {
     static coolFace = new Image();
     static sadFace = new Image();
     static backgroundImg = new Image();
+    static scrollImg = new Image();
     static explosionFrames = new Image();
+    static helpImage = new Image();
     
     static explosionSound = new Audio();
     static highlightSound = new Audio();
     static clickSound = new Audio();
     static victorySound = new Audio();
+    static introSound = new Audio();
     static music1 = new Audio();
     static music2 = new Audio();
     static music3 = new Audio();
@@ -70,35 +74,39 @@ class Minesweeper {
         return Promise.all([
             loadImage(
                 Minesweeper.mine,
-                "resources/mine.png",
+                "resources/Images/mine.png",
             ),
             loadImage(
                 Minesweeper.smileyFace, 
-                "resources/smileyFace.png",
+                "resources/Images/smileyFace.png",
             ),
             loadImage(
                 Minesweeper.surprisedFace, 
-                "resources/surprisedFace.png",
+                "resources/Images/surprisedFace.png",
             ),
             loadImage(
                 Minesweeper.coolFace, 
-                "resources/coolFace.jpg",
+                "resources/Images/coolFace.jpg",
             ),
             loadImage(
                 Minesweeper.sadFace, 
-                "resources/sadFace.png",
+                "resources/Images/sadFace.png",
             ),
             loadImage(
                 Minesweeper.backgroundImg, 
-                `resources/bg${0 | Math.random() * 5}.jpeg`,
+                `resources/Images/bg${0 | Math.random() * 5}.jpg`,
+            ),
+            loadImage(
+                Minesweeper.scrollImg,
+                "resources/Images/scroll.png",
             ),
             loadImage(
                 Minesweeper.explosionFrames, 
-                "resources/explosion.png",
+                "resources/Images/explosion.png",
             ),
             loadAudio(
                 Minesweeper.explosionSound,
-                "resources/Sound/explosion.wav",
+                "resources/Sound/explosion.mp3",
             ),
             loadAudio(
                 Minesweeper.highlightSound,
@@ -113,12 +121,20 @@ class Minesweeper {
                 "resources/Sound/victory.mp3",
             ),
             loadAudio(
+                Minesweeper.introSound,
+                "resources/Sound/intro.mp3",
+            ),
+            loadAudio(
                 Minesweeper.music1,
                 "resources/Sound/music1.mp3",
             ),
             loadAudio(
                 Minesweeper.music2,
                 "resources/Sound/music2.mp3",
+            ),
+            loadAudio(
+                Minesweeper.music3,
+                "resources/Sound/music3.mp3",
             ),
         ]);
     }
@@ -143,6 +159,12 @@ class Minesweeper {
 
         this.soundOn = true;
         this.musicOn = true;
+        this.helpOpen = false;
+        this.settingsOpen = false;
+        this.difficulty = Minesweeper.HARD;
+        this.allowHint = true;
+        this.autoFlag = true;
+        this.cacheImg = null;
 
         this.canvas = document.createElement("canvas");
         this.canvas.setAttribute("id", "minesweeper");
@@ -186,7 +208,7 @@ class Minesweeper {
         document.body.append(Minesweeper.victorySound);
         document.body.append(Minesweeper.music1);
         document.body.append(Minesweeper.music2);
-        //document.body.append(Minesweeper.music3);
+        document.body.append(Minesweeper.music3);
 
         this.state = [];
         this.mines = new Set();
@@ -214,9 +236,10 @@ class Minesweeper {
         Minesweeper.clickSound.remove();
         Minesweeper.highlightSound.remove();
         Minesweeper.victorySound.remove();
+        Minesweeper.introSound.remove();
         Minesweeper.music1.remove();
         Minesweeper.music2.remove();
-        //Minesweeper.music3.remove();
+        Minesweeper.music3.remove();
         this.canvas.remove();
     }
 
@@ -250,7 +273,7 @@ class Minesweeper {
         }
 
         let index, tmp, x, y;
-        for (let m = 0; m < Minesweeper.INITIAL_MINES; m++) {
+        for (let m = 0; m < this.difficulty; m++) {
             index = m + (Math.random() * (totalSize - m) | 0);
             tmp = spaces[index];
             this.mines.add(tmp);
@@ -291,7 +314,7 @@ class Minesweeper {
     endGame(isWin = false) {
         this.gameStatus = Minesweeper.INTRO;
         this.cellClickEnabled = false;
-        this.menuCLickEnabled = false;
+        this.menuClickEnabled = false;
         clearInterval(this.timerInterval);
 
         if (isWin) {
@@ -313,21 +336,6 @@ class Minesweeper {
                 }
             );
         }
-    }
-
-    displayHelp() {
-        this.cellClickEnabled = false;
-        this.menuClickEnabled = false;
-    }
-
-    displaySettings() {
-        this.cellClickEnabled = false;
-        this.menuClickEnabled = false;
-    }
-
-    displayCredit() {
-        this.cellClickEnabled = false;
-        this.menuClickEnabled = false;
     }
 
     playSound(audio) {
@@ -493,8 +501,8 @@ class Minesweeper {
                             );
                         }
                         for (let i = 0; i < explosions.length; i+=2) {
-                            let x = explosions[i] - 1;
-                            let y = explosions[i + 1] - 1;
+                            let x = explosions[i] - 2;
+                            let y = explosions[i + 1] - 2;
                             this.screen.drawImage(
                                 Minesweeper.explosionFrames,
                                 512 * (frame % 8),
@@ -503,16 +511,131 @@ class Minesweeper {
                                 512,
                                 y * this.cellWidth,
                                 x * this.cellHeight,
-                                3 * this.cellWidth,
-                                3 * this.cellHeight,
+                                5 * this.cellWidth,
+                                5 * this.cellHeight,
                             );
                         }
-                        frame += frame < 16 ? 1 : 2;
+                        frame += frame < 32 ? 1 : 2;
                     },
-                    30,
+                    20,
                 );
             },
         );
+    }
+    
+    animateCredit() {
+        this.renderButtons(3, false, false);
+        let credits;
+        fetch("resources/JSON/credit.json").then(
+            response => response.json()
+        ).then(
+            data => {
+                credits = data;
+            }
+        );
+
+        return new Promise(
+            (resolve) => {
+                let frame = 0;
+                let x = 800, ystart = 800;
+                this.screen.textAlign = "center";
+                this.screen.textBaseline = "top";
+                let imgData = this.screen.getImageData(
+                    0, 0, 1600, 800,
+                );
+                let animation = setInterval(
+                    () => {
+                        this.screen.fillStyle = "rgb(0, 0, 0)";
+                        if (frame < 20) {
+                            this.screen.fillRect(0, 0, 1600, 800);
+                            this.screen.putImageData(
+                                imgData,
+                                -frame * 20, 0,
+                                frame * 20, 0,
+                                800 - frame * 20, 800,
+                            );
+                            this.screen.putImageData(
+                                imgData,
+                                frame * 20, 0,
+                                800, 0,
+                                800 - frame * 20, 800,
+                            );
+                        } else if (frame < 1500) {
+                            this.screen.fillRect(400, 0, 800, 800);
+                            let y = ystart;
+                            for (let line of credits) {
+                                if (y > 800) {
+                                    break;
+                                }
+                                this.screen.font = line[0];
+                                this.screen.fillStyle = line[1];
+                                this.screen.fillText(line[2], x, y);
+                                y += line[3];
+                            }
+                            ystart -= 2;
+                        } else if (frame <= 1520) {
+                            this.screen.fillRect(0, 0, 1600, 800);
+                            this.screen.putImageData(
+                                imgData,
+                                -(1520 - frame) * 20, 0,
+                                (1520 - frame) * 20, 0,
+                                800 - (1520 - frame) * 20, 800,
+                            );
+                            this.screen.putImageData(
+                                imgData,
+                                (1520 - frame) * 20, 0,
+                                800, 0,
+                                800 - (1520 - frame) * 20, 800,
+                            );
+                        } else {
+                            clearInterval(animation);
+                            resolve();
+                        }
+                        frame++;
+                    },
+                    25,
+                );
+            }
+        );
+    }
+
+    openCredit() {
+        let tmp = this.cellClickEnabled;
+        this.cellClickEnabled = false
+        this.menuClickEnabled = false;
+        this.animateCredit().then(
+            () => {
+                this.cellClickEnabled = tmp;
+                this.menuClickEnabled = true;
+            }
+        );
+    }
+
+    openHelp() {
+        if (this.helpOpen) {
+            return;
+        }
+        this.cellClickEnabled = false;
+        this.menuClickEnabled = false;
+        this.helpOpen = true;
+        this.cacheImg = this.screen.getImageData(
+            0, 0, 1600, 800,
+        );
+        this.helpPage = 0;
+        this.renderHelp();
+    }
+
+    openSettings() {
+        if (this.settingsOpen) {
+            return;
+        }
+        this.cellClickEnabled = false;
+        this.menuClickEnabled = false;
+        this.settingsOpen = true;
+        this.cacheImg = this.screen.getImageData(
+            0, 0, 1600, 800,
+        );
+        this.renderSettings();
     }
 
     runAround(i, j, func) {
@@ -899,6 +1022,244 @@ class Minesweeper {
         );
     }
 
+    renderHelp(helpPage) {
+        function getHelpImg(page) {
+            return new Promise(
+                (resolve) => {
+                    Minesweeper.helpImage.onload = resolve
+                    Minesweeper.helpImage.src = (
+                        `resources/Images/help${page}.png`
+                    );
+                },
+            );
+        }
+        this.screen.putImageData(this.cacheImg, 0, 0);
+        this.renderButtons(1, false, false);
+        if (!this.helpOpen) {
+            return;
+        }
+        let x = 200, y = 100, w = 1200, h = 600;
+        getHelpImg(this.helpPage).
+        then(
+            () => {
+                this.screen.drawImage(
+                    Minesweeper.helpImage,
+                    x, y, w, h,
+                );
+                this.screen.fillStyle = (
+                    this.helpPage == 0 ? 
+                    "rgb(155, 155, 155)" : "rgb(55, 100, 150)"
+                );
+                this.screen.beginPath();
+                this.screen.moveTo(x + 15, y + 40);
+                this.screen.lineTo(x + 40, y + 15);
+                this.screen.lineTo(x + 40, y + 65);
+                this.screen.fill();
+                this.screen.fillRect(x + 40, y + 30, 40, 20);
+                this.screen.fillStyle = (
+                    this.helpPage == 5 ? 
+                    "rgb(155, 155, 155)" : "rgb(55, 100, 150)"
+                );
+                this.screen.beginPath();
+                this.screen.moveTo(x + w - 15, y + 40);
+                this.screen.lineTo(x + w - 40, y + 15);
+                this.screen.lineTo(x + w - 40, y + 65);
+                this.screen.fill();
+                this.screen.fillRect(x + w - 40, y + 30, -40, 20);
+                this.screen.font = "40px/1 serif";
+                this.screen.textAlign = "center";
+                this.screen.textBaseline = "top";
+                this.screen.fillStyle = "rgb(55, 55, 55)";
+                this.screen.fillText(
+                    `${1 + this.helpPage} / 6`,
+                    x + w / 2, y + 15,
+                );
+                this.screen.fillStyle = "rgb(155, 155, 155)";
+                this.screen.fillText(
+                    "CLOSE",
+                    x + w - 75, y + h - 50,
+                );
+            }
+        );
+    }
+
+    renderSettings() {
+        this.screen.putImageData(this.cacheImg, 0, 0);
+        this.renderButtons(2, false, false);
+        if (!this.settingsOpen) {
+            return;
+        }
+        let x = 550, y = 25, w = 600, h = 750;
+        this.screen.drawImage(
+            Minesweeper.scrollImg,
+            x, y, w, h,
+        );
+        this.screen.font = "bold 40px/1 arial";
+        this.screen.textAlign = "center";
+        this.screen.textBaseline = "middle";
+        this.screen.fillStyle = "brown";
+        this.screen.fillText(
+            "Settings",
+            x + w / 2,
+            y + 125,
+        );
+        this.screen.font = "32px/1 cursive";
+        this.screen.textAlign = "right";
+        this.screen.fillText(
+            "Difficulty:",
+            x + 200,
+            y + 200,
+        );
+        this.screen.fillText(
+            "Hints:",
+            x + 200,
+            y + 350,
+        );
+        this.screen.fillText(
+            "Autoflag:",
+            x + 200,
+            y + 500,
+        );
+
+        let colors = ["green", "orange", "red", "purple"];
+        let lvls = ["easy", "medium", "hard", "insane"];
+        let i = 0 | (this.difficulty - Minesweeper.EASY) / 40;
+        this.screen.textAlign = "center";
+        this.screen.fillStyle = colors[i];
+        this.screen.fillText(
+            lvls[i],
+            x + 400,
+            y + 200,
+        );
+
+        this.screen.textAlign = "left";
+        this.screen.fillStyle = this.allowHint ? "black" : "grey";
+        this.screen.fillText(
+            this.allowHint ? "Enabled" : "Disabled",
+            x + 400,
+            y + 350,
+        );
+        this.screen.fillStyle = this.autoFlag ? "black" : "grey";
+        this.screen.fillText(
+            this.autoFlag ? "Enabled" : "Disabled",
+            x + 400,
+            y + 500,
+        );
+
+        if (this.difficulty > Minesweeper.EASY) {
+            this.screen.fillStyle = "rgb(55, 55, 55)";
+            this.screen.beginPath();
+            this.screen.moveTo(x + 275, y + 200);
+            this.screen.lineTo(x + 310, y + 180);
+            this.screen.lineTo(x + 295, y + 200);
+            this.screen.lineTo(x + 310, y + 220);
+            this.screen.closePath();
+            this.screen.fill();
+        }
+        if (this.difficulty < Minesweeper.INSANE) {
+            this.screen.fillStyle = "rgb(55, 55, 55)";
+            this.screen.beginPath();
+            this.screen.moveTo(x + 525, y + 200);
+            this.screen.lineTo(x + 490, y + 180);
+            this.screen.lineTo(x + 505, y + 200);
+            this.screen.lineTo(x + 490, y + 220);
+            this.screen.closePath();
+            this.screen.fill();
+        }
+
+        this.screen.fillStyle = "rgb(255, 255, 255)";
+        this.screen.strokeStyle = "rgb(255, 100, 0)";
+        this.screen.beginPath();
+        this.screen.arc(
+            x + 300, 
+            y + 345, 
+            20, 
+            0.5 * Math.PI, 
+            1.5 * Math.PI,
+        );
+        this.screen.arc(
+            x + 350, 
+            y + 345, 
+            20, 
+            -0.5 * Math.PI, 
+            0.5 * Math.PI,
+        );
+        this.screen.closePath();
+        this.screen.fill();
+        this.screen.stroke();
+
+        this.screen.beginPath();
+        this.screen.arc(
+            x + 300, 
+            y + 495, 
+            20, 
+            0.5 * Math.PI, 
+            1.5 * Math.PI,
+        );
+        this.screen.arc(
+            x + 350, 
+            y + 495, 
+            20, 
+            -0.5 * Math.PI, 
+            0.5 * Math.PI,
+        );
+        this.screen.closePath();
+        this.screen.fill();
+        this.screen.stroke();
+
+        this.screen.fillStyle = "rgb(0, 100, 255)";
+        this.screen.beginPath();
+        this.screen.arc(
+            x + 300 + 30 * (1 - this.allowHint), 
+            y + 345, 
+            16, 
+            0.5 * Math.PI, 
+            1.5 * Math.PI,
+        );
+        this.screen.arc(
+            x + 350 - 30 * this.allowHint, 
+            y + 345, 
+            16, 
+            -0.5 * Math.PI, 
+            0.5 * Math.PI,
+        );
+        this.screen.fill();
+
+        this.screen.beginPath();
+        this.screen.arc(
+            x + 300 + 30 * (1 - this.autoFlag), 
+            y + 495, 
+            16, 
+            0.5 * Math.PI, 
+            1.5 * Math.PI,
+        );
+        this.screen.arc(
+            x + 350 - 30 * this.autoFlag, 
+            y + 495, 
+            16, 
+            -0.5 * Math.PI, 
+            0.5 * Math.PI,
+        );
+        this.screen.fill();
+
+        
+        let gradient = this.screen.createLinearGradient(
+            x + w / 2 - 100, y + 600 - 75,
+            x + w / 2 + 100, y + 600 + 75,
+        );
+        gradient.addColorStop(0, "orange");
+        gradient.addColorStop(1, "green");
+        this.screen.fillStyle = gradient;
+        this.screen.font = "36px/1 serif";
+        this.screen.textAlign = "center";
+        this.screen.fillText(
+            "CONFIRM",
+            x + w / 2,
+            y + 600,
+        );
+
+    }
+
     renderMenu() {
         // displays menu on the left side of the script
 
@@ -1170,9 +1531,14 @@ class Minesweeper {
 
 
         if (isHighlight) {
-            this.screen.fillStyle = "rgb(100, 100, 150)";
+            let gradient = this.screen.createLinearGradient(
+                1625, 0, 1775, 0,
+            );
+            gradient.addColorStop(0, "rgb(0, 0, 255)");
+            gradient.addColorStop(0.4, "rgb(0, 100, 255)");
+            gradient.addColorStop(1, "rgb(255, 0, 255)");
+            this.screen.fillStyle = gradient;
             if (isPressed) {
-                this.screen.fillStyle = "rgb(100, 100, 150)";
                 this.screen.shadowOffsetX = 2;
                 this.screen.shadowOffsetY = 1;
                 this.screen.shadowBlur = 2;
@@ -1458,6 +1824,9 @@ class Minesweeper {
     }
 
     menuClick() {
+        if (!this.menuClickEnabled) {
+            return;
+        }
         for (let i = 0; i < 5; i++) {
             if (this.currentButton == i) {
                 this.renderButtons(i, true, false);
@@ -1467,13 +1836,13 @@ class Minesweeper {
                         this.reset();
                         break;
                     case 1:
-                        this.displayHelp();
+                        this.openHelp();
                         break;
                     case 2:
-                        this.displaySettings();
+                        this.openSettings();
                         break;
                     case 3:
-                        this.displayCredit();
+                        this.openCredit();
                         break;
                     case 4:
                         this.destroy();
@@ -1581,6 +1950,9 @@ class Minesweeper {
         let i = 0 | (e.clientY - rect.y) / (this.cellHeight / 2);
 
         if (j >= Minesweeper.COL) {
+            if (!this.menuClickEnabled) {
+                return;
+            }
             for (let button = 0; button < 5; button++) {
                 if (this.currentButton == button) {
                     this.renderButtons(button, true, true);
@@ -1656,7 +2028,9 @@ class Minesweeper {
     }
 
     mousemoveHandler(e) {
-        if (this.leftMouseDown || this.rightMouseDown) {
+        if (this.leftMouseDown || 
+            this.rightMouseDown || 
+            !this.menuClickEnabled) {
             return;
         }
         let rect = this.canvas.getBoundingClientRect();
@@ -1717,22 +2091,46 @@ class Minesweeper {
     }
 
     keyupHandler(e) {
-        let hasSound = true;
+        let hasSound = false;
         switch (e.key) {
             case "r":
-                game.reset();
+                if (game.menuClickEnabled) {
+                    game.reset();
+                    hasSound = true;
+                }
                 break;
-            case "s":
-                game._solve();
+            case "v":
+                if (game.cellClickEnabled) {
+                    game._solve();
+                    hasSound = true;
+                }
                 break;
             case "q":
                 game.destroy();
                 break;
+            case "i":
+                if (game.cellClickEnabled && game.allowHint) {
+                    game.hint();
+                    hasSound = true;
+                }
+                break;
             case "h":
-                game.displayHelp();
+                if (game.menuClickEnabled) {
+                    game.openHelp();
+                    hasSound = true;
+                }
+                break;
+            case "s":
+                if (game.menuClickEnabled) {
+                    game.openSettings();
+                    hasSound = true;
+                }
                 break;
             case "c":
-                game.displayCredit();
+                if (game.menuClickEnabled) {
+                    game.openCredit();
+                    hasSound = true;
+                }
                 break;
             case "n":
                 game.toggleSound();
@@ -1744,8 +2142,6 @@ class Minesweeper {
                 game.canvas.dispatchEvent(new Event("mousemove"));
                 hasSound = game.soundOn;
                 break;
-            default:
-                hasSound = false;
         }
         if (hasSound) {
             game.playSound(Minesweeper.clickSound);

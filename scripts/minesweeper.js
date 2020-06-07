@@ -11,7 +11,6 @@ class Minesweeper {
 
     static IDLE = 0;
     static GAME = 1;
-    static SETTING = 2;
 
     static mine = new Image();
     static smileyFace = new Image();
@@ -153,9 +152,11 @@ class Minesweeper {
             i : -1,
             j : -1,
         }
-        this.currentButton = -1;
         this.currentEmoji = null;
         this.currentMusic = Minesweeper.music1;
+        this.currentMenuButton = -1;
+        this.currentHelpButton = -1;
+        this.currentSettingsButton = -1;
 
         this.soundOn = true;
         this.musicOn = true;
@@ -221,6 +222,14 @@ class Minesweeper {
         this.screen.drawImage(
             Minesweeper.backgroundImg,
             0, 0, 1600, 800,
+        );
+        this.screen.fillStyle = "black";
+        this.screen.font = "bold 108px/1 cursive";
+        this.screen.textAlign = "center";
+        this.screen.fillBaseline = "top";
+        this.screen.fillText(
+            "MINESWEEPER v1.0",
+            800, 200,
         );
         this.renderMenu();
         this.playMusic(Minesweeper.music1);
@@ -353,14 +362,6 @@ class Minesweeper {
         if (this.musicOn) {
             this.currentMusic.play();
         }
-    }
-
-    animateIntro() {
-        return new Promise(
-            (resolve) => {
-                resolve();
-            },
-        );
     }
 
     animateStart() {
@@ -998,16 +999,12 @@ class Minesweeper {
     
     removeHighlight() {
         if (this.clickedCell.j >= Minesweeper.COL || 
-            this.clickedCell.j < 0) {
+            this.clickedCell.j < 0 || 
+            this.gameStatus == Minesweeper.IDLE || 
+            this.helpOpen || this.settingsOpen) {
             return;
         }
         this.screen.strokeStyle = "rgb(255, 255, 255)";
-        this.screen.strokeRect(
-            this.cellWidth * this.clickedCell.j,
-            this.cellHeight * this.clickedCell.i,
-            this.cellWidth,
-            this.cellHeight,
-        );
         this.runAround(
             this.clickedCell.i,
             this.clickedCell.j,
@@ -1033,33 +1030,44 @@ class Minesweeper {
                 },
             );
         }
-        this.screen.putImageData(this.cacheImg, 0, 0);
         this.renderButtons(1, false, false);
         if (!this.helpOpen) {
+            this.screen.putImageData(this.cacheImg, 0, 0);
             return;
         }
         let x = 200, y = 100, w = 1200, h = 600;
         getHelpImg(this.helpPage).
         then(
             () => {
+                this.screen.putImageData(this.cacheImg, 0, 0);
                 this.screen.drawImage(
                     Minesweeper.helpImage,
                     x, y, w, h,
                 );
-                this.screen.fillStyle = (
-                    this.helpPage == 0 ? 
-                    "rgb(155, 155, 155)" : "rgb(55, 100, 150)"
-                );
+                if (this.helpPage == 0) { 
+                    this.screen.fillStyle = "rgb(155, 155, 155)";
+                } else {
+                    this.screen.fillStyle = `rgb(
+                        ${55 + 75 * (this.currentHelpButton == 1)},
+                        ${100 + 75 * (this.currentHelpButton == 1)},
+                        ${155 + 75 * (this.currentHelpButton == 1)}
+                    )`;
+                }
                 this.screen.beginPath();
                 this.screen.moveTo(x + 15, y + 40);
                 this.screen.lineTo(x + 40, y + 15);
                 this.screen.lineTo(x + 40, y + 65);
                 this.screen.fill();
                 this.screen.fillRect(x + 40, y + 30, 40, 20);
-                this.screen.fillStyle = (
-                    this.helpPage == 5 ? 
-                    "rgb(155, 155, 155)" : "rgb(55, 100, 150)"
-                );
+                if (this.helpPage == 5) { 
+                    this.screen.fillStyle = "rgb(155, 155, 155)";
+                } else {
+                    this.screen.fillStyle = `rgb(
+                        ${55 + 75 * (this.currentHelpButton == 2)},
+                        ${100 + 75 * (this.currentHelpButton == 2)},
+                        ${155 + 75 * (this.currentHelpButton == 2)}
+                    )`;
+                }
                 this.screen.beginPath();
                 this.screen.moveTo(x + w - 15, y + 40);
                 this.screen.lineTo(x + w - 40, y + 15);
@@ -1074,7 +1082,10 @@ class Minesweeper {
                     `${1 + this.helpPage} / 6`,
                     x + w / 2, y + 15,
                 );
-                this.screen.fillStyle = "rgb(155, 155, 155)";
+                this.screen.fillStyle = (
+                    this.currentHelpButton == 0 ? 
+                    "rgb(200, 155, 100)" : "rgb(155, 155, 155)"
+                );
                 this.screen.fillText(
                     "CLOSE",
                     x + w - 75, y + h - 50,
@@ -1147,7 +1158,11 @@ class Minesweeper {
         );
 
         if (this.difficulty > Minesweeper.EASY) {
-            this.screen.fillStyle = "rgb(55, 55, 55)";
+            this.screen.fillStyle = `rgb(
+                ${55 + 100 * (this.currentSettingsButton == 1)},
+                ${55 + 100 * (this.currentSettingsButton == 1)},
+                ${55 + 100 * (this.currentSettingsButton == 1)}
+            )`;
             this.screen.beginPath();
             this.screen.moveTo(x + 275, y + 200);
             this.screen.lineTo(x + 310, y + 180);
@@ -1157,7 +1172,11 @@ class Minesweeper {
             this.screen.fill();
         }
         if (this.difficulty < Minesweeper.INSANE) {
-            this.screen.fillStyle = "rgb(55, 55, 55)";
+            this.screen.fillStyle = `rgb(
+                ${55 + 100 * (this.currentSettingsButton == 2)},
+                ${55 + 100 * (this.currentSettingsButton == 2)},
+                ${55 + 100 * (this.currentSettingsButton == 2)}
+            )`;
             this.screen.beginPath();
             this.screen.moveTo(x + 525, y + 200);
             this.screen.lineTo(x + 490, y + 180);
@@ -1168,7 +1187,12 @@ class Minesweeper {
         }
 
         this.screen.fillStyle = "rgb(255, 255, 255)";
-        this.screen.strokeStyle = "rgb(255, 100, 0)";
+        this.screen.strokeStyle = `rgba(
+            255, 
+            100, 
+            0,
+            ${0.5 + 0.5 * (this.currentSettingsButton == 3)}
+        )`;
         this.screen.beginPath();
         this.screen.arc(
             x + 300, 
@@ -1188,6 +1212,12 @@ class Minesweeper {
         this.screen.fill();
         this.screen.stroke();
 
+        this.screen.strokeStyle = `rgba(
+            255, 
+            100, 
+            0,
+            ${0.5 + 0.5 * (this.currentSettingsButton == 4)}
+        )`;
         this.screen.beginPath();
         this.screen.arc(
             x + 300, 
@@ -1247,8 +1277,14 @@ class Minesweeper {
             x + w / 2 - 100, y + 600 - 75,
             x + w / 2 + 100, y + 600 + 75,
         );
-        gradient.addColorStop(0, "orange");
-        gradient.addColorStop(1, "green");
+        gradient.addColorStop(
+            0, 
+            this.currentSettingsButton == 0 ? "orange" : "black",
+        );
+        gradient.addColorStop(
+            1, 
+            this.currentSettingsButton == 0 ? "green" : "grey",
+        );
         this.screen.fillStyle = gradient;
         this.screen.font = "36px/1 serif";
         this.screen.textAlign = "center";
@@ -1778,33 +1814,46 @@ class Minesweeper {
         let rect = this.canvas.getBoundingClientRect();
 
         if (e.clientX - rect.x > 800) {
-            this.menuClick(
-                e.clientX - rect.x,
-                e.clientY - rect.y,
-            );
-            this.leftMouseDown = false;
-            this.rightMouseDown = false;
-            this.removeHighlight();
-            this.clickedCell.i = -1;
-            this.clickedCell.j = -1;
-            return;
-        }
-
-        let j = 0 | (e.clientX - rect.x) / (this.cellWidth / 2);
-        let i = 0 | (e.clientY - rect.y) / (this.cellHeight / 2);
-
-        if (this.leftMouseDown && this.rightMouseDown) {
+            if (this.menuClickEnabled) {
+                this.menuClick(
+                    e.clientX - rect.x,
+                    e.clientY - rect.y,
+                );
+            }
+        } else if (this.helpOpen) {
             
-            this.dualClickCell(i, j);
+            this.helpClick();
 
-        } else if (this.leftMouseDown) {
-            
-            this.leftClickCell(i, j);
-  
-        } else if (this.rightMouseDown) {
+        } else if (this.settingsOpen) {
 
-            this.rightClickCell(i, j);
+            this.settingsClick();
 
+        } else if (this.cellClickEnabled) {
+
+            let j = 0 | (e.clientX - rect.x) / (this.cellWidth / 2);
+            let i = 0 | (e.clientY - rect.y) / (this.cellHeight / 2);
+
+            if (this.leftMouseDown && this.rightMouseDown) {
+                
+                this.dualClickCell(i, j);
+
+            } else if (this.leftMouseDown) {
+                
+                this.leftClickCell(i, j);
+      
+            } else if (this.rightMouseDown) {
+
+                this.rightClickCell(i, j);
+
+            }
+
+            // check for whether game is won
+            let gridSize = Minesweeper.ROW * Minesweeper.COL;
+            if (this.gameStatus == Minesweeper.GAME && 
+                this.flagCorrect == this.flags.size &&
+                this.flagCorrect + this.explored == gridSize) {
+                this.endGame(true);
+            }
         }
 
         this.leftMouseDown = false;
@@ -1812,14 +1861,6 @@ class Minesweeper {
         this.removeHighlight();
         this.clickedCell.i = -1;
         this.clickedCell.j = -1;
-
-        // check for whether game is won
-        let gridSize = Minesweeper.ROW * Minesweeper.COL;
-        if (this.gameStatus == Minesweeper.GAME && 
-            this.flagCorrect == this.flags.size &&
-            this.flagCorrect + this.explored == gridSize) {
-            this.endGame(true);
-        }
        
     }
 
@@ -1828,7 +1869,7 @@ class Minesweeper {
             return;
         }
         for (let i = 0; i < 5; i++) {
-            if (this.currentButton == i) {
+            if (this.currentMenuButton == i) {
                 this.renderButtons(i, true, false);
                 this.playSound(Minesweeper.clickSound);
                 switch (i) {
@@ -1850,20 +1891,80 @@ class Minesweeper {
                 }
             }
         }
-        if (this.currentButton == 5) {
+        if (this.currentMenuButton == 5) {
             this.renderEmoji(null, true, false);
+            if (this.allowHint && this.gameStatus == Minesweeper.GAME) {
+                this._hint();
+            } else {
+                this.reset();
+            }
             this.playSound(Minesweeper.clickSound);
         }
-        if (this.currentButton == 6) {
+        if (this.currentMenuButton == 6) {
             this.toggleSound();
             this.renderSoundIcon(true, false);
             this.playSound(Minesweeper.clickSound);
         }
-        if (this.currentButton == 7) {
+        if (this.currentMenuButton == 7) {
             this.toggleMusic();
             this.renderMusicIcon(true, false);
             this.playSound(Minesweeper.clickSound);
         }
+    }
+
+    helpClick() {
+
+        switch (this.currentHelpButton) {
+            case 0:
+                this.helpPage = 0;
+                this.helpOpen = false;
+                this.menuClickEnabled = true;
+                if (this.gameStatus == Minesweeper.GAME) {
+                    this.cellClickEnabled = true;
+                }
+                break;
+            case 1:
+                this.helpPage--;
+                break;
+            case 2:
+                this.helpPage++;
+                break;
+        }
+
+        this.renderHelp();
+
+    }
+
+    settingsClick() {
+
+        switch (this.currentSettingsButton) {
+            case 0:
+                this.currentSettingsButton = -1;
+                this.settingsOpen = false;
+                this.menuClickEnabled = true;
+                if (this.gameStatus == Minesweeper.GAME) {
+                    this.cellClickEnabled = true;
+                }
+                break;
+            case 1:
+                if (this.difficulty > Minesweeper.EASY) {
+                    this.difficulty -= 40;
+                }
+                break;
+            case 2:
+                if (this.difficulty < Minesweeper.INSANE) {
+                    this.difficulty += 40;
+                }
+                break;
+            case 3:
+                this.allowHint = !this.allowHint;
+                break;
+            case 4:
+                this.autoFlag = !this.autoFlag;
+                break;
+        }
+        this.renderSettings();
+
     }
 
     leftClickCell(i, j) {
@@ -1931,7 +2032,7 @@ class Minesweeper {
                         if ( this.reveal(a, b) ) {
                             triggered = true;
                         }
-                    } else if (mines == spaces) {
+                    } else if (mines == spaces && this.autoFlag) {
                         this.mark(a, b);
                     }
                 }
@@ -1954,17 +2055,17 @@ class Minesweeper {
                 return;
             }
             for (let button = 0; button < 5; button++) {
-                if (this.currentButton == button) {
+                if (this.currentMenuButton == button) {
                     this.renderButtons(button, true, true);
                 }
             }
-            if (this.currentButton == 5) {
+            if (this.currentMenuButton == 5) {
                 this.renderEmoji(null, true, true);
             }
-            if (this.currentButton == 6) {
+            if (this.currentMenuButton == 6) {
                 this.renderSoundIcon(true, true);
             }
-            if (this.currentButton == 7) {
+            if (this.currentMenuButton == 7) {
                 this.renderMusicIcon(true, true);
             }
             if (e.button == 0) {
@@ -1973,6 +2074,9 @@ class Minesweeper {
             if (e.button == 2) {
                 this.rightMouseDown = true;
             }
+            return;
+        }
+        if (!this.cellClickEnabled) {
             return;
         }
         
@@ -2029,11 +2133,66 @@ class Minesweeper {
 
     mousemoveHandler(e) {
         if (this.leftMouseDown || 
-            this.rightMouseDown || 
-            !this.menuClickEnabled) {
+            this.rightMouseDown) {
             return;
         }
+
         let rect = this.canvas.getBoundingClientRect();
+        let a = 2 * (e.clientX - rect.x);
+        let b = 2 * (e.clientY - rect.y);
+
+        if (this.helpOpen) {
+            this.currentHelpButton = -1;
+            if (a >= 1260 && a <= 1390 && 
+                b >= 650 && b <= 690) {
+                this.currentHelpButton = 0;
+            } else if (
+                a >= 215 && a <= 280 && 
+                b >= 115 && b <= 165 && 
+                this.helpPage > 0) {
+                this.currentHelpButton = 1;
+            } else if (
+                a >= 1320 && a <= 1385 && 
+                b >= 115 && b <= 165 && 
+                this.helpPage < 5) {
+                this.currentHelpButton = 2;
+            }
+            this.renderHelp();
+            return;
+        }
+
+        if (this.settingsOpen) {
+            this.currentSettingsButton = -1;
+            if (a >= 775 && a <= 925 && 
+                b >= 605 && b <= 645) {
+                this.currentSettingsButton = 0;
+            } else if (
+                a >= 825 && a <= 860 && 
+                b >= 225 - 20 * (a - 825) / 35 && 
+                b <= 225 + 20 * (a - 825) / 35) {
+                this.currentSettingsButton = 1;
+            } else if (
+                a >= 1040 && a <= 1075 && 
+                b >= 225 - 20 * (1075 - a) / 35 && 
+                b <= 225 + 20 * (1075 - a) / 35 ) {
+                this.currentSettingsButton = 2;
+            } else if (
+                a >= 830 && a <= 920 && 
+                b >= 350 && b <= 390) {
+                this.currentSettingsButton = 3;
+            } else if (
+                a >= 830 && a <= 920 && 
+                b >= 500 && b <= 540) {
+                this.currentSettingsButton = 4;
+            }
+            this.renderSettings();
+            return;
+        }
+
+        if (!this.menuClickEnabled) {
+            return;
+        }
+
 
         this.canvas.font = "bold small-caps 36px serif";
         let w = [
@@ -2045,14 +2204,12 @@ class Minesweeper {
         ];
 
         let x = 1620, y = 400, h = 36;
-        let a = 2 * (e.clientX - rect.x);
-        let b = 2 * (e.clientY - rect.y);
         let button = -1;
         for (let i = 0; i < 5; i++) {
             if (a >= x && a <= x + w[i] && b <= y && b >= y - h) {
                 this.renderButtons(i, true, false);
                 button = i;
-                if (this.currentButton != button) {
+                if (this.currentMenuButton != button) {
                     this.playSound(Minesweeper.highlightSound);
                 }
             } else {
@@ -2063,7 +2220,7 @@ class Minesweeper {
         if (a >= 1650 && a <= 1750 && b >= 25 && b <= 125) {
             this.renderEmoji(null, true, false);
             button = 5;
-            if (this.currentButton != button) {
+            if (this.currentMenuButton != button) {
                 this.playSound(Minesweeper.highlightSound);
             }
         } else {
@@ -2072,7 +2229,7 @@ class Minesweeper {
         if (a >= 1620 && a <= 1690 && b >= 720 && b <= 790) {
             this.renderSoundIcon(true, false);
             button = 6;
-            if (this.currentButton != button) {
+            if (this.currentMenuButton != button) {
                 this.playSound(Minesweeper.highlightSound);
             }
         } else {
@@ -2081,13 +2238,13 @@ class Minesweeper {
         if (a >= 1710 && a <= 1780 && b >= 720 && b <= 790) {
             this.renderMusicIcon(true, false);
             button = 7;
-            if (this.currentButton != button) {
+            if (this.currentMenuButton != button) {
                 this.playSound(Minesweeper.highlightSound);
             }
         } else {
             this.renderMusicIcon(false, false);
         }
-        this.currentButton = button;
+        this.currentMenuButton = button;
     }
 
     keyupHandler(e) {
@@ -2110,7 +2267,7 @@ class Minesweeper {
                 break;
             case "i":
                 if (game.cellClickEnabled && game.allowHint) {
-                    game.hint();
+                    game._hint();
                     hasSound = true;
                 }
                 break;
@@ -2145,6 +2302,81 @@ class Minesweeper {
         }
         if (hasSound) {
             game.playSound(Minesweeper.clickSound);
+        }
+    }
+
+    _hint() {
+        // reveals something.
+        this.timer += 20;
+        this.renderTimer();
+
+        let a = 0, b = 0, d = 0;
+        let w = Minesweeper.COL, h = Minesweeper.ROW;
+        let key = 0, priority = 0;
+        for (let i = 0; i < Minesweeper.COL * Minesweeper.ROW; i++) {
+            console.log(a + "," + b);
+            if (this.state[a][b] >= -1) {
+                let p = 0;
+                if (this.state[a][b] == 0) {
+                    p = 3;
+                } else {
+                    let isAdjacent = false;
+                    this.runAround(
+                        a, b,
+                        (x, y) => {
+                            if (this.state[x][y] < -1) {
+                            }
+                        },
+                    );
+                    if (isAdjacent) {
+                        p = 2;
+                    } else if (this.state[a][b] > 0) {
+                        p = 1;
+                    }
+                }
+                if (p >= priority) {
+                    key = a * Minesweeper.COL + b;
+                    priority = p;
+                }
+            }
+            switch (d) {
+                case 0:
+                    b++;
+                    if (b + 1 == w) {
+                        d = 1;
+                    }
+                    break;
+                case 1:
+                    a++;
+                    if (a + 1 == h) {
+                        d = 2;
+                        h--;
+                    }
+                    break;
+                case 2:
+                    b--;
+                    if (b == 40 - w) {
+                        d = 3
+                        w--;
+                    }
+                    break;
+                case 3:
+                    a--;
+                    if (a == 20 - h) {
+                        d = 0;
+                    }
+                    break;
+            }
+        }
+        
+        a = 0 | key / Minesweeper.COL;
+        b = key % Minesweeper.COL;
+        if (priority > 0) {
+            this.reveal(a, b);
+        } else {
+            while ( this.flags.has(key) ) {
+                this.mark(a, b);
+            }
         }
     }
 

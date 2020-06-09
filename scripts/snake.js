@@ -10,6 +10,8 @@
 
 
 class Snake {
+    static loadAssets() {
+    }
     constructor() {
     }
 }

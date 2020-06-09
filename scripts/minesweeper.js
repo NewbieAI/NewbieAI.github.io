@@ -26,7 +26,6 @@ class Minesweeper {
     static highlightSound = new Audio();
     static clickSound = new Audio();
     static victorySound = new Audio();
-    static introSound = new Audio();
     static music1 = new Audio();
     static music2 = new Audio();
     static music3 = new Audio();
@@ -120,10 +119,6 @@ class Minesweeper {
                 "resources/Sound/victory.mp3",
             ),
             loadAudio(
-                Minesweeper.introSound,
-                "resources/Sound/intro.mp3",
-            ),
-            loadAudio(
                 Minesweeper.music1,
                 "resources/Sound/music1.mp3",
             ),
@@ -175,10 +170,6 @@ class Minesweeper {
 
         this.cellWidth = 1600 / Minesweeper.COL;
         this.cellHeight = 800 / Minesweeper.ROW;
-
-        this.animationBuffer = document.createElement("canvas");
-        this.animationBuffer.setAttribute("width", this.cellWidth);
-        this.animationBuffer.setAttribute("height", 800);
 
         this.canvas.addEventListener(
             "mousedown",
@@ -245,7 +236,6 @@ class Minesweeper {
         Minesweeper.clickSound.remove();
         Minesweeper.highlightSound.remove();
         Minesweeper.victorySound.remove();
-        Minesweeper.introSound.remove();
         Minesweeper.music1.remove();
         Minesweeper.music2.remove();
         Minesweeper.music3.remove();
@@ -2142,49 +2132,75 @@ class Minesweeper {
         let b = 2 * (e.clientY - rect.y);
 
         if (this.helpOpen) {
-            this.currentHelpButton = -1;
+            let button = -1
             if (a >= 1260 && a <= 1390 && 
                 b >= 650 && b <= 690) {
-                this.currentHelpButton = 0;
+                button = 0;
+                if (this.currentHelpButton != 0) {
+                    this.playSound(Minesweeper.highlightSound);
+                }
             } else if (
                 a >= 215 && a <= 280 && 
                 b >= 115 && b <= 165 && 
                 this.helpPage > 0) {
-                this.currentHelpButton = 1;
+                button = 1;
+                if (this.currentHelpButton != 1) {
+                    this.playSound(Minesweeper.highlightSound);
+                }
             } else if (
                 a >= 1320 && a <= 1385 && 
                 b >= 115 && b <= 165 && 
                 this.helpPage < 5) {
-                this.currentHelpButton = 2;
+                button = 2;
+                if (this.currentHelpButton != 2) {
+                    this.playSound(Minesweeper.highlightSound);
+                }
             }
+            this.currentHelpButton = button;
             this.renderHelp();
             return;
         }
 
         if (this.settingsOpen) {
-            this.currentSettingsButton = -1;
+            let button = -1;
             if (a >= 775 && a <= 925 && 
                 b >= 605 && b <= 645) {
-                this.currentSettingsButton = 0;
+                button = 0;
+                if (this.currentSettingsButton != 0) {
+                    this.playSound(Minesweeper.highlightSound);
+                }
             } else if (
                 a >= 825 && a <= 860 && 
                 b >= 225 - 20 * (a - 825) / 35 && 
                 b <= 225 + 20 * (a - 825) / 35) {
-                this.currentSettingsButton = 1;
+                button = 1;
+                if (this.currentSettingsButton != 1) {
+                    this.playSound(Minesweeper.highlightSound);
+                }
             } else if (
                 a >= 1040 && a <= 1075 && 
                 b >= 225 - 20 * (1075 - a) / 35 && 
                 b <= 225 + 20 * (1075 - a) / 35 ) {
-                this.currentSettingsButton = 2;
+                button = 2;
+                if (this.currentSettingsButton != 2) {
+                    this.playSound(Minesweeper.highlightSound);
+                }
             } else if (
                 a >= 830 && a <= 920 && 
                 b >= 350 && b <= 390) {
-                this.currentSettingsButton = 3;
+                button = 3;
+                if (this.currentSettingsButton != 3) {
+                    this.playSound(Minesweeper.highlightSound);
+                }
             } else if (
                 a >= 830 && a <= 920 && 
                 b >= 500 && b <= 540) {
-                this.currentSettingsButton = 4;
+                button = 4;
+                if (this.currentSettingsButton != 4) {
+                    this.playSound(Minesweeper.highlightSound);
+                }
             }
+            this.currentSettingsButton = button;
             this.renderSettings();
             return;
         }

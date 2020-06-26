@@ -2272,12 +2272,6 @@ class Minesweeper {
                     hasSound = true;
                 }
                 break;
-            case "v":
-                if (game.cellClickEnabled) {
-                    game._solve();
-                    hasSound = true;
-                }
-                break;
             case "q":
                 game.destroy();
                 break;
@@ -2330,7 +2324,6 @@ class Minesweeper {
         let w = Minesweeper.COL, h = Minesweeper.ROW;
         let key = 0, priority = 0;
         for (let i = 0; i < Minesweeper.COL * Minesweeper.ROW; i++) {
-            console.log(a + "," + b);
             if (this.state[a][b] >= -1) {
                 let p = 0;
                 if (this.state[a][b] == 0) {

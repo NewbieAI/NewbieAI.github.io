@@ -285,8 +285,8 @@ class Cartpole {
             "The weather will alternate between \'sunny\', \'rainy\', and \'snowy\'. When it\'s raining, the ground becomes slippery and pressing the arrow", 
             "keys will apply more forces on the cart. When it\'s snowing, pressing arrow keys will instead be less effective.",
             "",
-            "As the game goes on, it will become incrementally more difficulty because wind stength will incrementally increase. Initially, there,", 
-            "is no wind. But after the completion of the first weather cycle, wind strength will become non-zero. Pay attention to the weather,", 
+            "As the game goes on, it will become incrementally more difficulty because wind stength will incrementally increase. Initially, there", 
+            "is no wind. But after the completion of the first weather cycle, wind strength will become non-zero. Pay attention to the weather", 
             "forecast displayed near the top of the screen, so that you do not get caught unprepared when the wind direction changes.",
             "",
             "",
@@ -504,14 +504,14 @@ class Cartpole {
         this.screen.font = "small-caps 32px Georgia";
         this.screen.textAlign = "center";
         this.screen.fillStyle = (
-            this.currentIdleButton == 0 ? "orange" : "silver"
+            this.currentIdleButton == 0 ? "orange" : "black"
         );
         this.screen.fillText(
             "Play Again",
             750, 450,
         );
         this.screen.fillStyle = (
-            this.currentIdleButton == 1 ? "orange" : "silver"
+            this.currentIdleButton == 1 ? "orange" : "black"
         );
         this.screen.fillText(
             "Main Menu",
@@ -908,6 +908,7 @@ class Cartpole {
                 case 0:
                     this.playSound(Cartpole.clickSound);
                     this.startGame();
+                    this.currentIdleButton = -1;
                     break;
                 case 1:
                     this.playSound(Cartpole.clickSound);
@@ -915,6 +916,7 @@ class Cartpole {
                     this.gameStatus = Cartpole.MENU;
                     this.paintMenu();
                     this.renderMenu();
+                    this.currentIdleButton = -1;
                     break;
             }
         } else if (

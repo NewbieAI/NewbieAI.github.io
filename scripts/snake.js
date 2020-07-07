@@ -18,6 +18,7 @@ class Snake {
     static HELP = 3;
     static CREDIT = 4;
 
+    static title = new Image();
     static body1 = new Image();
     static body2 = new Image();
     static body3 = new Image();
@@ -35,8 +36,7 @@ class Snake {
     static patternIron = new Image();
     static patternBronze = new Image();
 
-    static music1 = new Audio();
-    static music2 = new Audio();
+    static gameMusic = new Audio();
     static clickSound = new Audio();
     static highlightSound = new Audio();
     static defeatSound = new Audio();
@@ -84,6 +84,10 @@ class Snake {
             );
         }
         return Promise.all([
+            loadImage(
+                Snake.title,
+                "resources/Images/title.png",
+            ),
             loadImage(
                 Snake.body1,
                 "resources/Images/body1.png",
@@ -149,12 +153,8 @@ class Snake {
                 "resources/Images/bronzeTexture.jpg",
             ),
             loadAudio(
-                Snake.music1,
-                "resources/Sound/music1.mp3",
-            ),
-            loadAudio(
-                Snake.music2,
-                "resources/Sound/music2.mp3",
+                Snake.gameMusic,
+                "resources/Sound/gameMusic.mp3",
             ),
             loadAudio(
                 Snake.clickSound,
@@ -167,6 +167,14 @@ class Snake {
             loadAudio(
                 Snake.defeatSound,
                 "resources/Sound/defeat.mp3",
+            ),
+            loadAudio(
+                Snake.winSound,
+                "resources/Sound/win.mp3",
+            ),
+            loadAudio(
+                Snake.eatSound,
+                "resources/Sound/eat.mp3",
             ),
         ]);
     }
@@ -236,6 +244,12 @@ class Snake {
         );
         
         document.body.append(this.canvas);
+        document.body.append(Snake.gameMusic);
+        document.body.append(Snake.clickSound);
+        document.body.append(Snake.highlightSound);
+        document.body.append(Snake.defeatSound);
+        document.body.append(Snake.winSound);
+        document.body.append(Snake.eatSound);
 
         this.tailPrev = {
             i : -1,
@@ -253,8 +267,7 @@ class Snake {
         this.space = [];
         this.spaceMap = new Map();
 
-        this.currentMusic = Snake.music1;
-        this.playMusic(Snake.music1);
+        this.currentMusic = Snake.gameMusic;
         this.renderBackground();
         this.animateMenu();
         this.renderScores();
@@ -277,8 +290,7 @@ class Snake {
         Snake.food3.remove();
         Snake.food4.remove();
         Snake.food5.remove();
-        Snake.music1.remove();
-        Snake.music2.remove();
+        Snake.gameMusic.remove();
         Snake.clickSound.remove();
         Snake.highlightSound.remove();
         Snake.defeatSound.remove();
@@ -292,6 +304,7 @@ class Snake {
 
         this.initialize();
         this.renderSettings();
+        this.playMusic(Snake.gameMusic);
         this.gameAnimation = setInterval(
             () => {
 
@@ -312,6 +325,14 @@ class Snake {
 
     endGame() {
         clearInterval(this.gameAnimation);
+        this.currentMusic.pause();
+        if (this.bodySet.size >= this.row * this.col) {
+            this.score *= 2;
+            this.renderScores();
+            this.playSound(Snake.winSound);
+        } else {
+            this.playSound(Snake.defeatSound);
+        }
         this.gameStatus = Snake.IDLE;
         this.endingScene = this.screen.getImageData(
             300, 100, 1200, 600,
@@ -449,6 +470,7 @@ class Snake {
         this.currentMenuButton = -1;
         this.screen.fillStyle = "rgb(20, 20, 30)";
         this.screen.fillRect(300, 100, 1200, 600);
+        this.screen.drawImage(Snake.title, 400, 100);
         this.menuAnimation = setInterval(
             () => {
                 this.renderMenu();
@@ -578,20 +600,100 @@ class Snake {
 
     openCredit() {
         this.gameStatus = Snake.CREDIT;
+        this.currentCreditButton = -1;
         clearInterval(this.menuAnimation);
         this.renderCredit();
     }
 
     renderCredit() {
+        function _renderList(texts, x, y) {
+            this.screen.fillStyle = "rgb(255, 200, 55)";
+            this.screen.font = "bold 24px/1 courier";
+
+            this.screen.fillText(
+                texts[0],
+                x, y,
+            );
+
+            this.screen.fillStyle = "rgb(55, 200, 55)";
+            this.screen.font = "24px/1 courier";
+
+            y += 25;
+            for (let i = 1; i < texts.length; i++) {
+                this.screen.fillText(
+                    texts[i],
+                    x, y,
+                );
+                y += 25;
+            }
+            
+            return y;
+        }
+
         this.screen.fillStyle = "rgb(20, 20, 30)";
         this.screen.fillRect(300, 100, 1200, 600);
-        this.screen.fillStyle = "rgb(55, 200, 55)";
-        this.screen.font = "20px/1 courier";
         this.screen.textAlign = "left";
         this.screen.textBaseline = "top";
+
+        let arr1 = [
+            "The following image files were edited using lunapic.com",
+            " -\'food1.png\', (from clipart-library.com)",
+            " -\'food2.png\', (from pngitem.com)",
+            " -\'food3.png\', (from htdraw.com)",
+            " -\'food4.png\', (from )",
+            " -\'bonusFood.png\', (from dreamstime.com)",
+            " -\'woodSign.png\', (from nicepng.com)",
+        ];
+        let arr2 = [
+            "Texture files used in the game include:",
+            " -\'ironTexture.jpg\', (from poliigon.com)",
+            " -\'bronzeTexture.jpg\', (from freecreatives.com)",
+            " -\'pattern1.jpg\', (from freepik.com)",
+            " -\'pattern3.jpg\', (from colourbox.com)",
+        ];
+        let arr3 = [
+            "Sound files:",
+            "\'gameMusic.mp3\', (\"The Entertainer\" by Joplin, performed by Alexander",
+            "(from orangefreesounds.com)",
+            "\'click.wav\', (by InspectorJ from freesound.org)",
+            "\'defeat.mp3\', (from zapsplat.com)",
+            "\'win.mp3\', (from zapsplat.com)",
+            "\'eat.mp3\', (from zapsplat.com)",
+            "\'highlight.mp3\', (from zapsplat.com)",
+        ];
+
+        let x = 325, y = 125;
+        y = _renderList.call(this, arr1, x, y);
+        y = _renderList.call(this, arr2, x, y);
+        y = _renderList.call(this, arr3, x, y);
+
+        this.screen.fillStyle = "rgb(255, 200, 55)";
+        this.screen.font = "bold 24px/1 courier";
         this.screen.fillText(
-            "Credits to Ming",
-            800, 400,
+            "snake.js game and its uncredited assets were created by Mingzhi Tian", 
+            x, y,
+        );
+        y += 25;
+        this.screen.fillText(
+            "\u00a92020 by Tian, All Rights Reserved",
+            x, y,
+        );
+        
+        this.screen.fillStyle = "rgb(55, 200, 255)";
+        this.screen.textAlign = "center";
+        this.screen.textBaseline = "middle";
+        if (this.currentCreditButton == 0) {
+            if (this.mouseDown) {
+                this.screen.font = "bold 40px/1 courier";
+            } else {
+                this.screen.font = "bold 45px/1 courier";
+            }
+        } else {
+            this.screen.font = "45px/1 courier";
+        }
+        this.screen.fillText(
+            "BACK\u2794",
+            1400, 150,
         );
     }
 
@@ -1091,6 +1193,11 @@ class Snake {
 
         this.score--;
 
+        if (this.bodySet.has(this.food.i * this.col + this.food.j) || 
+            this.bodySet.has(this.food.bonusIndex)) {
+            this.playSound(Snake.eatSound);
+        }
+
         if (this.bodySet.size == this.row * this.col / 3) {
             this.currentBody = Snake.body2;
             this.foodMultiplier = 2;
@@ -1514,6 +1621,23 @@ class Snake {
                     this.currentIdleButton = -1;
                     this.playSound(Snake.clickSound);
                 }
+                if (this.currentSettingsButton == 0) {
+                    this.gameSpeed = "slow";
+                } else if (this.currentSettingsButton == 1) {
+                    this.gameSpeed = "normal";
+                } else if (this.currentSettingsButton == 2) {
+                    this.gameSpeed = "fast";
+                } else if (this.currentSettingsButton == 3) {
+                    this.gameSize = "small";
+                } else if (this.currentSettingsButton == 4) {
+                    this.gameSize = "normal";
+                } else if (this.currentSettingsButton == 5) {
+                    this.gameSize = "large";
+                }
+                if (this.currentSettingsButton >= 0) {
+                    this.renderSettings();
+                    this.playSound(Snake.clickSound);
+                }
                 break;
             case Snake.HELP:
                 if (this.currentHelpButton == 0) {
@@ -1530,6 +1654,10 @@ class Snake {
                 }
                 break;
             case Snake.CREDIT:
+                if (this.currentCreditButton == 0) {
+                    this.animateMenu();
+                    this.playSound(Snake.clickSound);
+                }
                 break;
         }
         if (this.toggleButton == 0) {
@@ -1553,6 +1681,8 @@ class Snake {
             this.renderIdle();
         } else if (this.gameStatus == Snake.HELP) {
             this.renderHelp();
+        } else if (this.gameStatus == Snake.CREDIT) {
+            this.renderCredit();
         }
     }
 
@@ -1640,6 +1770,15 @@ class Snake {
             this.currentHelpButton = button;
             this.renderHelp();
         } else if (this.gameStatus == Snake.CREDIT) {
+            let button = -1;
+            if (a >= 1325 && a <= 1475 && b >= 125 && b <= 175) {
+                button = 0;
+                if (this.currentCreditButton != button) {
+                    this.playSound(Snake.highlightSound);
+                }
+            }
+            this.currentCreditButton = button;
+            this.renderCredit();
         }
 
         if (a >= 1575 && a <= 1625 && b >= 725 && b <= 775) {

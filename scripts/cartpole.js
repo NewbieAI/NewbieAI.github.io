@@ -149,6 +149,11 @@ class Cartpole {
         );
         
         document.body.append(this.canvas);
+        document.body.append(Cartpole.music);
+        document.body.append(Cartpole.introSound);
+        document.body.append(Cartpole.defeatSound);
+        document.body.append(Cartpole.clickSound);
+        document.body.append(Cartpole.highlightSound);
         this.currentMusic = Cartpole.introSound;
         this.playMusic(Cartpole.introSound, false);
         this.paintMenu();

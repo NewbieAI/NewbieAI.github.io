@@ -72,35 +72,35 @@ class Minesweeper {
         return Promise.all([
             loadImage(
                 Minesweeper.mine,
-                "resources/Images/mine.png",
+                "resources/Images/Minsweeper/mine.png",
             ),
             loadImage(
                 Minesweeper.smileyFace, 
-                "resources/Images/smileyFace.png",
+                "resources/Images/Minsweeper/smileyFace.png",
             ),
             loadImage(
                 Minesweeper.surprisedFace, 
-                "resources/Images/surprisedFace.png",
+                "resources/Images/Minsweeper/surprisedFace.png",
             ),
             loadImage(
                 Minesweeper.coolFace, 
-                "resources/Images/coolFace.jpg",
+                "resources/Images/Minsweeper/coolFace.jpg",
             ),
             loadImage(
                 Minesweeper.sadFace, 
-                "resources/Images/sadFace.png",
+                "resources/Images/Minsweeper/sadFace.png",
             ),
             loadImage(
                 Minesweeper.backgroundImg, 
-                `resources/Images/bg${0 | Math.random() * 5}.jpg`,
+                `resources/Images/Minsweeper/bg${0 | Math.random() * 5}.jpg`,
             ),
             loadImage(
                 Minesweeper.scrollImg,
-                "resources/Images/scroll.png",
+                "resources/Images/Minsweeper/scroll.png",
             ),
             loadImage(
                 Minesweeper.explosionFrames, 
-                "resources/Images/explosion.png",
+                "resources/Images/Minsweeper/explosion.png",
             ),
             loadAudio(
                 Minesweeper.explosionSound,
@@ -187,9 +187,11 @@ class Minesweeper {
             "mousemove",
             this.mousemoveHandler.bind(this),
         );
+
+        this._keyupHandler = this.keyupHandler.bind(this);
         document.addEventListener(
             "keyup",
-            this.keyupHandler,
+            this._keyupHandler,
         );
         this.screen = this.canvas.getContext("2d");
         this.screen.lineWidth = 2;
@@ -230,7 +232,7 @@ class Minesweeper {
     destroy() {
         document.removeEventListener(
             "keyup",
-            this.keyupHandler,
+            this._keyupHandler,
         );
         Minesweeper.explosionSound.remove();
         Minesweeper.clickSound.remove();
@@ -2267,51 +2269,51 @@ class Minesweeper {
         let hasSound = false;
         switch (e.key) {
             case "r":
-                if (game.menuClickEnabled) {
-                    game.reset();
+                if (this.menuClickEnabled) {
+                    this.reset();
                     hasSound = true;
                 }
                 break;
             case "q":
-                game.destroy();
+                this.destroy();
                 break;
             case "i":
-                if (game.cellClickEnabled && game.allowHint) {
-                    game._hint();
+                if (this.cellClickEnabled && this.allowHint) {
+                    this._hint();
                     hasSound = true;
                 }
                 break;
             case "h":
-                if (game.menuClickEnabled) {
-                    game.openHelp();
+                if (this.menuClickEnabled) {
+                    this.openHelp();
                     hasSound = true;
                 }
                 break;
             case "s":
-                if (game.menuClickEnabled) {
-                    game.openSettings();
+                if (this.menuClickEnabled) {
+                    this.openSettings();
                     hasSound = true;
                 }
                 break;
             case "c":
-                if (game.menuClickEnabled) {
-                    game.openCredit();
+                if (this.menuClickEnabled) {
+                    this.openCredit();
                     hasSound = true;
                 }
                 break;
             case "n":
-                game.toggleSound();
-                game.canvas.dispatchEvent(new Event("mousemove"));
-                hasSound = game.soundOn;
+                this.toggleSound();
+                this.canvas.dispatchEvent(new Event("mousemove"));
+                hasSound = this.soundOn;
                 break;
             case "m":
-                game.toggleMusic();
-                game.canvas.dispatchEvent(new Event("mousemove"));
-                hasSound = game.soundOn;
+                this.toggleMusic();
+                this.canvas.dispatchEvent(new Event("mousemove"));
+                hasSound = this.soundOn;
                 break;
         }
         if (hasSound) {
-            game.playSound(Minesweeper.clickSound);
+            this.playSound(Minesweeper.clickSound);
         }
     }
 

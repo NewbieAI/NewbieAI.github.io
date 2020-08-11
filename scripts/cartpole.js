@@ -120,13 +120,16 @@ class Cartpole {
             "mousemove",
             this.mousemoveHandler.bind(this),
         );
+
+        this._keyupHandler = this.keyupHandler.bind(this);
+        this._keydownHandler = this.keydownHandler.bind(this);
         document.addEventListener(
             "keyup",
-            this.keyupHandler,
+            this._keyupHandler,
         );
         document.addEventListener(
             "keydown",
-            this.keydownHandler,
+            this._keydownHandler,
         );
 
         this.screen = this.canvas.getContext("2d");
@@ -161,8 +164,8 @@ class Cartpole {
     }
 
     destroy() {
-        document.removeEventListener("keydown", this.keydownHandler);
-        document.removeEventListener("keyup", this.keyupHandler);
+        document.removeEventListener("keyup", this._keyupHandler);
+        document.removeEventListener("keydown", this._keydownHandler);
         this.canvas.remove();
         Cartpole.music.remove();
         Cartpole.introSound.remove();
@@ -1004,26 +1007,26 @@ class Cartpole {
     }
 
     keydownHandler(e) {
-        if (game.gameStatus != Cartpole.GAME) {
+        if (this.gameStatus != Cartpole.GAME) {
             return;
         }
         if (e.key == "ArrowLeft") {
-            game.leftDown = true;
+            this.leftDown = true;
         }
         if (e.key == "ArrowRight") {
-            game.rightDown = true;
+            this.rightDown = true;
         }
     }
 
     keyupHandler(e) {
-        if (game.gameStatus != Cartpole.GAME) {
+        if (this.gameStatus != Cartpole.GAME) {
             return;
         }
         if (e.key == "ArrowLeft") {
-            game.leftDown = false;
+            this.leftDown = false;
         }
         if (e.key == "ArrowRight") {
-            game.rightDown = false;
+            this.rightDown = false;
         }
     }
 

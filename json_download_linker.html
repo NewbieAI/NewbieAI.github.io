@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+    <script src = "scripts/create_data.js"></script>
+    <script>
+        "use strict";
+        function download(content, filename, filetype) {
+            let file = new Blob([content], {type: filetype});
+            a.href = URL.createObjectURL(file);
+            a.download = filename;
+        }
+        let a = document.createElement("a");
+        a.innerText = "download link";
+        document.body.append(a);
+        download(
+            JSON.stringify(data), 
+            "download.json", 
+            "text/json"
+        );
+
+    </script>
+    </body>
+</html>

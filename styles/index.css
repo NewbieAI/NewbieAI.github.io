@@ -2,6 +2,32 @@
  * stylesheet for index.html
  */
 
+a {
+    color: rgb(55, 100, 200);
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(0, 155, 255);
+}
+
+a:active {
+    color: rgb(255, 100, 55);
+}
+
+a:visited {
+    color: rgb(200, 100, 55);
+}
+
+p {
+    text-align: justify;
+    margin: 8%;
+}
+
+p.indented {
+    text-indent: 8%;
+}
+
 canvas {
     position: absolute;
     width: 900px;
@@ -17,3 +43,112 @@ h1 {
     color: grey;
     text-align: center;
 }
+
+.WelcomeHeader {
+    border: 1px solid red;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.NavigationMenu {
+    float: left;
+    text-align: left;
+    width: 20%;
+    height: 350px;
+    border: 1px solid green;
+    border-radius: 10px;
+}
+
+.ContentsArea {
+    float: right;
+    text-align: center;
+    width: 75%;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+div.GameSample {
+    float: left;
+    text-align: center;
+    width: 30%;
+    margin-left: 2.5%;
+    background-color: #ffabcd;
+    border: hidden;
+    border-radius: 20px;
+}
+
+div#Cartpole {
+    background-color: rgba(255, 55, 55, 0.4);
+}
+
+div#Minesweeper {
+    background-color: rgba(255, 155, 0, 0.4);
+}
+
+div#Snake {
+    background-color: rgba(55, 155, 255, 0.4);
+}
+
+h3.SelectedButton {
+    margin-top: 30px;
+    margin-left: 15%;
+    margin-right: 15%;
+    color: black;
+}
+
+h3.UnselectedButton {
+    margin-top: 30px;
+    margin-left: 15%;
+    margin-right: 15%;
+    color: grey;
+}
+
+h3:hover {
+    color: coral;
+    background-color: silver;
+    cursor: pointer;
+}
+
+.LoadIndicator {
+    margin-left: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.ErrorIndicator {
+    margin-left: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+button.gameButton{
+    width: 100px;
+    height: 100px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+}
+
+button.gameButton:hover {
+    border: 3px outset white;
+}
+
+button.gameButton:active {
+    border: 3px inset white;
+}
+
+button#CartpoleGame {
+}
+
+button#MinesweeperGame {
+}
+
+button#SnakeGame {
+}
+
+
+img#avatar {
+    width: 200px;
+    height: 200px;
+}
+

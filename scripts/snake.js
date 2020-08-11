@@ -86,71 +86,71 @@ class Snake {
         return Promise.all([
             loadImage(
                 Snake.title,
-                "resources/Images/title.png",
+                "resources/Images/Snake/title.png",
             ),
             loadImage(
                 Snake.body1,
-                "resources/Images/body1.png",
+                "resources/Images/Snake/body1.png",
             ),
             loadImage(
                 Snake.body2,
-                "resources/Images/body2.png",
+                "resources/Images/Snake/body2.png",
             ),
             loadImage(
                 Snake.body3,
-                "resources/Images/body3.png",
+                "resources/Images/Snake/body3.png",
             ),
             loadImage(
                 Snake.food1,
-                "resources/Images/food1.png",
+                "resources/Images/Snake/food1.png",
             ),
             loadImage(
                 Snake.food2,
-                "resources/Images/food2.png",
+                "resources/Images/Snake/food2.png",
             ),
             loadImage(
                 Snake.food3,
-                "resources/Images/food3.png",
+                "resources/Images/Snake/food3.png",
             ),
             loadImage(
                 Snake.food4,
-                "resources/Images/food4.png",
+                "resources/Images/Snake/food4.png",
             ),
             loadImage(
                 Snake.bonusFood,
-                "resources/Images/bonusFood.png",
+                "resources/Images/Snake/bonusFood.png",
             ),
             loadImage(
                 Snake.woodSign,
-                "resources/Images/woodSign.png",
+                "resources/Images/Snake/woodSign.png",
             ),
             loadImage(
                 Snake.pattern1,
-                "resources/Images/pattern1.jpg",
+                "resources/Images/Snake/pattern1.jpg",
             ),
             loadImage(
                 Snake.pattern2a,
-                "resources/Images/pattern2a.png",
+                "resources/Images/Snake/pattern2a.png",
             ),
             loadImage(
                 Snake.pattern2b,
-                "resources/Images/pattern2b.png",
+                "resources/Images/Snake/pattern2b.png",
             ),
             loadImage(
                 Snake.pattern2c,
-                "resources/Images/pattern2c.png",
+                "resources/Images/Snake/pattern2c.png",
             ),
             loadImage(
                 Snake.pattern3,
-                "resources/Images/pattern3.jpg",
+                "resources/Images/Snake/pattern3.jpg",
             ),
             loadImage(
                 Snake.patternIron,
-                "resources/Images/ironTexture.jpg",
+                "resources/Images/Snake/ironTexture.jpg",
             ),
             loadImage(
                 Snake.patternBronze,
-                "resources/Images/bronzeTexture.jpg",
+                "resources/Images/Snake/bronzeTexture.jpg",
             ),
             loadAudio(
                 Snake.gameMusic,
@@ -216,13 +216,16 @@ class Snake {
             "mousemove",
             this.mousemoveHandler.bind(this),
         );
+
+        this._keyupHandler = this.keyupHandler.bind(this);
+        this._keydownHandler = this.keydownHandler.bind(this);
         document.addEventListener(
             "keyup",
-            this.keyupHandler,
+            this._keyupHandler,
         );
         document.addEventListener(
             "keydown",
-            this.keydownHandler,
+            this._keydownHandler,
         );
 
         this.screen = this.canvas.getContext("2d");
@@ -276,10 +279,10 @@ class Snake {
 
     destroy() {
         document.removeEventListener(
-            "keyup", this.keyupHandler,
+            "keyup", this._keyupHandler,
         );
         document.removeEventListener(
-            "keydown", this.keydownHandler,
+            "keydown", this._keydownHandler,
         );
         this.canvas.remove();
         Snake.body1.remove();
@@ -1798,45 +1801,45 @@ class Snake {
     }
 
     keyupHandler(e) {
-        if (game.gameStatus != Snake.GAME) {
+        if (this.gameStatus != Snake.GAME) {
             return;
         }
         switch (e.key) {
             case "ArrowUp":
-                game.arrowUp = false;
+                this.arrowUp = false;
                 break;
             case "ArrowDown":
-                game.arrowDown = false;
+                this.arrowDown = false;
                 break;
             case "ArrowLeft":
-                game.arrowLeft = false;
+                this.arrowLeft = false;
                 break;
             case "ArrowRight":
-                game.arrowRight = false;
+                this.arrowRight = false;
                 break;
         }
     }
 
     keydownHandler(e) {
-        if (game.gameStatus != Snake.GAME) {
+        if (this.gameStatus != Snake.GAME) {
             return;
         }
         switch (e.key) {
             case "ArrowUp":
-                game.arrowUp = true;
-                game.nextDirection = "Up";
+                this.arrowUp = true;
+                this.nextDirection = "Up";
                 break;
             case "ArrowDown":
-                game.arrowDown = true;
-                game.nextDirection = "Down";
+                this.arrowDown = true;
+                this.nextDirection = "Down";
                 break;
             case "ArrowLeft":
-                game.arrowLeft = true;
-                game.nextDirection = "Left";
+                this.arrowLeft = true;
+                this.nextDirection = "Left";
                 break;
             case "ArrowRight":
-                game.arrowRight = true;
-                game.nextDirection = "Right";
+                this.arrowRight = true;
+                this.nextDirection = "Right";
                 break;
         }
     }

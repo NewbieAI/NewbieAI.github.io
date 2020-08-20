@@ -1,0 +1,624 @@
+html, #root, .editor {
+    height: 98%;
+}
+
+body {
+    padding: none;
+    height: 98%;
+    overflow-y: auto;
+    background-color: lightblue;
+}
+
+.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    user-select: none;
+}
+
+#control-panel {
+    position: fixed;
+    text-align: center;
+    width: 20%;
+    left: 10px;
+    top: 10px;
+    bottom: 10px;
+    overflow-y: scroll;
+    background-color: wheat;
+    border: 1px solid coral;
+}
+
+#editing-panel {
+    position: fixed;
+    text-align: center;
+    bottom: 0;
+    left: 50%;
+    padding: 0;
+    background-color: lightgray;
+    transform: translate(-50%, 0);
+}
+
+div.component-editor {
+    display: grid;
+}
+
+div.is-minimized {
+    width: 25%;
+}
+
+div.is-open {
+    width: 80%;
+}
+
+.toolbar {
+    margin: auto;
+    margin-top: 10px;
+    width: 80%;
+    height: auto;
+}
+
+.toolbar img{
+    display: inline;
+    margin: 5px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid transparent;
+}
+
+.toolbar .enabled:hover {
+    background-color: white;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+h5.status-bar {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 15px;
+    color: ivory;
+    background-color: tomato;
+    cursor: pointer;
+}
+
+h5.status-bar:hover {
+    color: khaki;
+}
+
+h5.status-bar:active {
+    color: lightgreen;
+}
+
+h6.control {
+    text-align: left;
+    margin-left: 15%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 70%;
+    border: 2px solid transparent;
+    outline: none;
+}
+ 
+h6.control:hover {
+    border: 2px dotted white;
+    cursor: pointer;
+}
+
+h6.selected {
+    color: black;
+    background-color: lightsteelblue;
+}
+
+h6.unselected {
+    color: #555555;
+}
+
+input#json-upload {
+    display: none;
+}
+
+button:hover {
+    color: white;
+}
+
+button:active {
+    color: orange;
+}
+
+button#upload {
+    display: inline;
+    margin: auto;
+    margin-top: 10px;
+    background-color: red;
+    border: 1px solid white;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+button#download {
+    display: inline;
+    margin-top: 10px;
+    margin-left: 10px;
+    background-color: green;
+    border: 1px solid white;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+button#close-button.is-minimized {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    left: 100%;
+    top: 0px;
+    margin: 0px;
+    padding: 0px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+button#close-button.is-minimized:hover {
+    background-color: khaki;
+}
+
+button#close-button.is-open {
+    background-color: skyblue;
+    font: 12px cursive;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+}
+
+#close-button-image {
+    width: 15px;
+    height: 15px;
+}
+
+#title-editor {
+    grid-template-rows: 40px;
+    grid-template-columns: 30% auto;
+}
+#title-editor > #title-textfield-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+    text-align: right;
+    padding-top: 10px;
+    padding-right: 10px;
+}
+#title-editor > #title-textfield-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+    text-align: left;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+#author-editor {
+    grid-template-rows: 35px 35px 35px 35px;
+    grid-template-columns: 50% auto;
+}
+#author-editor > #author-list-label-cell{
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#author-editor > #author-list-cell{
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 2;
+    grid-row-end: span 3;
+    overflow-y: scroll;
+}
+#author-editor > #author-delete-cell{
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#author-editor > #author-add-cell{
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+}
+#author-editor > #author-textfield-label-cell{
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 3;
+    grid-row-end: span 1;
+}
+#author-editor > #author-textfield-cell{
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 4;
+    grid-row-end: span 1;
+}
+
+#date-editor {
+    grid-template-rows: 40px;
+    grid-template-columns: 30% auto;
+}
+#date-editor > #date-textfield-label-cell{
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#date-editor > #date-textfield-cell{
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+
+#text-editor {
+    grid-template-rows: 30px 30px 30px 30px 20px 30px;
+    grid-template-columns: 20% 20% 30% auto;
+}
+#text-editor > #text-name-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#text-editor > #text-name-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#text-editor > #text-content-label-cell {
+    grid-column-start: 3;
+    grid-column-end: span 2;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#text-editor > #text-content-cell {
+    grid-column-start: 3;
+    grid-column-end: span 2;
+    grid-row-start: 2;
+    grid-row-end: span 4;
+}
+#text-editor > #text-indent-label-cell {
+    grid-column-start: 3;
+    grid-column-end: span 1;
+    grid-row-start: 6;
+    grid-row-end: span 1;
+}
+#text-editor > #text-indent-cell {
+    grid-column-start: 4;
+    grid-column-end: span 1;
+    grid-row-start: 6;
+    grid-row-end: span 1;
+}
+#text-editor > #link-selection-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+}
+#text-editor > #link-selection-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+}
+#text-editor > #link-delete-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 3;
+    grid-row-end: span 1;
+}
+#text-editor > #link-add-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 3;
+    grid-row-end: span 1;
+}
+#text-editor > #newlink-name-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 4;
+    grid-row-end: span 1;
+}
+#text-editor > #newlink-name-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 4;
+    grid-row-end: span 1;
+}
+#text-editor > #link-source-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 2;
+    grid-row-start: 5;
+    grid-row-end: span 1;
+}
+#text-editor > #link-source-cell {
+    grid-column-start: 1;
+    grid-column-end: span 2;
+    grid-row-start: 6;
+    grid-row-end: span 1;
+}
+
+#image-editor {
+    grid-template-rows: 20px 30px 20px 30px 20px 30px;
+    grid-template-columns: 40% auto;
+}
+#image-editor > #image-name-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#image-editor > #image-name-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+}
+#image-editor > #image-source-label-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#image-editor > #image-source-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+}
+#image-editor > #image-width-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 3;
+    grid-row-end: span 1;
+}
+#image-editor > #image-width-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 4;
+    grid-row-end: span 1;
+}
+#image-editor > #image-height-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 5;
+    grid-row-end: span 1;
+}
+#image-editor > #image-height-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 6;
+    grid-row-end: span 1;
+}
+#image-editor > #image-caption-label-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 3;
+    grid-row-end: span 1;
+}
+#image-editor > #image-caption-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 4;
+    grid-row-end: span 3;
+}
+
+#quote-editor {
+    grid-template-rows: 30px 20px 30px;
+    grid-template-columns: 20% 30% auto;
+}
+#quote-editor > #quote-name-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#quote-editor > #quote-name-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#quote-editor > #quote-source-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 2;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+}
+#quote-editor > #quote-source-cell {
+    grid-column-start: 1;
+    grid-column-end: span 2;
+    grid-row-start: 3;
+    grid-row-end: span 1;
+}
+#quote-editor > #quote-text-label-cell {
+    grid-column-start: 3;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#quote-editor > #quote-text-cell {
+    grid-column-start: 3;
+    grid-column-end: span 1;
+    grid-row-start: 2;
+    grid-row-end: span 2;
+}
+
+#subtitle-editor {
+    grid-template-rows: 20px 30px;
+    grid-template-columns: 35% auto;
+}
+#subtitle-editor > #subtitle-name-label-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#subtitle-editor > #subtitle-name-cell {
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+}
+#subtitle-editor > #subtitle-text-label-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#subtitle-editor > #subtitle-text-cell {
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 2;
+    grid-row-end: span 1;
+}
+
+#placeholder-editor {
+    grid-template-rows: 40px;
+    grid-template-columns: 30% auto;
+}
+#placeholder-editor > #placeholder-name-label-cell{
+    grid-column-start: 1;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+#placeholder-editor > #placeholder-name-cell{
+    grid-column-start: 2;
+    grid-column-end: span 1;
+    grid-row-start: 1;
+    grid-row-end: span 1;
+}
+
+.component-editor input:not(#text-indent) {
+    width: 70%;
+    height: 20px;
+    text-align: center;
+    color: limegreen;
+    border: 2px solid royalblue;
+    background-color: cornsilk;
+    border-radius: 5px;
+    outline: none;
+}
+
+.component-editor input:not(#text-indent):focus{
+    color: darkslategray;
+    border: 2px solid orangered;
+    background-color: ivory;
+}
+
+/* the styling blocks below will be copied to index.css */
+
+#article {
+    position: absolute;
+    text-align: center;
+    width: 75%;
+    right: 10px;
+    min-height: 800px;
+    margin-bottom: 30px;
+    background-color: white;
+    border: none;
+    border-radius: 20px;
+}
+
+h1.title {
+    margin-left: 10%;
+    margin-right: 10%;
+    color: black;
+}
+
+h3.subtitle {
+    text-align: left;
+    margin-left: 6%;
+}
+
+h4.author {
+    margin-left: 20%;
+    margin-right: 20%;
+    color: firebrick;
+}
+
+h4.date {
+    text-align: left;
+    color: dimgray;
+    font-style: italic;
+    font-weight: normal;
+    margin-left: 6%;
+}
+
+div.image-element {
+    display: inline-block;
+    margin: 5px;
+}
+
+div.image-container {
+    display: table;
+    margin: auto;
+}
+
+div.text {
+    width: 100%;
+}
+
+div.quote {
+    display: inline-block;
+    text-align: right;
+    width: 40%;
+    margin-left: 48%;
+    background-color: wheat;
+    border-radius: 15px;
+}
+
+p {
+    text-align: justify;
+    margin-left: 6%;
+    margin-right: 6%;
+}
+
+p.quote-text {
+    color: lightslategray;
+    margin: 10px 15px 0px 15px;
+}
+
+
+p.indented {
+    text-indent: 6%;
+}
+
+span.quote-source {
+    display: inline-block;
+    text-align: left;
+    margin: 0px 15px 10px;
+    max-width: 60%;
+}
+
+span.caption-text {
+    display: inline-block;
+    font: 12px arial;
+    text-align: justify;
+    margin: auto;
+    max-width: 90%;
+}
+
+.image-container > .figure {
+    display: table-row;
+    margin: 0px;
+    width: 1px;
+}
+
+.image-container > .figure + .caption {
+    display: table-cell;
+    text-align: center;
+    color: steelblue;
+    width: 1px;
+}

@@ -444,7 +444,7 @@ class InsertionForm extends React.Component {
       onSubmit: this.onSubmit
     }, /*#__PURE__*/React.createElement("label", {
       for: "new-element"
-    }, "Create Component"), /*#__PURE__*/React.createElement("select", {
+    }, "Add Component:"), /*#__PURE__*/React.createElement("select", {
       id: "new-element",
       onChange: this.onChange
     }, /*#__PURE__*/React.createElement("option", {
@@ -705,7 +705,7 @@ class EditingPanel extends React.Component {
       id: "close-button-image",
       src: "resources/Images/editor/close.png",
       alt: "close"
-    }) : "finish editing"));
+    }) : "Finish Editing"));
   }
 
 }
@@ -1288,9 +1288,15 @@ class TextEditor extends React.Component {
   }
 
   selectLink(e) {
-    this.setState({
-      selected: e.target.value
-    });
+    if (e.target.value == "--None--") {
+      this.setState({
+        selected: null
+      });
+    } else {
+      this.setState({
+        selected: e.target.value
+      });
+    }
   }
 
   editNewLink(e) {
@@ -1333,7 +1339,7 @@ class TextEditor extends React.Component {
       onChange: this.indentToggler
     })), /*#__PURE__*/React.createElement(LabelInGrid, {
       for: "link-selection",
-      value: "Selected Link"
+      value: "Selected Link:"
     }), /*#__PURE__*/React.createElement("div", {
       id: "link-selection-cell"
     }, /*#__PURE__*/React.createElement("select", {
@@ -1341,13 +1347,13 @@ class TextEditor extends React.Component {
       onChange: this.selectLink
     }, /*#__PURE__*/React.createElement("option", {
       selected: this.state.selected == null
-    }, "None"), Object.keys(this.props.data.links).map(link => /*#__PURE__*/React.createElement("option", null, link)))), /*#__PURE__*/React.createElement(ButtonInGrid, {
-      id: "link-delete",
+    }, "--None--"), Object.keys(this.props.data.links).map(link => /*#__PURE__*/React.createElement("option", null, link)))), /*#__PURE__*/React.createElement(ButtonInGrid, {
+      ID: "link-delete",
       className: this.state.selected == null ? "disabled" : "enabled",
-      value: "Delete Link",
+      value: "Delete This Link",
       onClick: this.removeLink
     }), /*#__PURE__*/React.createElement(ButtonInGrid, {
-      id: "link-add",
+      ID: "link-add",
       className: this.state.newlink == "" ? "disabled" : "enabled",
       value: "Create New Link",
       onClick: this.addLink
@@ -1428,14 +1434,14 @@ class SubtitleEditor extends React.Component {
     }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
       ID: "subtitle-name",
       value: this.props.data.name,
-      onChange: this.props.updateName
+      onChange: this.updateName
     }), /*#__PURE__*/React.createElement(LabelInGrid, {
       for: "subtitle-text",
       value: "Subtitle Text:"
     }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
       ID: "subtitle-text",
       value: this.props.data.text,
-      onChange: this.props.updateText
+      onChange: this.updateText
     }));
   }
 
@@ -1479,7 +1485,7 @@ class PlaceholderEditor extends React.Component {
     }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
       ID: "placeholder-name",
       value: this.props.data.name,
-      onChange: this.props.updateName
+      onChange: this.updateName
     }));
   }
 

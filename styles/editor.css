@@ -115,6 +115,20 @@ input#json-upload {
     display: none;
 }
 
+input.insert {
+    margin-top: 5px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    outline: none;
+}
+
+select#new-element {
+    margin-top: 5px;
+    vertical-align: top;
+    height: 20px;
+}
+
 button:hover {
     color: white;
 }
@@ -163,13 +177,24 @@ button#close-button.is-minimized:hover {
 }
 
 button#close-button.is-open {
-    background-color: skyblue;
-    font: 12px cursive;
+    background-color: ivory;
+    font: 15px cursive;
+    color: darkgreen;
     margin-top: 5px;
     margin-bottom: 5px;
+    border: 1px solid black;
     border-radius: 5px;
-    border: none;
     outline: none;
+}
+
+button#close-button.is-open:hover {
+    background-color: lightskyblue;
+    color: white;
+    cursor: pointer;
+}
+
+button#close-button.is-open:active {
+    color: black;
 }
 
 #close-button-image {
@@ -178,7 +203,7 @@ button#close-button.is-open {
 }
 
 #title-editor {
-    grid-template-rows: 40px;
+    grid-template-rows: 30px;
     grid-template-columns: 30% auto;
 }
 #title-editor > #title-textfield-label-cell {
@@ -187,8 +212,6 @@ button#close-button.is-open {
     grid-row-start: 1;
     grid-row-end: span 1;
     text-align: right;
-    padding-top: 10px;
-    padding-right: 10px;
 }
 #title-editor > #title-textfield-cell {
     grid-column-start: 2;
@@ -196,12 +219,10 @@ button#close-button.is-open {
     grid-row-start: 1;
     grid-row-end: span 1;
     text-align: left;
-    padding-top: 10px;
-    padding-left: 10px;
 }
 
 #author-editor {
-    grid-template-rows: 35px 35px 35px 35px;
+    grid-template-rows: 30px 30px 30px 30px;
     grid-template-columns: 50% auto;
 }
 #author-editor > #author-list-label-cell{
@@ -243,7 +264,7 @@ button#close-button.is-open {
 }
 
 #date-editor {
-    grid-template-rows: 40px;
+    grid-template-rows: 30px;
     grid-template-columns: 30% auto;
 }
 #date-editor > #date-textfield-label-cell{
@@ -251,16 +272,18 @@ button#close-button.is-open {
     grid-column-end: span 1;
     grid-row-start: 1;
     grid-row-end: span 1;
+    text-align: right;
 }
 #date-editor > #date-textfield-cell{
     grid-column-start: 2;
     grid-column-end: span 1;
     grid-row-start: 1;
     grid-row-end: span 1;
+    text-align: left;
 }
 
 #text-editor {
-    grid-template-rows: 30px 30px 30px 30px 20px 30px;
+    grid-template-rows: 30px 30px 30px 30px 30px 30px;
     grid-template-columns: 20% 20% 30% auto;
 }
 #text-editor > #text-name-label-cell {
@@ -268,6 +291,7 @@ button#close-button.is-open {
     grid-column-end: span 1;
     grid-row-start: 1;
     grid-row-end: span 1;
+    text-align: right;
 }
 #text-editor > #text-name-cell {
     grid-column-start: 2;
@@ -292,18 +316,21 @@ button#close-button.is-open {
     grid-column-end: span 1;
     grid-row-start: 6;
     grid-row-end: span 1;
+    text-align: right;
 }
 #text-editor > #text-indent-cell {
     grid-column-start: 4;
     grid-column-end: span 1;
     grid-row-start: 6;
     grid-row-end: span 1;
+    text-align: left;
 }
 #text-editor > #link-selection-label-cell {
     grid-column-start: 1;
     grid-column-end: span 1;
     grid-row-start: 2;
     grid-row-end: span 1;
+    text-align: right;
 }
 #text-editor > #link-selection-cell {
     grid-column-start: 2;
@@ -328,6 +355,7 @@ button#close-button.is-open {
     grid-column-end: span 1;
     grid-row-start: 4;
     grid-row-end: span 1;
+    text-align: right;
 }
 #text-editor > #newlink-name-cell {
     grid-column-start: 2;
@@ -349,7 +377,7 @@ button#close-button.is-open {
 }
 
 #image-editor {
-    grid-template-rows: 20px 30px 20px 30px 20px 30px;
+    grid-template-rows: 30px 30px 30px 30px 30px 30px;
     grid-template-columns: 40% auto;
 }
 #image-editor > #image-name-label-cell {
@@ -414,7 +442,7 @@ button#close-button.is-open {
 }
 
 #quote-editor {
-    grid-template-rows: 30px 20px 30px;
+    grid-template-rows: 30px 30px 30px;
     grid-template-columns: 20% 30% auto;
 }
 #quote-editor > #quote-name-label-cell {
@@ -422,12 +450,14 @@ button#close-button.is-open {
     grid-column-end: span 1;
     grid-row-start: 1;
     grid-row-end: span 1;
+    text-align: right;
 }
 #quote-editor > #quote-name-cell {
     grid-column-start: 2;
     grid-column-end: span 1;
     grid-row-start: 1;
     grid-row-end: span 1;
+    text-align: left;
 }
 #quote-editor > #quote-source-label-cell {
     grid-column-start: 1;
@@ -455,7 +485,7 @@ button#close-button.is-open {
 }
 
 #subtitle-editor {
-    grid-template-rows: 20px 30px;
+    grid-template-rows: 30px 30px;
     grid-template-columns: 35% auto;
 }
 #subtitle-editor > #subtitle-name-label-cell {
@@ -484,36 +514,120 @@ button#close-button.is-open {
 }
 
 #placeholder-editor {
-    grid-template-rows: 40px;
-    grid-template-columns: 30% auto;
+    grid-template-rows: 30px;
+    grid-template-columns: 40% auto;
 }
 #placeholder-editor > #placeholder-name-label-cell{
     grid-column-start: 1;
     grid-column-end: span 1;
     grid-row-start: 1;
     grid-row-end: span 1;
+    text-align: right;
 }
 #placeholder-editor > #placeholder-name-cell{
     grid-column-start: 2;
     grid-column-end: span 1;
     grid-row-start: 1;
     grid-row-end: span 1;
+    text-align: left;
+}
+
+.component-editor label {
+    display: inline-block;
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #000510;
+    font: 20px "Times New Roman"
+}
+
+.component-editor select {
+    display: inline-block;
+    margin-top: 5px;
+    width: 50%;
+    height: 20px;
+    border: 1px solid royalblue;
+    outline: none;
+}
+
+.component-editor select:focus {
+    border: 1px solid orangered;
+}
+
+.component-editor button {
+    display: inline-block;
+    margin-top: 5px;
+    min-width: 50%;
+    height: 20px;
+    border: 1px solid firebrick;
+    outline: none;
+    cursor: pointer;
+}
+
+.component-editor ol {
+    list-style-position: inside;
+}
+.component-editor li {
+    margin-right: 20px;
+}
+.component-editor li.selected {
+    color: red;
+    background-color: white;
+}
+.component-editor li:hover {
+    color: orange;
+    cursor: pointer;
+}
+
+button#author-add, button#link-add {
+    background-color: limegreen;
+}
+
+button#author-delete, button#link-delete {
+    background-color: crimson;
+}
+
+.component-editor input#text-indent {
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 30px;
 }
 
 .component-editor input:not(#text-indent) {
+    display: inline-block;
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
     width: 70%;
     height: 20px;
     text-align: center;
-    color: limegreen;
-    border: 2px solid royalblue;
+    color: darkslategray;
+    border: 1px solid royalblue;
     background-color: cornsilk;
     border-radius: 5px;
     outline: none;
 }
 
 .component-editor input:not(#text-indent):focus{
+    color: black;
+    border: 1px solid orangered;
+    background-color: ivory;
+}
+
+.component-editor textarea {
+    display: inline-block;
+    margin: auto;
+    width: 90%;
+    height: 90%;
     color: darkslategray;
-    border: 2px solid orangered;
+    border: 1px solid royalblue;
+    background-color: bisque;
+    outline: none;
+    resize: none;
+}
+.component-editor textarea:focus {
+    color: black;
+    border: 1px solid orangered;
     background-color: ivory;
 }
 

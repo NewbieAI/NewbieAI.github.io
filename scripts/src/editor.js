@@ -483,7 +483,7 @@ class InsertionForm extends React.Component {
         return (
             <form className = "insert" onSubmit = {this.onSubmit}>
                 <label for = "new-element">
-                    Create Component
+                    Add Component:
                 </label>
                 <select id = "new-element" onChange = {this.onChange}>
                     <option value = "placeholder" selected> 
@@ -781,7 +781,7 @@ class EditingPanel extends React.Component {
                         id = "close-button-image"
                         src = "resources/Images/editor/close.png"
                         alt = "close" />
-                    : "finish editing"
+                    : "Finish Editing"
                 }
                 </button>
             </div>
@@ -1471,7 +1471,11 @@ class TextEditor extends React.Component {
     }
 
     selectLink(e) {
-        this.setState({selected: e.target.value});
+        if (e.target.value == "--None--") {
+            this.setState({selected: null});
+        } else {
+            this.setState({selected: e.target.value});
+        }
     }
 
     editNewLink(e) {
@@ -1510,13 +1514,13 @@ class TextEditor extends React.Component {
                     onChange = {this.indentToggler} /></div>
                 <LabelInGrid
                     for = "link-selection"
-                    value = "Selected Link" />
+                    value = "Selected Link:" />
                 <div id = "link-selection-cell">
                     <select 
                         id = "link-selection" 
                         onChange = {this.selectLink}>
                         <option selected = {this.state.selected == null}>
-                        None
+                        --None--
                         </option>
                         {Object.keys(this.props.data.links).map(
                             link => (
@@ -1528,15 +1532,15 @@ class TextEditor extends React.Component {
                     </select>
                 </div>
                 <ButtonInGrid
-                    id = "link-delete"
+                    ID = "link-delete"
                     className = {
                         this.state.selected == null ?
                         "disabled" : "enabled"
                     }
-                    value = "Delete Link"
+                    value = "Delete This Link"
                     onClick = {this.removeLink} />
                 <ButtonInGrid
-                    id = "link-add"
+                    ID = "link-add"
                     className = {
                         this.state.newlink == "" ?
                         "disabled" : "enabled"
@@ -1631,14 +1635,14 @@ class SubtitleEditor extends React.Component {
                 <TextfieldInGrid
                     ID = "subtitle-name"
                     value = {this.props.data.name}
-                    onChange = {this.props.updateName} />
+                    onChange = {this.updateName} />
                 <LabelInGrid
                     for = "subtitle-text"
                     value = "Subtitle Text:" />
                 <TextfieldInGrid
                     ID = "subtitle-text"
                     value = {this.props.data.text}
-                    onChange = {this.props.updateText} />
+                    onChange = {this.updateText} />
             </div>
         );
     }
@@ -1685,7 +1689,7 @@ class PlaceholderEditor extends React.Component {
                 <TextfieldInGrid
                     ID = "placeholder-name"
                     value = {this.props.data.name}
-                    onChange = {this.props.updateName} />
+                    onChange = {this.updateName} />
             </div>
         );
     }

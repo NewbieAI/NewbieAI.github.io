@@ -73,12 +73,14 @@ class Avatar extends React.Component {
 
     render() {
         return (
-            <img id = "avatar" src = "resources/Images/coolFace.jpg"/>
+            <img 
+                id = "avatar" 
+                src = "resources/Images/Site/coolFace.jpg"/>
         );
     }
 }
 
-class MessageBox extends React.Component {
+class Messenge extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -233,27 +235,32 @@ class SamplesPage extends React.Component {
                     type = "indented"
                     src = "bad-src"/>
                 <br/>
-                <GameSample
+                <Runnable
                     name = "Cartpole"
-                    src = "bad-src"
+                    iconSource = "resources/Images/Cartpole/cartpole.png"
+                    introSource = "bad-src"
                     loader = {Cartpole.loadAssets}
                     runner = {
                         () => {
                             let game = new Cartpole();
                         }
                     } />
-                <GameSample
+                <Runnable
                     name = "Minesweeper"
-                    src = "resources/JSON/test.json"
+                    className = "gameSample"
+                    iconSource = "resources/Images/Minesweeper/mine.png"
+                    introSource = "resources/JSON/test.json"
                     loader = {Minesweeper.loadAssets}
                     runner = {
                         () => {
                             let game = new Minesweeper();
                         }
                     } />
-                <GameSample
+                <Runnable
                     name = "Snake"
-                    src = "bad-src"
+                    className = "gameSample"
+                    iconSource = "resources/Images/Snake/snake.png"
+                    introSource = "bad-src"
                     loader = {Snake.loadAssets}
                     runner = {
                         () => {
@@ -293,13 +300,72 @@ class ContactPage extends React.Component {
     }
 }
 
-class LinkEmbedText extends React.Component {
+class Article extends React.Component {
     constructor(props) {
         super(props);
         this.state = {data : null};
     }
 
     componentDidMount() {
+        fetch(this.props.src)
+            .then( response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("http status error");
+                }
+            }).then( jsonData => {
+                this.setState({data : jsonData});
+            })
+            .catch(
+                err => this.setState({data : err})
+            );
+    }
+
+    buildLink(token) {
+        if (token == undefined) {
+            return null;
+        }
+        const link = token.slice(1, token.length - 1);
+        return (
+            <a href = {this.state.data.links[link]} target = "_blank">
+            {link}
+            </a>
+        );
+    }
+
+    renderComponent() {
+        return null;
+    }
+
+    renderArticle() {
+        return null;
+    }
+
+    render() {
+        if (this.state.data == null) {
+            return <LoadIndicator/>;
+        } else if (this.state.data instanceof Error) {
+            return <ErrorIndicator/>;
+        }
+        return (
+            <div className = "article">
+                {this.renderArticle()}
+            </div>
+        );
+    }
+}
+
+class LinkEmbedText extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {data : this.props.data};
+    }
+
+    componentDidMount() {
+        if (this.state.data != null) {
+            return;
+        }
         fetch(this.props.src)
             .then( response => {
                 if (response.ok) {
@@ -336,7 +402,7 @@ class LinkEmbedText extends React.Component {
         return merged;
     }
 
-    formatData() {
+    renderData() {
         return this.state.data.text.map(
             (text) => {
                 let links = text.match(/{[^{}]+}/g);
@@ -358,41 +424,64 @@ class LinkEmbedText extends React.Component {
         }
         return (
             <div>
-                {this.formatData()}
+                {this.renderData()}
             </div>
         );
     }
 }
 
-class GameSample extends React.Component {
+class Runnable extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {isLoading: false};
+        this.state = {
+            isLoading: false,
+            isError: false,
+        };
+    }
+
+    getMessage() {
+        if (this.state.isLoading) {
+            return <b className = "load">LOADING...</b>;
+        }
+        if (this.state.isError) {
+            return <b className = "error">Critical Failure</b>;
+        }
+        return null;
     }
 
     clickHandler() {
         this.setState({isLoading: true});
         this.props.loader().
-            then(() => {
-                this.setState({isLoading: false});
+            then( () => {
+                this.setState({
+                    isLoading: false,
+                });
                 this.props.runner();
+            }).
+            catch( err => {
+                this.setState({isLoading: false});
+                this.setState({isError: true});
             });
     }
 
     render() {
         return (
-            <div className = "GameSample" id = {this.props.name}>
-                <h4 className = "GameName">{this.props.name}</h4>
-                <button 
-                    className = "gameButton"
-                    id = {this.props.name + "Game"}
+            <div className = "Runnable" id = {this.props.name}>
+                <h4 className = "Title">{this.props.name}</h4>
+                <div 
+                    className = "runnableButton"
                     onClick = {this.clickHandler.bind(this)}>
-                {this.state.isLoading? "LOADING..." : "Click to Play"}
-                </button>
+                <img 
+                    className = "runnableIcon"
+                    src = {this.props.iconSource} />
+                <span className = "status">
+                {this.getMessage()}
+                </span>
+                </div>
                 <br/>
                 <LinkEmbedText 
                     type = "block"
-                    src = {this.props.src}/>
+                    src = {this.props.introSource}/>
             </div>
         );
     }
@@ -402,7 +491,7 @@ function LoadIndicator(props) {
     return (
         <img 
             className = "LoadIndicator" 
-            src = "resources/Gifs/load_spinner.gif" />
+            src = "resources/Images/Site/load_spinner.gif" />
     );
 }
 
@@ -410,7 +499,7 @@ function ErrorIndicator(props) {
     return (
         <img 
             className = "ErrorIndicator" 
-            src = "resources/Images/smileyFace.png" />
+            src = "resources/Images/Site/smileyFace.png" />
     );
 }
 

@@ -75,13 +75,13 @@ class Avatar extends React.Component {
   render() {
     return /*#__PURE__*/React.createElement("img", {
       id: "avatar",
-      src: "resources/Images/coolFace.jpg"
+      src: "resources/Images/Site/coolFace.jpg"
     });
   }
 
 }
 
-class MessageBox extends React.Component {
+class Messenge extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -223,24 +223,30 @@ class SamplesPage extends React.Component {
     return /*#__PURE__*/React.createElement("div", {
       className: this.props.className
     }, /*#__PURE__*/React.createElement("h1", null, this.props.page), /*#__PURE__*/React.createElement(LinkEmbedText, {
+      type: "indented",
       src: "bad-src"
-    }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(GameSample, {
+    }), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(Runnable, {
       name: "Cartpole",
-      src: "bad-src",
+      iconSource: "resources/Images/Cartpole/cartpole.png",
+      introSource: "bad-src",
       loader: Cartpole.loadAssets,
       runner: () => {
         let game = new Cartpole();
       }
-    }), /*#__PURE__*/React.createElement(GameSample, {
+    }), /*#__PURE__*/React.createElement(Runnable, {
       name: "Minesweeper",
-      src: "resources/JSON/test.json",
+      className: "gameSample",
+      iconSource: "resources/Images/Minesweeper/mine.png",
+      introSource: "resources/JSON/test.json",
       loader: Minesweeper.loadAssets,
       runner: () => {
         let game = new Minesweeper();
       }
-    }), /*#__PURE__*/React.createElement(GameSample, {
+    }), /*#__PURE__*/React.createElement(Runnable, {
       name: "Snake",
-      src: "bad-src",
+      className: "gameSample",
+      iconSource: "resources/Images/Snake/snake.png",
+      introSource: "bad-src",
       loader: Snake.loadAssets,
       runner: () => {
         let game = new Snake();
@@ -276,7 +282,7 @@ class ContactPage extends React.Component {
 
 }
 
-class LinkEmbedText extends React.Component {
+class Article extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -285,6 +291,68 @@ class LinkEmbedText extends React.Component {
   }
 
   componentDidMount() {
+    fetch(this.props.src).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("http status error");
+      }
+    }).then(jsonData => {
+      this.setState({
+        data: jsonData
+      });
+    }).catch(err => this.setState({
+      data: err
+    }));
+  }
+
+  buildLink(token) {
+    if (token == undefined) {
+      return null;
+    }
+
+    const link = token.slice(1, token.length - 1);
+    return /*#__PURE__*/React.createElement("a", {
+      href: this.state.data.links[link],
+      target: "_blank"
+    }, link);
+  }
+
+  renderComponent() {
+    return null;
+  }
+
+  renderArticle() {
+    return null;
+  }
+
+  render() {
+    if (this.state.data == null) {
+      return /*#__PURE__*/React.createElement(LoadIndicator, null);
+    } else if (this.state.data instanceof Error) {
+      return /*#__PURE__*/React.createElement(ErrorIndicator, null);
+    }
+
+    return /*#__PURE__*/React.createElement("div", {
+      className: "article"
+    }, this.renderArticle());
+  }
+
+}
+
+class LinkEmbedText extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: this.props.data
+    };
+  }
+
+  componentDidMount() {
+    if (this.state.data != null) {
+      return;
+    }
+
     fetch(this.props.src).then(response => {
       if (response.ok) {
         return response.json();
@@ -323,11 +391,13 @@ class LinkEmbedText extends React.Component {
     return merged;
   }
 
-  formatData() {
+  renderData() {
     return this.state.data.text.map(text => {
       let links = text.match(/{[^{}]+}/g);
       let interLinkText = text.split(/{[^{}]+}/);
-      return /*#__PURE__*/React.createElement("p", null, this.merge(interLinkText, links));
+      return /*#__PURE__*/React.createElement("p", {
+        className: this.props.type
+      }, this.merge(interLinkText, links));
     });
   }
 
@@ -338,19 +408,34 @@ class LinkEmbedText extends React.Component {
       return /*#__PURE__*/React.createElement(ErrorIndicator, null);
     }
 
-    return /*#__PURE__*/React.createElement("div", {
-      className: this.props.className
-    }, this.formatData());
+    return /*#__PURE__*/React.createElement("div", null, this.renderData());
   }
 
 }
 
-class GameSample extends React.Component {
+class Runnable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false
+      isLoading: false,
+      isError: false
     };
+  }
+
+  getMessage() {
+    if (this.state.isLoading) {
+      return /*#__PURE__*/React.createElement("b", {
+        className: "load"
+      }, "LOADING...");
+    }
+
+    if (this.state.isError) {
+      return /*#__PURE__*/React.createElement("b", {
+        className: "error"
+      }, "Critical Failure");
+    }
+
+    return null;
   }
 
   clickHandler() {
@@ -362,22 +447,33 @@ class GameSample extends React.Component {
         isLoading: false
       });
       this.props.runner();
+    }).catch(err => {
+      this.setState({
+        isLoading: false
+      });
+      this.setState({
+        isError: true
+      });
     });
   }
 
   render() {
     return /*#__PURE__*/React.createElement("div", {
-      className: "GameSample",
+      className: "Runnable",
       id: this.props.name
     }, /*#__PURE__*/React.createElement("h4", {
-      className: "GameName"
-    }, this.props.name), /*#__PURE__*/React.createElement("button", {
-      className: "gameButton",
-      id: this.props.name + "Game",
+      className: "Title"
+    }, this.props.name), /*#__PURE__*/React.createElement("div", {
+      className: "runnableButton",
       onClick: this.clickHandler.bind(this)
-    }, this.state.isLoading ? "LOADING..." : "Click to Play"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(LinkEmbedText, {
-      className: "GameIntro",
-      src: this.props.src
+    }, /*#__PURE__*/React.createElement("img", {
+      className: "runnableIcon",
+      src: this.props.iconSource
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "status"
+    }, this.getMessage())), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(LinkEmbedText, {
+      type: "block",
+      src: this.props.introSource
     }));
   }
 
@@ -386,14 +482,14 @@ class GameSample extends React.Component {
 function LoadIndicator(props) {
   return /*#__PURE__*/React.createElement("img", {
     className: "LoadIndicator",
-    src: "resources/Gifs/load_spinner.gif"
+    src: "resources/Images/Site/load_spinner.gif"
   });
 }
 
 function ErrorIndicator(props) {
   return /*#__PURE__*/React.createElement("img", {
     className: "ErrorIndicator",
-    src: "resources/Images/smileyFace.png"
+    src: "resources/Images/Site/smileyFace.png"
   });
 }
 

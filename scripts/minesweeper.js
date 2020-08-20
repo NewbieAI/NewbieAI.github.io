@@ -72,35 +72,35 @@ class Minesweeper {
         return Promise.all([
             loadImage(
                 Minesweeper.mine,
-                "resources/Images/Minsweeper/mine.png",
+                "resources/Images/Minesweeper/mine.png",
             ),
             loadImage(
                 Minesweeper.smileyFace, 
-                "resources/Images/Minsweeper/smileyFace.png",
+                "resources/Images/Minesweeper/smileyFace.png",
             ),
             loadImage(
                 Minesweeper.surprisedFace, 
-                "resources/Images/Minsweeper/surprisedFace.png",
+                "resources/Images/Minesweeper/surprisedFace.png",
             ),
             loadImage(
                 Minesweeper.coolFace, 
-                "resources/Images/Minsweeper/coolFace.jpg",
+                "resources/Images/Minesweeper/coolFace.jpg",
             ),
             loadImage(
                 Minesweeper.sadFace, 
-                "resources/Images/Minsweeper/sadFace.png",
+                "resources/Images/Minesweeper/sadFace.png",
             ),
             loadImage(
                 Minesweeper.backgroundImg, 
-                `resources/Images/Minsweeper/bg${0 | Math.random() * 5}.jpg`,
+                `resources/Images/Minesweeper/bg${0 | Math.random() * 5}.jpg`,
             ),
             loadImage(
                 Minesweeper.scrollImg,
-                "resources/Images/Minsweeper/scroll.png",
+                "resources/Images/Minesweeper/scroll.png",
             ),
             loadImage(
                 Minesweeper.explosionFrames, 
-                "resources/Images/Minsweeper/explosion.png",
+                "resources/Images/Minesweeper/explosion.png",
             ),
             loadAudio(
                 Minesweeper.explosionSound,
@@ -382,7 +382,8 @@ class Minesweeper {
                             let a = 0 | arr[i % size] / Minesweeper.COL;
                             let b = arr[i % size] % Minesweeper.COL
                             if (frame < Minesweeper.ROW) {
-                                this.screen.clearRect(
+                                this.screen.fillStyle = "white";
+                                this.screen.fillRect(
                                     b * this.cellWidth,
                                     a * this.cellHeight,
                                     this.cellWidth,
@@ -703,7 +704,7 @@ class Minesweeper {
     }
 
     renderCell(i, j) {
-        this.screen.fillStyle = (
+        let colorStyle = (
             "rgba(" + 
             String(0 + ((Math.random() * 20) | 0)) + ", " +
             String(125 + ((Math.random() * 20) | 0)) + ", " +
@@ -714,13 +715,15 @@ class Minesweeper {
 
         let key = i * Minesweeper.COL + j;
         if (this.state[i][j] >= -1) {
-            this.screen.clearRect(
+            this.screen.fillStyle = "rgb(255, 255, 255)";
+            this.screen.fillRect(
                 j * this.cellWidth,
                 i * this.cellHeight,
                 this.cellWidth,
                 this.cellHeight,
             );
 
+            this.screen.fillStyle = colorStyle;
             this.screen.fillRect(
                 j * this.cellWidth,
                 i * this.cellHeight,
@@ -737,12 +740,15 @@ class Minesweeper {
             if ( this.flags.has(key) || this.qMarks.has(key) ) {
                 this.flags.delete(key);
                 this.qMarks.delete(key);
-                this.screen.clearRect(
+
+                this.screen.fillStyle = "rgb(255, 255, 255)";
+                this.screen.fillRect(
                     j * this.cellWidth,
                     i * this.cellHeight,
                     this.cellWidth,
                     this.cellHeight,
                 );
+                this.screen.fillStyle = colorStyle;
                 this.screen.fillRect(
                     j * this.cellWidth,
                     i * this.cellHeight,
@@ -1134,6 +1140,12 @@ class Minesweeper {
             x + 400,
             y + 200,
         );
+        this.screen.fillStyle = "black";
+        this.screen.fillText(
+            "(changes only affect new games)",
+            x + w / 2,
+            y + 250,
+        );
 
         this.screen.textAlign = "left";
         this.screen.fillStyle = this.allowHint ? "black" : "grey";
@@ -1291,6 +1303,8 @@ class Minesweeper {
     renderMenu() {
         // displays menu on the left side of the script
 
+        this.screen.fillStyle = "white";
+        this.screen.fillRect(1600, 0, 200, 800);
         this.screen.fillStyle = "rgba(255, 155, 0, 0.4)";
         this.screen.fillRect(1600, 0, 200, 800);
 
@@ -1367,7 +1381,8 @@ class Minesweeper {
 
         let x = 1650, y = 25;
         let w = 100, h = 100;
-        this.screen.clearRect(x, y, w, h);
+        this.screen.fillStyle = "white";
+        this.screen.fillRect(x, y, w, h);
         this.screen.strokeStyle = `rgb(
             ${150 + highlight * 105}, 
             ${150 + highlight * 105 - pressed * 155}, 
@@ -1537,7 +1552,8 @@ class Minesweeper {
 
         let x = 1625, y = 400 + 50 * buttonNumber;
 
-        this.screen.clearRect(x, y - 50, 250, 55);
+        this.screen.fillStyle = "white";
+        this.screen.fillRect(x, y - 50, 250, 55);
         this.screen.fillStyle = "rgba(255, 155, 0, 0.4)";
         this.screen.fillRect(x, y - 50, 250, 55);
 

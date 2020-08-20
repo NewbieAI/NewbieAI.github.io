@@ -20,7 +20,7 @@
  *
  */
 function about() {
-    let name = "about.js";
+    let name = "about.json";
     let data = {};
     data.text = [
         "click {here} to view image",
@@ -33,7 +33,7 @@ function about() {
 }
 
 function sample() {
-    let name = "sample.js";
+    let name = "sample.json";
     let data = {};
     data.text = [];
     data.links = {
@@ -42,7 +42,7 @@ function sample() {
 }
 
 function project1() {
-    let name = "projects.js";
+    let name = "projects.json";
     let data = {};
     data.text = [];
     data.links = {
@@ -51,7 +51,7 @@ function project1() {
 }
 
 function contact() {
-    let name = "contact.js";
+    let name = "contact.json";
     let data = {};
     data.text = [];
     data.links = {
@@ -59,8 +59,8 @@ function contact() {
     return [data, name];
 }
 
-function gameIntro1() {
-    let name = "game_intro1.js";
+function minesweeperIntro() {
+    let name = "minesweeperIntro.json";
     let data = {};
     data.text = [];
     data.links = {
@@ -68,8 +68,8 @@ function gameIntro1() {
     return [data, name];
 }
 
-function gameIntro2() {
-    let name = "game_intro2.js";
+function snakeIntro() {
+    let name = "snakeIntro.json";
     let data = {};
     data.text = [];
     data.links = {
@@ -77,8 +77,8 @@ function gameIntro2() {
     return [data, name];
 }
 
-function gameIntro3() {
-    let name = "game_intro3.js";
+function cartpoleIntro() {
+    let name = "cartpoleIntro.json";
     let data = {};
     data.text = [];
     data.links = {
@@ -86,4 +86,5 @@ function gameIntro3() {
     return [data, name];
 }
 
-[data, filename] = about();
+let f = about;
+[data, filename] = f();

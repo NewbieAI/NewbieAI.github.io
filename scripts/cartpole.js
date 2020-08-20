@@ -576,7 +576,8 @@ class Cartpole {
     }
 
     renderBackground() {
-        this.screen.clearRect(0, 0, 1800, 800);
+        this.screen.fillStyle = "white";
+        this.screen.fillRect(0, 0, 1800, 800);
         switch (this.weather) {
             case "sunny":
                 this._paintSunny();
@@ -834,14 +835,14 @@ class Cartpole {
         for (let i = 0; i < this.clouds.length; i += 2) {
             if (this.clouds[i] >= -105 && this.clouds[i] <= 1905) {
                 this._renderCloud(this.clouds[i], this.clouds[i + 1]);
-                this.clouds[i] += this.W * 0.05;
+                this.clouds[i] += this.W * 0.10;
             } else {
                 this.clouds[i] = (this.W > 0) ? -105 : 1905;
                 this.clouds[i + 1] = 75 + Math.random() * 150;
             }
         }
         this._renderTree(
-            Math.atan(-this.W / Cartpole.GRAVITY) *
+            Math.atan(-this.W * 2 / Cartpole.GRAVITY) *
             (1 + 0.2 * Math.sin(2 * Math.PI * this.frame / 30))
         );
         switch (this.weather) {

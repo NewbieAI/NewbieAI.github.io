@@ -292,7 +292,7 @@ class Snake {
         Snake.food2.remove();
         Snake.food3.remove();
         Snake.food4.remove();
-        Snake.food5.remove();
+        Snake.bonusFood.remove();
         Snake.gameMusic.remove();
         Snake.clickSound.remove();
         Snake.highlightSound.remove();
@@ -1806,38 +1806,47 @@ class Snake {
         }
         switch (e.key) {
             case "ArrowUp":
+                e.preventDefault();
                 this.arrowUp = false;
                 break;
             case "ArrowDown":
+                e.preventDefault();
                 this.arrowDown = false;
                 break;
             case "ArrowLeft":
+                e.preventDefault();
                 this.arrowLeft = false;
                 break;
             case "ArrowRight":
+                e.preventDefault();
                 this.arrowRight = false;
                 break;
         }
     }
 
     keydownHandler(e) {
+        e.preventDefault();
         if (this.gameStatus != Snake.GAME) {
             return;
         }
         switch (e.key) {
             case "ArrowUp":
+                e.preventDefault();
                 this.arrowUp = true;
                 this.nextDirection = "Up";
                 break;
             case "ArrowDown":
+                e.preventDefault();
                 this.arrowDown = true;
                 this.nextDirection = "Down";
                 break;
             case "ArrowLeft":
+                e.preventDefault();
                 this.arrowLeft = true;
                 this.nextDirection = "Left";
                 break;
             case "ArrowRight":
+                e.preventDefault();
                 this.arrowRight = true;
                 this.nextDirection = "Right";
                 break;

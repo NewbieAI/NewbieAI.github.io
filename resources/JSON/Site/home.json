@@ -1,0 +1,42 @@
+{
+  "title": "",
+  "authors": [],
+  "creationDate": "10/11/2020",
+  "lastModified": "10/14/2020, 5:10:37 PM",
+  "components": [
+    {
+      "type": "quote",
+      "name": "[unnamed]",
+      "text": "I don't any responsibility at all.",
+      "src": "Donald J. Trump"
+    },
+    {
+      "type": "text",
+      "name": "intro_message",
+      "content": "Welcome everyone ! ! !  After quite a bit of effort, my personal website is finally online.\n\nWhether you came here through a link, entered in the URL yourself, or maybe stumbled onto my website accidentally, feel free to take a look around. All the contents on this website can be accessed through the navigation menu on the left.\nHere, you can find out {more} about me, {who I am}, {what I can do}, and {what my interests are}. You can also take a detailed look at my past {projects} and, if you'd like sample my past works first hand, try these {web games} that I wrote in Javascript. In addition, I will also be maintaining a personal {blog} in which I will offer some fun discussions on various technical subjects.\nIf you like the design of my website and want to find out how it is done, you can read about it {here} or check out the source code from this Github {repository}.\n\n\n",
+      "links": {
+        "more": "internal::",
+        "who I am": "internal::",
+        "what I can do": "internal::",
+        "what my interests are": "internal::",
+        "projects": "internal::",
+        "here": "internal::",
+        "repository": "internal::",
+        "web games": "internal::"
+      },
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "new",
+      "text": "What's new:"
+    },
+    {
+      "type": "text",
+      "name": "new_content",
+      "content": "1. My first {blog post}, \"A Cautionary Tale on the Dangers of Deploying AI in Social Media\", has been added.",
+      "links": {},
+      "indented": false
+    }
+  ]
+}

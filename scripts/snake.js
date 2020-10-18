@@ -3,11 +3,11 @@
 // File created on May 10th
 // source file for a fun little snake game
 // where the food will be little animals that run
-// across the screen in a fixed direction
+// across the screen in a fixed direction (update: food no longer moves)
 
 // to start a game, use the static loadAssets function to create
-// a promise object, then create a new Snake object. Game should 
-// run automatically.
+// a promise, then after the promise resolves create a new Snake object. 
+// Game should run automatically.
 
 
 class Snake {

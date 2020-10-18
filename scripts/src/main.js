@@ -12,29 +12,156 @@ Since the scope of this site is well-defined and unlikely
 to change later, I've opted to go with a single .js file
 to includes all the React components. If this file exceeds
 2000 lines of code at some point, maybe I'll refactor it.
+
+Requires setup.json file in the "resources/JSON/Site/" path
+setup.json should have the following structure:
+
+{
+    "header": {
+        "avatarURL": str,
+        "backgrounds": [
+            image_src1,
+            image_src2,
+            ...
+        ],
+        "announcements": [
+            str1,
+            str2,
+            ...
+        ]
+    },
+    "name": "HOME"
+    "nesting_depth": 0,
+    "articles": [
+        article_src1,
+        article_src2,
+        ...
+    ],
+    "children": [
+        obj1,
+        obj2,
+        ...
+    ]
+}
+
+Objects contained in the "content" array should have
+the following nested structure:
+
+{
+    "name": str,
+    "nesting_depth": int
+    "articles": [
+        article_src1,
+        article_src2,
+        ...
+    ]
+    "childrens": [
+        obj1,
+        obj2,
+        ...
+    ]
+}
+
 */ 
+
 
 // React page
 
 class MainPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {currentPage : "HOME"};
+        this.state = {
+            currentPath: [],
+        };
+        this.navigator = this.navigateTo.bind(this);
     }
 
-    navigateTo(newPage) {
-        this.setState({currentPage: newPage});
+    navigateTo(newPath) {
+        this.setState({
+            currentPath: newPath,
+        });
+    }
+
+    getPathNames(path) {
+        let pathNames = ["Home"];
+        let cur = this.props.data;
+        for (let index of path) {
+            cur = cur.contents[index];
+            pathNames.push( cur.name );
+        }
+        return pathNames;
+    }
+
+    getArticleList(path) {
+        let cur = this.props.data;
+        for (let index of path) {
+            cur = cur.contents[index];
+        }
+        return cur.articles;
+    }
+
+    getContentList(path) {
+        let cur = this.props.data;
+        let contents = cur.contents;
+        for (let index of path) {
+            cur = cur.contents[index];
+            if (cur.contents.length > 0) {
+                contents = cur.contents;
+            } else {
+                return contents.map(child => child.name);
+            }
+        }
+        return contents.map(child => child.name);
+    }
+
+    getNodeName(path) {
+        let cur = this.props.data;
+        let nodeName = cur.name;
+        for (let index of path) {
+            cur = cur.contents[index];
+            if (cur.contents.length == 0) {
+                return nodeName;
+            } else {
+                nodeName = cur.name;
+            }
+        }
+        return nodeName;
+    }
+    
+    isLeafNode(path) {
+        let cur = this.props.data;
+        for (let index of path) {
+            cur = cur.contents[index];
+        }
+        return cur.contents.length == 0;
     }
 
     render() {
         return (
-            <div id = "PersonalSite">
-                <WelcomeHeader name = "Ming"/>
-                <hr/>
+            <div id = "personal-site">
+                <WelcomeHeader {...(this.props.data.header)} />
                 <NavigationMenu 
-                    page = {this.state.currentPage} 
-                    clickHandler = {this.navigateTo.bind(this)} />
-                <ContentsArea page = {this.state.currentPage}/>
+                    navigator = {this.navigator}
+                    path = {this.state.currentPath}
+                    nodeName = {
+                        this.getNodeName(this.state.currentPath)
+                    }
+                    contentList = {
+                        this.getContentList(this.state.currentPath)
+                    }
+                    isLeafNode = {
+                        this.isLeafNode(this.state.currentPath)
+                    } />
+                <ContentArea 
+                    navigator = {this.navigator}
+                    path = {this.state.currentPath}
+                    pathNames = {
+                        this.getPathNames(this.state.currentPath)
+                    }
+                    articleList = {
+                        this.getArticleList(this.state.currentPath)
+                    } 
+                    fillers = {this.props.globalFillers} />
             </div>
         );
     }
@@ -43,50 +170,366 @@ class MainPage extends React.Component {
 class WelcomeHeader extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {name : "Everyone"};
+        this.state = {
+            index: 0,
+            newIndex: null,
+            isMessaging: false,
+            wasMessaging: false,
+            message: "",
+            messageStatus: "idle",
+        };
+        this.startSlider = this.startSlider.bind(this);
+        this.toggleMessage = this.toggleMessage.bind(this)
+        this.selectView = this.selectView.bind(this);
+        this.editMessage = this.editMessage.bind(this);
+        this.sendMessage = this.sendMessage.bind(this);
+        this.cancelMessage = this.cancelMessage.bind(this);
+    }
+
+    startSlider() {
+        this.setState(
+            state => {
+                if (state.newIndex == undefined) {
+                    return {
+                        index: state.index,
+                        newIndex: state.index + 1,
+                        wasMessaging: false,
+                    };
+                }
+                return {
+                    index: state.index + 1,
+                    newIndex: state.newIndex + 1,
+                    wasMessaging: false,
+                };
+            }
+        );
+        this.sliderIntervalID = setInterval(
+            () => {
+                this.setState(
+                    state => ({
+                        index: state.index + 1,
+                        newIndex: state.newIndex + 1,
+                        wasMessaging: false,
+                    })
+                );
+            },
+            15000,
+        );
     }
 
     componentDidMount() {
-        setTimeout(
-            () => {
-                this.setState({name : this.props.name});
+        this.sliderTimeoutID = setTimeout(
+            this.startSlider,
+            12000,
+        );
+    }
+
+    componentWillDismount() {
+        clearInterval(this.sliderIntervalID);
+        clearTimeout(this.sliderTimeoutID);
+    }
+
+    toggleMessage() {
+        this.setState(
+            state => ({
+                isMessaging: !state.isMessaging,
+                wasMessaging: state.isMessaging,
+            })
+        );
+    }
+
+    selectView(view) {
+        clearInterval(this.sliderIntervalID);
+        clearTimeout(this.sliderTimeoutID);
+        const M = this.props.announcements.length || 1;
+        this.setState(
+            state => ({
+                index: (
+                    state.index + (
+                        view >= state.index % M ?
+                        view - state.index % M : 
+                        M + view - state.index % M
+                    )
+                ),
+                newIndex: null,
+            })
+        );
+        this.sliderTimeoutID = setTimeout(
+            this.startSlider,
+            30000,
+        );
+    }
+
+    editMessage(text) {
+        this.setState(
+            {
+                message: text,
+                messageStatus: "editing",
+            }
+        );
+    }
+
+    sendMessage(e) {
+        e.preventDefault();
+        this.setState({messageStatus: "pending"});
+        fetch(
+            "https://9tsemll1m6.execute-api.us-east-2.amazonaws.com/",
+            {
+                method: "POST",
+                body: this.state.message,
             },
-            2000,
+        ).then(
+            response => {
+                if (response.ok) {
+                    this.setState({messageStatus: "success"});
+                } else {
+                    throw new Error("http status error");
+                }
+            }
+        ).catch(
+            e => {
+                this.setState({messageStatus: "failure"});
+            }
+        );
+    }
+
+    cancelMessage(e) {
+        e.preventDefault();
+        this.setState({
+            isMessaging: false,
+            wasMessaging: true,
+            message: "",
+            messageStatus: "idle",
+        });
+    }
+    
+    renderMyName() {
+        return (
+            <svg viewBox = "0 0 200 80" id = "my-name">
+                <path
+                    id = "curve"
+                    d = "M0 20 Q100 80,200 20"
+                    fill = "transparent"/>
+                <text id = "my-name-text">
+                    <textPath 
+                        xlinkHref = "#curve"
+                        text-anchor = "middle"
+                        startOffset = "50%">
+                        TIAN, MINGZHI
+                    </textPath>
+                </text>
+            </svg>
+        );
+    }
+
+    renderAnnouncement(fadeOut = false) {
+        const M = this.props.announcements.length || 1;
+        if (fadeOut) {
+            return (
+                <p className = "announcement">
+                {this.props.announcements[
+                    this.state.index % M
+                ]}
+                </p>
+            )
+        }
+        return (
+            <p className = "announcement">
+            {this.props.announcements[
+                (this.state.newIndex ?? this.state.index) % M
+            ]}
+            </p>
+        );
+    }
+
+    renderSelectionBar() {
+        const M = this.props.announcements.length || 1;
+        if (M < 2) {
+            return null;
+        }
+        return (
+            <div id = "selection-bar">
+            {this.props.announcements.map(
+                (element, index) => {
+                    let classList;
+                    if ((this.state.newIndex == undefined && 
+                        this.state.index % M == index) ||
+                        (this.state.newIndex != undefined && 
+                        this.state.newIndex % M == index)) {
+                        classList = "selected-bar-button"
+                    } else {
+                        classList = "bar-button"
+                    }
+                    return (
+                        <span 
+                            className = {classList}
+                            onClick = {
+                                () => {
+                                    this.selectView(index);
+                                }
+                            }>
+                        </span>
+                    );
+                }
+            )}
+            </div>
         );
     }
 
     render() {
+        const M = this.props.backgrounds.length || 1;
+        const N = this.props.announcements.length || 1;
+        const isStatic = (
+            this.state.newIndex == undefined ||
+            this.state.isMessaging
+        );
         return (
-            <div className = "WelcomeHeader">
-                <Avatar/>
-                <h1>Welcome! {this.state.name}</h1>
+            <div className = "welcome-header">
+                <img 
+                    key = {
+                        "BgKey" + this.state.index}
+                    id = {
+                        this.state.newIndex == undefined ?
+                        "static-background" : "current-background"
+                    }
+                    className = "header-background"
+                    src = {
+                        this.props.backgrounds[ this.state.index % M ]
+                    } 
+                    alt = "background image" />
+                {this.state.newIndex &&
+                    <img
+                        key = {"NextBgKey" + this.state.newIndex}
+                        id = "next-background"
+                        className = "header-background"
+                        src = {
+                            this.props.backgrounds[
+                                this.state.newIndex % M
+                            ]
+                        } 
+                        alt = "background image" />
+                }
+                <img 
+                    id = "avatar"
+                    src = {
+                        this.state.isMessaging ?
+                        this.props.avatarGifs[ 
+                            0 | Math.random() * this.props.avatarGifs.length
+                        ] : this.props.avatarImg
+                    }
+                    alt = "Avatar Image"
+                    onClick = {this.toggleMessage} />
+                {this.renderMyName()}
+                {isStatic || this.state.wasMessaging ?
+                    null :
+                    <div
+                        className = "header-banner"
+                        key = {"NBannerKey" + this.state.index}
+                        id = "current-banner">
+                    {this.renderAnnouncement(true)}
+                    </div>
+                }
+                <div 
+                    className = {"header-banner" + (
+                        this.state.isMessaging ?
+                        " hidden" : ""
+                    )}
+                    key = {
+                        "CBannerKey" + (
+                            isStatic ?
+                            this.state.index : this.state.newIndex
+                        )
+                    }
+                    id = {
+                        isStatic || this.state.wasMessaging ?
+                        "static-banner" : "next-banner"
+                    }>
+                {this.renderAnnouncement()}
+                </div>
+                <div 
+                    className = {"header-banner" + (
+                        this.state.isMessaging ? 
+                        "" : " hidden"
+                    )}
+                    id = "message-banner">
+                    <MessageForm 
+                        message = {this.state.message}
+                        messageStatus = {this.state.messageStatus}
+                        onChange = {this.editMessage}
+                        onSend = {this.sendMessage}
+                        onCancel = {this.cancelMessage} />
+                </div>
+                {this.renderSelectionBar()}
             </div>
         );
     }
 
 }
 
-class Avatar extends React.Component {
+class MessageForm extends React.Component {
     constructor(props) {
         super(props);
+        this.editText = this.editText.bind(this);
+    }
+
+    editText(e) {
+        this.props.onChange(e.target.value);
+    }
+
+    getStatus() {
+        switch (this.props.messageStatus) {
+            case "idle":
+                return "You can leave a direct message here!";
+            case "editing":
+                return "This message will be delivered to my Inbox";
+            case "pending":
+                return "Sending Message...";
+            case "success":
+                return "Message Sent!!!";
+            case "failure":
+                return "Failed to Send Message.";
+        }
     }
 
     render() {
+        const maxLength = 1000;
         return (
-            <img 
-                id = "avatar" 
-                src = "resources/Images/Site/coolFace.jpg"/>
+            <form id = "message-form">
+                <textarea
+                    id = "message-textarea"
+                    value = {this.props.message}
+                    placeholder = "[Enter Message Here] (Please provide your contact information if you want a response)"
+                    maxlength = {maxLength}
+                    onChange = {this.editText}>
+                </textarea>
+                <button
+                    className = "form-button"
+                    id = "message-sendbutton"
+                    onClick = {this.props.onSend}>
+                Send
+                </button>
+                <button
+                    className = "form-button"
+                    id = "message-cancelbutton"
+                    onClick = {this.props.onCancel}>
+                Cancel
+                </button>
+                <span 
+                    key = {this.props.messageStatus}
+                    className = {
+                        "message-status " + this.props.messageStatus
+                    }>
+                {this.getStatus()}
+                </span>
+                <span 
+                    className = {"count" + (
+                        this.props.message.length < maxLength ?
+                        "" : " maximum"
+                    )}>
+                {this.props.message.length} / {maxLength}
+                </span>
+            </form>
         );
-    }
-}
-
-class Messenge extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return null;
     }
 }
 
@@ -94,28 +537,79 @@ class NavigationMenu extends React.Component {
     constructor(props) {
         super(props);
     }
+    
+    isLeafNode() {
+    }
 
     render() {
-        const pages = [
-            "HOME",
-            "ABOUT",
-            "SAMPLES",
-            "PROJECTS",
-            "CONTACT",
-        ];
         return (
-            <div className = "NavigationMenu">
-            {pages.map(
-                pageName => {
-                    return (
-                        <NavigationButton 
-                            name = {pageName} 
-                            isSelected = {this.props.page == pageName} 
-                            clickHandler = {this.props.clickHandler}
-                        />
-                    );
+            <div className = "navigation-menu">
+                <NavigationButton 
+                    id = "home-button"
+                    type = "icon" 
+                    src = "resources/Images/Site/icon_home.png"
+                    value = "Home Button"
+                    path = {[]}
+                    clickHandler = {this.props.navigator} />
+                {this.props.nodeName != "__HOME__" && 
+                    <NavigationButton 
+                        type = "topbutton"
+                        value = {this.props.nodeName}
+                        path = {
+                            this.props.isLeafNode ?
+                            this.props.path.slice(
+                                0, this.props.path.length - 1
+                            )
+                            :
+                            this.props.path.slice()
+                        }
+                        isSelected = {!this.props.isLeafNode}
+                        clickHandler = {this.props.navigator} />
                 }
-            )}
+                {this.props.contentList.map(
+                    (content, index) => (
+                        <NavigationButton
+                            value = {content}
+                            type = "subbutton"
+                            path = {
+                                this.props.isLeafNode?
+                                [
+                                    ...this.props.path.slice(
+                                        0, this.props.path.length - 1
+                                    ), 
+                                    index,
+                                ]
+                                :
+                                [...this.props.path, index]
+                            }
+                            isSelected = {
+                                this.props.isLeafNode
+                                &&
+                                index == this.props.path[
+                                    this.props.path.length - 1
+                                ]
+                            }
+                            clickHandler = {this.props.navigator} />
+                    )
+                )}
+                {this.props.nodeName != "__HOME__" &&
+                    <NavigationButton 
+                        id = "back-button"
+                        type = "icon"
+                        value = "Back Button"
+                        src = "resources/Images/Site/icon_back.png"
+                        path = {
+                            this.props.isLeafNode ?
+                            this.props.path.slice(
+                                0, this.props.path.length - 2,
+                            )
+                            :
+                            this.props.path.slice(
+                                0, this.props.path.length - 1,
+                            )
+                        }
+                        clickHandler = {this.props.navigator} />
+                }
             </div>
         );
     }
@@ -124,69 +618,53 @@ class NavigationMenu extends React.Component {
 class NavigationButton extends React.Component {
     constructor(props) {
         super(props);
+        this.clickHandler = this.clickHandler.bind(this);
     }
 
-    clickHandler(e) {
-        e.preventDefault();
-        this.props.clickHandler(this.props.name);
-    }
-
-    getClass() {
-        if (this.props.isSelected) {
-            return "SelectedButton";
-        }
-        return "UnselectedButton";
-    }
-
-    render() {
-        return (
-            <h3 
-                onClick = {this.clickHandler.bind(this)} 
-                className = {this.getClass()}>
-            {this.props.name}
-            </h3>
+    clickHandler() {
+        this.props.clickHandler(
+            this.props.path
         );
     }
-}
-
-class ContentsArea extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
-        let content;
-        switch (this.props.page) {
-            case "HOME":
+        switch (this.props.type) {
+            case "icon":
                 return (
-                    <HomePage 
-                        className = "ContentsArea" 
-                        page = {this.props.page}/>
+                    <img
+                        id = {this.props.id}
+                        src = {this.props.src}
+                        alt = {this.props.value} 
+                        onClick = {this.clickHandler} />
                 );
-            case "ABOUT":
+            case "topbutton":
                 return (
-                    <AboutPage 
-                        className = "ContentsArea" 
-                        page = {this.props.page}/>
+                    <h3
+                        className = {
+                            "navigation-button top " + (
+                                this.props.isSelected ? 
+                                "selected" : "unselected"
+                            )
+                        }
+                        onClick = {this.clickHandler}>
+                    {this.props.value.toUpperCase()}:
+                    </h3>
                 );
-            case "SAMPLES":
+            case "subbutton":
                 return (
-                    <SamplesPage 
-                        className = "ContentsArea" 
-                        page = {this.props.page}/>
-                );
-            case "PROJECTS":
-                return (
-                    <ProjectsPage 
-                        className = "ContentsArea" 
-                        page = {this.props.page}/>
-                );
-                return <ProjectsPage className = {this.props.page}/>;
-            case "CONTACT":
-                return (
-                    <ContactPage 
-                        className = "ContentsArea" 
-                        page = {this.props.page}/>
+                    <h3
+                        className = {
+                            "navigation-button item " + (
+                                this.props.isSelected ? 
+                                " selected" : " unselected"
+                            )
+                        }
+                        onClick = {this.clickHandler}>
+                    <span>
+                    {"\u00bb "}
+                    </span>
+                    {this.props.value}
+                    </h3>
                 );
             default:
                 return null;
@@ -194,107 +672,58 @@ class ContentsArea extends React.Component {
     }
 }
 
-class HomePage extends React.Component {
+class ContentArea extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    render() {
-        return (
-            <div className = {this.props.className}>
-                <h1>{this.props.page}</h1>
-            </div>
+    renderNavigationPath() {
+        let navigationPath = ["You're Viewing:   "];
+        this.props.pathNames.forEach(
+            (name, index) => {
+                navigationPath.push(
+                    <span
+                        onClick = {
+                            () => {
+                                this.props.navigator(
+                                    this.props.path.slice(0, index)
+                                );
+                            }
+                        }>
+                    {name}
+                    </span>
+                );
+                if (index + 1 < this.props.pathNames.length) {
+                    navigationPath.push("   \u2192   ");
+                }
+            }
         );
-    }
-}
-
-class AboutPage extends React.Component {
-    constructor(props) {
-        super(props);
+        return (
+            <p id = "navigation-path">
+            {navigationPath}
+            </p>
+        )
     }
 
     render() {
         return (
-            <div className = {this.props.className}>
-                <h1>{this.props.page}</h1>
-            </div>
-        );
-    }
-}
-
-class SamplesPage extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div className = {this.props.className}>
-                <h1>{this.props.page}</h1>
-                <LinkEmbedText
-                    type = "indented"
-                    src = "bad-src"/>
-                <br/>
-                <Runnable
-                    name = "Cartpole"
-                    iconSource = "resources/Images/Cartpole/cartpole.png"
-                    introSource = "bad-src"
-                    loader = {Cartpole.loadAssets}
-                    runner = {
-                        () => {
-                            let game = new Cartpole();
-                        }
-                    } />
-                <Runnable
-                    name = "Minesweeper"
-                    className = "gameSample"
-                    iconSource = "resources/Images/Minesweeper/mine.png"
-                    introSource = "resources/JSON/test.json"
-                    loader = {Minesweeper.loadAssets}
-                    runner = {
-                        () => {
-                            let game = new Minesweeper();
-                        }
-                    } />
-                <Runnable
-                    name = "Snake"
-                    className = "gameSample"
-                    iconSource = "resources/Images/Snake/snake.png"
-                    introSource = "bad-src"
-                    loader = {Snake.loadAssets}
-                    runner = {
-                        () => {
-                            let game = new Snake();
-                        }
-                    } />
-            </div>
-        );
-    }
-}
-
-class ProjectsPage extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div className = {this.props.className}>
-                <h1>{this.props.page}</h1>
-            </div>
-        );
-    }
-}
-
-class ContactPage extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div className = {this.props.className}>
-                <h1>{this.props.page}</h1>
+            <div className = "content-area">
+            {this.renderNavigationPath()}
+            {this.props.articleList.length == 0 &&
+            <img 
+                className = "empty-article"
+                src = "resources/Images/Site/empty.jpg"
+                alt = "image that represents an empty article" />
+            }
+            {this.props.articleList.map(
+                article => (
+                    <Article 
+                        key = {article}
+                        src = {article}
+                        navigator = {this.props.navigator}
+                        fillers = {this.props.fillers} />
+                )
+            )}
             </div>
         );
     }
@@ -303,7 +732,8 @@ class ContactPage extends React.Component {
 class Article extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {data : null};
+        this.state = {data : this.props.data};
+        this.renderElement = this.renderElement.bind(this);
     }
 
     componentDidMount() {
@@ -322,36 +752,255 @@ class Article extends React.Component {
             );
     }
 
-    buildLink(token) {
-        if (token == undefined) {
+    renderTitle(title) {
+        if (title == "") {
             return null;
         }
-        const link = token.slice(1, token.length - 1);
+        return <h1 className = "title">{title}</h1>;
+    }
+
+    renderAuthors(authors) {
+        if (authors.length == 0) {
+            return null;
+        }
         return (
-            <a href = {this.state.data.links[link]} target = "_blank">
-            {link}
-            </a>
+            <h4 className = "author">
+            {authors.map(
+                (author, index, arr) => {
+                    if (index == 0) {
+                        return "by " + author;
+                    } else if (index + 1 == arr.length) {
+                        return " and " + author;
+                    }
+                    return " " + author;
+                }
+            ).join()}
+            </h4>
         );
     }
 
-    renderComponent() {
-        return null;
+    renderDate(creationDate, lastModified) {
+        if (creationDate == "") {
+            return null;
+        }
+        return (
+            <h4 className = "date">
+            {creationDate} (last edited {lastModified})
+            </h4>
+        );
+    }
+    
+    renderTextElement(element) {
+        function buildParagraph(p) {
+            if ( codeMatcher.test(p) ) {
+                let codeSrc = p.match(codeMatcher)[1];
+                return <Code src = {codeSrc}/>
+            }
+            let arr = p.split( linkSplitter );
+            return (
+                <p className = {element.indented ? "indented" : null}>
+                {arr.map(
+                    s => {
+                        if ( linkMatcher.test(s) ) {
+                            return buildLink(s);
+                        }
+                        return s;
+                    }
+                )}
+                </p>
+            );
+        }
+
+        function buildLink(s) {
+            const t = s.slice(1, s.length - 1);
+            let link, clicker, target;
+            if (element.links[t] == undefined) {
+                link = null;
+                clicker = (e) => {
+                    e.preventDefault();
+                    return false;
+                };
+                target = null;
+            } else if ( internalLink.test( element.links[t] ) ) {
+                link = null;
+                clicker = (e) => {
+                    e.preventDefault();
+                    let pathString = element.links[t].match(
+                        internalLink
+                    )[1];
+                    let path = (
+                        pathString == "" ?
+                        [] : pathString.split( /, */ ).map( n => +n )
+                    );
+                    navigator(path);
+                    return false;
+                }
+                target = null;
+            } else {
+                link = element.links[t];
+                clicker = null;
+                target = "_blank";
+            }
+            return (
+                <a
+                    href = {link}
+                    onClick = {clicker}
+                    target = {target}>
+                {t}
+                </a>
+            );
+        }
+
+        let paragraphs = element.content.split(/\n+/);
+        const linkSplitter = /({[^{}]+})/g;
+        const linkMatcher = /^{[^{}]+}$/;
+        const codeMatcher = /^<(.*)>$/;
+        const internalLink = /^internal::(.*)$/;
+        const navigator = this.props.navigator;
+        return (
+            <div className = "text">
+            {paragraphs.map( buildParagraph )}
+            </div>
+        );
     }
 
-    renderArticle() {
-        return null;
+    renderImageElement(element) {
+        let caption;
+        if (element.name || element.caption) {
+            const sep = (
+                element.name == "" || element.caption == "" ?
+                "" : ": "
+            );
+            caption = (
+                <div className = "caption">
+                    <span className = "caption-text">
+                        <b> {element.name + sep} </b>
+                        {element.caption}
+                    </span>
+                </div>
+            );
+        } else {
+            caption = null;
+        }
+        return (
+            <div 
+                className = "image-element" >
+                <div className = "image-container">
+                    <div className = "figure">
+                        <img 
+                            width = {element.width || null}
+                            height = {element.height || null}
+                            src = {element.src}
+                            alt = "Image failed to load" />
+                    </div>
+                    {caption}
+                </div>
+            </div>
+        );
+    }
+
+    renderQuoteElement(element) {
+        return (
+            <div className = "quote">
+                <p className = "quote-text">
+                    <i>{"\u201c" + element.text + "\u201d"}</i>
+                </p>
+                <span className = "quote-source">
+                {element.src == "" ?  null : "\u2014 " + element.src}
+                </span>
+            </div>
+        );
+    }
+
+    renderSubtitleElement(element) {
+        return (
+            <h3 className = "subtitle">
+            {element.text}
+            </h3>
+        );
+    }
+
+    renderElement(element) {
+        switch (element.type) {
+            case "text":
+                return this.renderTextElement(element);
+            case "image":
+                return this.renderImageElement(element);
+            case "quote":
+                return this.renderQuoteElement(element);
+            case "subtitle":
+                return this.renderSubtitleElement(element);
+            case "placeholder":
+                return this.props.fillers[element.name];
+            default:
+                return null;
+        }
     }
 
     render() {
-        if (this.state.data == null) {
+        if (this.state.data == undefined) {
             return <LoadIndicator/>;
         } else if (this.state.data instanceof Error) {
-            return <ErrorIndicator/>;
+            return <ErrorIndicator type = "Article"/>;
         }
         return (
             <div className = "article">
-                {this.renderArticle()}
+                {this.renderTitle(this.state.data.title)}
+                {this.renderAuthors(this.state.data.authors)}
+                {this.renderDate(
+                    this.state.data.creationDate, 
+                    this.state.data.lastModified,
+                )}
+                {this.state.data.components.map(this.renderElement)}
             </div>
+        );
+    }
+
+}
+
+class Code extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: null,
+        }
+    }
+
+    componentDidMount() {
+        fetch(this.props.src)
+            .then( response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error("http status error");
+                }
+            })
+            .then( text => {
+                this.setState({data: text});
+            })
+            .catch( err => {
+                this.setState({data: err});
+            })
+    }
+
+    componentDidUpdate() {
+        if (this.state.data != undefined) {
+            let cur = ReactDOM.findDOMNode(this);
+            hljs.highlightBlock(cur);
+        }
+    }
+
+    render() {
+        if (this.state.data == undefined) {
+            return null;
+        }
+        if (this.state.data instanceof Error) {
+            return null;
+        }
+        return (
+            <pre><code>
+            {this.state.data}
+            </code></pre>
         );
     }
 }
@@ -359,7 +1008,7 @@ class Article extends React.Component {
 class LinkEmbedText extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {data : this.props.data};
+        this.state = {data: null};
     }
 
     componentDidMount() {
@@ -373,46 +1022,32 @@ class LinkEmbedText extends React.Component {
                 } else {
                     throw new Error("http status error");
                 }
-            }).then( jsonData => {
-                this.setState({data : jsonData});
-            })
-            .catch(
-                err => this.setState({data : err})
+            }).then(
+                jsonData => {this.setState({data: jsonData})},
+                err => {this.setState({data: err})},
             );
     }
 
-    buildLink(token) {
-        if (token == undefined) {
-            return null;
-        }
-        const link = token.slice(1, token.length - 1);
-        return (
-            <a href = {this.state.data.links[link]} target = "_blank">
-            {link}
-            </a>
-        );
-    }
-
-    merge(texts, links) {
-        let merged = [texts[0]];
-        for (let i = 1; i < texts.length; i++) {
-            merged.push( this.buildLink( links[i - 1] ) );
-            merged.push( texts[i] );
-        }
-        return merged;
-    }
-
     renderData() {
-        return this.state.data.text.map(
-            (text) => {
-                let links = text.match(/{[^{}]+}/g);
-                let interLinkText = text.split(/{[^{}]+}/);
-                return (
-                    <p className = {this.props.type}>
-                    {this.merge(interLinkText, links)}
-                    </p>
-                );
-            }
+        let arr = this.state.data.text.split( /({[^{}]+})/g );
+        return (
+            <p className = "link-embed-text">
+            {arr.map(
+                s => {
+                    if ( /^{[^{}]+}$/.test(s) ) {
+                        const t = s.slice(1, s.length - 1);
+                        return (
+                            <a 
+                                href = {this.state.data.links[t] ?? ""}
+                                target = "_blank" >
+                            {t}
+                            </a>
+                        );
+                    }
+                    return s;
+                }
+            )}
+            </p>
         );
     }
 
@@ -420,13 +1055,9 @@ class LinkEmbedText extends React.Component {
         if (this.state.data == null) {
             return <LoadIndicator/>;
         } else if (this.state.data instanceof Error) {
-            return <ErrorIndicator/>;
+            return <ErrorIndicator type = "Text"/>;
         }
-        return (
-            <div>
-                {this.renderData()}
-            </div>
-        );
+        return this.renderData();
     }
 }
 
@@ -466,13 +1097,13 @@ class Runnable extends React.Component {
 
     render() {
         return (
-            <div className = "Runnable" id = {this.props.name}>
-                <h4 className = "Title">{this.props.name}</h4>
+            <div className = "runnable" id = {this.props.id}>
+                <h4 className = "runnable-title">{this.props.name}</h4>
                 <div 
-                    className = "runnableButton"
+                    className = "runnable-button"
                     onClick = {this.clickHandler.bind(this)}>
                 <img 
-                    className = "runnableIcon"
+                    className = "runnable-icon"
                     src = {this.props.iconSource} />
                 <span className = "status">
                 {this.getMessage()}
@@ -480,7 +1111,6 @@ class Runnable extends React.Component {
                 </div>
                 <br/>
                 <LinkEmbedText 
-                    type = "block"
                     src = {this.props.introSource}/>
             </div>
         );
@@ -488,22 +1118,95 @@ class Runnable extends React.Component {
 }
 
 function LoadIndicator(props) {
+    // in the future it will be updated to more cool-looking
+    // animations
     return (
         <img 
-            className = "LoadIndicator" 
-            src = "resources/Images/Site/load_spinner.gif" />
+            className = "load-indicator" 
+            src = "resources/Images/Site/gif_spinner.gif" />
     );
 }
 
 function ErrorIndicator(props) {
     return (
-        <img 
-            className = "ErrorIndicator" 
-            src = "resources/Images/Site/smileyFace.png" />
+        <div className = "error-indicator">
+            <img 
+                className = "error-image" 
+                src = "resources/Images/Site/gif_error.gif" 
+                alt = "picture that indicates an error"/>
+            <span className = "error-text">
+            {props.type} Not Found
+            </span>
+        </div>
     );
 }
 
-ReactDOM.render(
-    <MainPage/>,
-    document.getElementById("root"),
-);
+const fillers = {
+    Cartpole: (
+        <Runnable
+            id = "cartpole"
+            name = "Cartpole"
+            iconSource = "resources/Images/Cartpole/cartpole.png"
+            introSource = "resources/JSON/Site/projects/cartp_intro.json"
+            loader = {Cartpole.loadAssets}
+            runner = {
+                () => {
+                    let game = new Cartpole();
+                }
+            } />
+    ),
+    Minesweeper: (
+        <Runnable
+            id = "minesweeper"
+            name = "Minesweeper"
+            className = "gameSample"
+            iconSource = "resources/Images/Minesweeper/mine.png"
+            introSource = "resources/JSON/Site/projects/minew_intro.json"
+            loader = {Minesweeper.loadAssets}
+            runner = {
+                () => {
+                    let game = new Minesweeper();
+                }
+            } />
+    ),
+    Snake: (
+        <Runnable
+            id = "snake"
+            name = "Snake"
+            className = "gameSample"
+            iconSource = "resources/Images/Snake/snake.png"
+            introSource = "resources/JSON/Site/projects/snake_intro.json"
+            loader = {Snake.loadAssets}
+            runner = {
+                () => {
+                    let game = new Snake();
+                }
+            } />
+    ),
+};
+
+fetch("resources/JSON/Site/setup.json").
+    then(
+        response => {
+            if ( response.ok ) {
+                return response.json();
+            } else {
+                throw new Error("http server error"); 
+            }
+        }
+    ).then(
+        jsonData => {
+            ReactDOM.render(
+                <MainPage 
+                    data = {jsonData} 
+                    globalFillers = {fillers} />,
+                document.getElementById("root"),
+            );
+        },
+        err => {
+            ReactDOM.render(
+                <MainPage data = {err} />,
+                document.getElementById("root"),
+            );
+        },
+    );

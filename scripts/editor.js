@@ -1,61 +1,4 @@
 "use strict";
-/* defining the structore of javascript objects that
- * stores all the information of an article
- *
- * {
- *   title: string
- *   authors: []
- *   date: string
- *   compoents: [
- *      {component1},
- *      {component2},
- *      ...
- *   ]
- * }
- *
- * supported article component formats:
- *
- * {
- *   type: image,
- *   name: str,
- *   src: str,
- *   caption: str,
- * }
- *
- * {
- *   type: text,
- *   name: str,
- *   content: "str",
- *   links: {
- *     [link1]: [url1],
- *     [link2]: [url2],
- *     ...
- *   }
- * }
- *
- * {
- *   type: subtitle,
- *   name: str,
- *   text: str,
- * }
- *
- * {
- *   type: quote,
- *   name: str,
- *   text: str,
- *   links: {
- *     [link1]: [url1],
- *     [link2]: [url2],
- *     ...
- *   }
- * }
- *
- * {
- *   type: placeholder,
- *   name: str,
- * }
- *
- */
 
 class Editor extends React.Component {
   constructor(props) {
@@ -219,7 +162,7 @@ class Editor extends React.Component {
 
   download() {
     let a = document.createElement("a");
-    let file = new Blob([JSON.stringify(this.state.data)], {
+    let file = new Blob([JSON.stringify(this.state.data, null, 2)], {
       type: "text/json"
     });
     a.href = URL.createObjectURL(file);
@@ -271,14 +214,14 @@ class Editor extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       className: "editor"
-    }, /*#__PURE__*/React.createElement("input", {
+    }, React.createElement("input", {
       type: "file",
       id: "json-upload",
       accept: ".json",
       onChange: this.loadData
-    }), /*#__PURE__*/React.createElement(ControlPanel, {
+    }), React.createElement(ControlPanel, {
       data: this.state.data,
       selected: this.state.selected,
       isEditing: this.state.isEditing,
@@ -290,10 +233,10 @@ class Editor extends React.Component {
       addHandler: this.addHandler,
       uploadHandler: this.uploadHandler,
       downloadHandler: this.downloadHandler
-    }), /*#__PURE__*/React.createElement(Article, {
+    }), React.createElement(Article, {
       data: this.state.data,
       selected: this.state.selected
-    }), this.state.isEditing && /*#__PURE__*/React.createElement(EditingPanel, {
+    }), this.state.isEditing && React.createElement(EditingPanel, {
       data: this.grabSelectedData(),
       updateHandler: this.updateHandler,
       closeHandler: this.stopEditing
@@ -308,7 +251,7 @@ class ControlPanel extends React.Component {
   }
 
   renderElements() {
-    return this.props.data.components.map((component, index) => /*#__PURE__*/React.createElement(ControlElement, {
+    return this.props.data.components.map((component, index) => React.createElement(ControlElement, {
       type: component.type,
       selectionID: index,
       isSelected: this.props.selected == index,
@@ -318,17 +261,17 @@ class ControlPanel extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: "control-panel"
-    }, /*#__PURE__*/React.createElement("button", {
+    }, React.createElement("button", {
       type: "button",
       id: "upload",
       onClick: this.props.uploadHandler
-    }, "Upload"), /*#__PURE__*/React.createElement("button", {
+    }, "Upload"), React.createElement("button", {
       type: "button",
       id: "download",
       onClick: this.props.downloadHandler
-    }, "Download"), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement(ToolBar, {
+    }, "Download"), React.createElement("br", null), React.createElement(ToolBar, {
       moveupHandler: this.props.moveupHandler,
       movedownHandler: this.props.movedownHandler,
       deleteHandler: this.props.deleteHandler,
@@ -336,25 +279,25 @@ class ControlPanel extends React.Component {
       isEditing: this.props.isEditing,
       isMovable: /\d+/.test(this.props.selected),
       isEnabled: this.props.selected != null
-    }), /*#__PURE__*/React.createElement(ControlElement, {
+    }), React.createElement(ControlElement, {
       type: "TITLE",
       selectionID: "title",
       isSelected: this.props.selected == "title",
       name: "Main Title",
       clickHandler: this.props.selectionHandler
-    }), /*#__PURE__*/React.createElement(ControlElement, {
+    }), React.createElement(ControlElement, {
       type: "AUTHORS",
       selectionID: "authors",
       isSelected: this.props.selected == "authors",
       name: this.props.data.authors.length + " authors",
       clickHandler: this.props.selectionHandler
-    }), /*#__PURE__*/React.createElement(ControlElement, {
+    }), React.createElement(ControlElement, {
       type: "DATE",
       selectionID: "date",
       isSelected: this.props.selected == "date",
       name: this.props.data.creationDate,
       clickHandler: this.props.selectionHandler
-    }), this.renderElements(), /*#__PURE__*/React.createElement(InsertionForm, {
+    }), this.renderElements(), React.createElement(InsertionForm, {
       onSubmit: this.props.addHandler
     }));
   }
@@ -376,10 +319,10 @@ class ControlElement extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("h6", {
+    return React.createElement("h6", {
       className: this.getClass(),
       onClick: this.clickHandler
-    }, this.props.type, ": ", /*#__PURE__*/React.createElement("i", null, this.props.name));
+    }, this.props.type, ": ", React.createElement("i", null, this.props.name));
   }
 
 }
@@ -390,24 +333,24 @@ class ToolBar extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       className: "toolbar"
-    }, /*#__PURE__*/React.createElement("img", {
+    }, React.createElement("img", {
       className: this.props.isEnabled && this.props.isMovable ? "enabled" : "disabled",
       src: "resources/Images/Editor/moveup.png",
       alt: "move up",
       onClick: this.props.moveupHandler
-    }), /*#__PURE__*/React.createElement("img", {
+    }), React.createElement("img", {
       className: this.props.isEnabled && this.props.isMovable ? "enabled" : "disabled",
       src: "resources/Images/Editor/movedown.png",
       alt: "move down",
       onClick: this.props.movedownHandler
-    }), /*#__PURE__*/React.createElement("img", {
+    }), React.createElement("img", {
       className: this.props.isEnabled && this.props.isMovable ? "enabled" : "disabled",
       src: "resources/Images/Editor/delete.png",
       alt: "delete",
       onClick: this.props.deleteHandler
-    }), /*#__PURE__*/React.createElement("img", {
+    }), React.createElement("img", {
       className: this.props.isEnabled && !this.props.isEditing ? "enabled" : "disabled",
       src: "resources/Images/Editor/edit.png",
       alt: "edit",
@@ -439,32 +382,77 @@ class InsertionForm extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("form", {
+    return React.createElement("form", {
       className: "insert",
       onSubmit: this.onSubmit
-    }, /*#__PURE__*/React.createElement("label", {
+    }, React.createElement("label", {
       for: "new-element"
-    }, "Add Component:"), /*#__PURE__*/React.createElement("select", {
+    }, "Add Component:"), React.createElement("select", {
       id: "new-element",
       onChange: this.onChange
-    }, /*#__PURE__*/React.createElement("option", {
+    }, React.createElement("option", {
       value: "placeholder",
       selected: true
-    }, "placeholder"), /*#__PURE__*/React.createElement("optgroup", {
+    }, "placeholder"), React.createElement("optgroup", {
       label: "Available Components"
-    }, /*#__PURE__*/React.createElement("option", {
+    }, React.createElement("option", {
       value: "image"
-    }, "image"), /*#__PURE__*/React.createElement("option", {
+    }, "image"), React.createElement("option", {
       value: "text"
-    }, "text"), /*#__PURE__*/React.createElement("option", {
+    }, "text"), React.createElement("option", {
       value: "quote"
-    }, "quotation"), /*#__PURE__*/React.createElement("option", {
+    }, "quotation"), React.createElement("option", {
       value: "subtitle"
-    }, "subtitle"))), /*#__PURE__*/React.createElement("input", {
+    }, "subtitle"))), React.createElement("input", {
       className: "insert",
       type: "image",
       src: "resources/Images/Editor/insert.png"
     }));
+  }
+
+}
+
+class Code extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: null
+    };
+  }
+
+  componentDidMount() {
+    fetch(this.props.src).then(response => {
+      if (response.ok) {
+        return response.text();
+      } else {
+        throw new Error("http status error");
+      }
+    }).then(text => {
+      this.setState({
+        data: text
+      });
+    }).catch(err => {
+      this.setState({
+        data: err
+      });
+    });
+  }
+
+  componentDidUpdate() {
+    let cur = ReactDOM.findDOMNode(this);
+    hljs.highlightBlock(cur);
+  }
+
+  render() {
+    if (this.state.data == undefined) {
+      return React.createElement("div", null);
+    }
+
+    if (this.state.data instanceof Error) {
+      return React.createElement("div", null);
+    }
+
+    return React.createElement("pre", null, React.createElement("code", null, this.state.data));
   }
 
 }
@@ -480,7 +468,7 @@ class Article extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("h1", {
+    return React.createElement("h1", {
       className: "title"
     }, title);
   }
@@ -490,7 +478,7 @@ class Article extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("h4", {
+    return React.createElement("h4", {
       className: "author"
     }, authors.map((author, index, arr) => {
       if (index == 0) {
@@ -508,35 +496,75 @@ class Article extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("h4", {
+    return React.createElement("h4", {
       className: "date"
     }, creationDate, " (last edited ", lastModified, ")");
   }
 
   renderTextElement(element) {
-    let paragraphs = element.content.split(/\n+/);
-    return /*#__PURE__*/React.createElement("div", {
-      className: "text"
-    }, paragraphs.map(p => {
-      if (p == "") {
-        return /*#__PURE__*/React.createElement("br", null);
+    function buildParagraph(p) {
+      if (codeMatcher.test(p)) {
+        let codeSrc = p.match(codeMatcher)[1];
+        return React.createElement(Code, {
+          src: codeSrc
+        });
       }
 
-      let arr = p.split(/({[^{}]+})/g);
-      return /*#__PURE__*/React.createElement("p", {
+      let arr = p.split(linkSplitter);
+      return React.createElement("p", {
         className: element.indented ? "indented" : null
       }, arr.map(s => {
-        if (/{[^{}]+}/.test(s)) {
-          const t = s.slice(1, s.length - 1);
-          return /*#__PURE__*/React.createElement("a", {
-            href: element.links[t] || "",
-            target: "_blank"
-          }, t);
+        if (linkMatcher.test(s)) {
+          return buildLink(s);
         }
 
         return s;
       }));
-    }));
+    }
+
+    function buildLink(s) {
+      const t = s.slice(1, s.length - 1);
+      let link, clicker, target;
+
+      if (element.links[t] == undefined) {
+        link = "#";
+
+        clicker = () => {
+          return false;
+        };
+
+        target = null;
+      } else if (internalLink.test(element.links[t])) {
+        link = "#";
+
+        clicker = () => {
+          let pathString = element.links[t].match(internalLink)[1];
+          alert("internal link: " + pathString);
+          return false;
+        };
+
+        target = null;
+      } else {
+        link = element.links[t];
+        clicker = null;
+        target = "_blank";
+      }
+
+      return React.createElement("a", {
+        href: link,
+        onClick: clicker,
+        target: target
+      }, t);
+    }
+
+    let paragraphs = element.content.split(/\n+/);
+    const linkSplitter = /({[^{}]+})/g;
+    const linkMatcher = /^{[^{}]+}$/;
+    const codeMatcher = /^<(.*)>$/;
+    const internalLink = /^internal::(.*)$/;
+    return React.createElement("div", {
+      className: "text"
+    }, paragraphs.map(buildParagraph));
   }
 
   renderImageElement(element) {
@@ -544,22 +572,22 @@ class Article extends React.Component {
 
     if (element.name || element.caption) {
       const sep = element.name == "" || element.caption == "" ? "" : ": ";
-      caption = /*#__PURE__*/React.createElement("div", {
+      caption = React.createElement("div", {
         className: "caption"
-      }, /*#__PURE__*/React.createElement("span", {
+      }, React.createElement("span", {
         className: "caption-text"
-      }, /*#__PURE__*/React.createElement("b", null, " ", element.name + sep, " "), element.caption));
+      }, React.createElement("b", null, " ", element.name + sep, " "), element.caption));
     } else {
       caption = null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       className: "image-element"
-    }, /*#__PURE__*/React.createElement("div", {
+    }, React.createElement("div", {
       className: "image-container"
-    }, /*#__PURE__*/React.createElement("div", {
+    }, React.createElement("div", {
       className: "figure"
-    }, /*#__PURE__*/React.createElement("img", {
+    }, React.createElement("img", {
       width: element.width || null,
       height: element.height || null,
       src: element.src,
@@ -568,17 +596,17 @@ class Article extends React.Component {
   }
 
   renderQuoteElement(element) {
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       className: "quote"
-    }, /*#__PURE__*/React.createElement("p", {
+    }, React.createElement("p", {
       className: "quote-text"
-    }, /*#__PURE__*/React.createElement("i", null, "\u201c" + element.text + "\u201d")), /*#__PURE__*/React.createElement("span", {
+    }, React.createElement("i", null, "\u201c" + element.text + "\u201d")), React.createElement("span", {
       className: "quote-source"
     }, element.src == "" ? null : "\u2014 " + element.src));
   }
 
   renderSubtitleElement(element) {
-    return /*#__PURE__*/React.createElement("h3", {
+    return React.createElement("h3", {
       className: "subtitle"
     }, element.text);
   }
@@ -603,7 +631,7 @@ class Article extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: "article"
     }, this.renderTitle(this.props.data.title), this.renderAuthors(this.props.data.authors), this.renderDate(this.props.data.creationDate, this.props.data.lastModified), this.props.data.components.map(this.renderElement));
   }
@@ -629,56 +657,56 @@ class EditingPanel extends React.Component {
   renderComponentEditor() {
     switch (this.props.data.type) {
       case "title":
-        return /*#__PURE__*/React.createElement(TitleEditor, {
+        return React.createElement(TitleEditor, {
           updateHandler: this.props.updateHandler,
           data: this.props.data,
           isMinimized: this.state.isMinimized
         });
 
       case "authors":
-        return /*#__PURE__*/React.createElement(AuthorEditor, {
+        return React.createElement(AuthorEditor, {
           updateHandler: this.props.updateHandler,
           data: this.props.data,
           isMinimized: this.state.isMinimized
         });
 
       case "date":
-        return /*#__PURE__*/React.createElement(DateEditor, {
+        return React.createElement(DateEditor, {
           updateHandler: this.props.updateHandler,
           data: this.props.data,
           isMinimized: this.state.isMinimized
         });
 
       case "text":
-        return /*#__PURE__*/React.createElement(TextEditor, {
+        return React.createElement(TextEditor, {
           updateHandler: this.props.updateHandler,
           data: this.props.data,
           isMinimized: this.state.isMinimized
         });
 
       case "image":
-        return /*#__PURE__*/React.createElement(ImageEditor, {
+        return React.createElement(ImageEditor, {
           updateHandler: this.props.updateHandler,
           data: this.props.data,
           isMinimized: this.state.isMinimized
         });
 
       case "quote":
-        return /*#__PURE__*/React.createElement(QuoteEditor, {
+        return React.createElement(QuoteEditor, {
           updateHandler: this.props.updateHandler,
           data: this.props.data,
           isMinimized: this.state.isMinimized
         });
 
       case "subtitle":
-        return /*#__PURE__*/React.createElement(SubtitleEditor, {
+        return React.createElement(SubtitleEditor, {
           updateHandler: this.props.updateHandler,
           data: this.props.data,
           isMinimized: this.state.isMinimized
         });
 
       case "placeholder":
-        return /*#__PURE__*/React.createElement(PlaceholderEditor, {
+        return React.createElement(PlaceholderEditor, {
           updateHandler: this.props.updateHandler,
           data: this.props.data,
           isMinimized: this.state.isMinimized
@@ -690,18 +718,18 @@ class EditingPanel extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       className: this.state.isMinimized ? "is-minimized" : "is-open",
       id: "editing-panel"
-    }, /*#__PURE__*/React.createElement(StatusBar, {
+    }, React.createElement(StatusBar, {
       isMinimized: this.state.isMinimized,
       clickHandler: this.minimizeToggler,
       closeHandler: this.props.closeHandler
-    }), this.renderComponentEditor(), /*#__PURE__*/React.createElement("button", {
+    }), this.renderComponentEditor(), React.createElement("button", {
       id: "close-button",
       className: this.state.isMinimized ? "is-minimized" : "is-open",
       onClick: this.props.closeHandler
-    }, this.state.isMinimized ? /*#__PURE__*/React.createElement("img", {
+    }, this.state.isMinimized ? React.createElement("img", {
       id: "close-button-image",
       src: "resources/Images/editor/close.png",
       alt: "close"
@@ -724,7 +752,7 @@ class StatusBar extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("h5", {
+    return React.createElement("h5", {
       className: "status-bar",
       onClick: this.props.clickHandler
     }, "----- ", this.getStatusMessage(), " -----");
@@ -753,13 +781,13 @@ class TitleEditor extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: "title-editor",
       className: "component-editor"
-    }, /*#__PURE__*/React.createElement(LabelInGrid, {
+    }, React.createElement(LabelInGrid, {
       for: "title-textfield",
       value: "Edit Title:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "title-textfield",
       value: this.props.data.content,
       onChange: this.updateTitle
@@ -830,38 +858,38 @@ class AuthorEditor extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: "author-editor",
       className: "component-editor"
-    }, /*#__PURE__*/React.createElement(LabelInGrid, {
+    }, React.createElement(LabelInGrid, {
       for: "author-list",
       value: "Author List: "
-    }), /*#__PURE__*/React.createElement("div", {
+    }), React.createElement("div", {
       id: "author-list-cell"
-    }, /*#__PURE__*/React.createElement("ol", {
+    }, React.createElement("ol", {
       id: "author-list"
     }, this.props.data.content.map((authorName, index) => {
-      return /*#__PURE__*/React.createElement("li", {
+      return React.createElement("li", {
         className: this.state.selected == index ? "selected" : "unselected",
         key: index + authorName,
         onClick: () => {
           this.selectAuthor(index);
         }
       }, authorName);
-    }))), /*#__PURE__*/React.createElement(ButtonInGrid, {
+    }))), React.createElement(ButtonInGrid, {
       ID: "author-delete",
       className: this.state.selected == null ? "disabled" : "enabled",
       value: "Remove Author",
       onClick: this.removeAuthor
-    }), /*#__PURE__*/React.createElement(ButtonInGrid, {
+    }), React.createElement(ButtonInGrid, {
       ID: "author-add",
       className: "enabled",
       value: "Add Author",
       onClick: this.addAuthor
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "author-textfield",
       value: "Author Name:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "author-textfield",
       className: this.state.selected == null ? "disabled" : "enabled",
       value: this.state.selected == null ? "" : this.props.data.content[this.state.selected],
@@ -892,13 +920,13 @@ class DateEditor extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: "date-editor",
       className: "component-editor"
-    }, /*#__PURE__*/React.createElement(LabelInGrid, {
+    }, React.createElement(LabelInGrid, {
       for: "date-textfield",
       value: "Edit Date:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "date-textfield",
       value: this.props.data.content,
       onChange: this.updateDate
@@ -974,27 +1002,27 @@ class QuoteEditor extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: "quote-editor",
       className: "component-editor"
-    }, /*#__PURE__*/React.createElement(LabelInGrid, {
+    }, React.createElement(LabelInGrid, {
       for: "quote-name",
       value: "Quote Name:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "quote-name",
       value: this.props.data.name,
       onChange: this.updateName
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "quote-source",
       value: "Quote Source:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "quote-source",
       value: this.props.data.src,
       onChange: this.updateSource
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "quote-text",
       value: "Quote Text:"
-    }), /*#__PURE__*/React.createElement(TextareaInGrid, {
+    }), React.createElement(TextareaInGrid, {
       ID: "quote-text",
       value: this.props.data.text,
       onChange: this.updateText
@@ -1108,41 +1136,41 @@ class ImageEditor extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: "image-editor",
       className: "component-editor"
-    }, /*#__PURE__*/React.createElement(LabelInGrid, {
+    }, React.createElement(LabelInGrid, {
       for: "image-name",
       value: "Image Name:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "image-name",
       value: this.props.data.name,
       onChange: this.updateName
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "image-source",
       value: "Image Source:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "image-source",
       value: this.props.data.src,
       onChange: this.updateSource
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "image-width",
       value: "Width:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "image-width",
       value: this.props.data.width,
       onChange: this.updateWidth
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "image-height",
       value: "Height:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "image-height",
       value: this.props.data.height,
       onChange: this.updateHeight
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "image-caption",
       value: "Caption Text:"
-    }), /*#__PURE__*/React.createElement(TextareaInGrid, {
+    }), React.createElement(TextareaInGrid, {
       ID: "image-caption",
       value: this.props.data.caption,
       onChange: this.updateCaption
@@ -1225,7 +1253,7 @@ class TextEditor extends React.Component {
   addLink() {
     const newLink = this.state.newlink;
     const newLinks = Object.assign({}, this.props.data.links, {
-      [newLink]: ""
+      [newLink]: "internal::"
     });
     this.props.updateHandler(state => ({
       data: { ...state.data,
@@ -1244,9 +1272,11 @@ class TextEditor extends React.Component {
   }
 
   removeLink() {
-    const newLinks = Object.assign({}, ...Object.keys(this.props.data.links).filter(key => key != this.state.selected).map(key => {
-      key: this.props.data.links[key];
-    }));
+    const deletedKey = this.state.selected;
+    let {
+      [deletedKey]: deletedLink,
+      ...newLinks
+    } = this.props.data.links;
     this.setState({
       selected: null
     });
@@ -1310,64 +1340,64 @@ class TextEditor extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: "text-editor",
       className: "component-editor"
-    }, /*#__PURE__*/React.createElement(LabelInGrid, {
+    }, React.createElement(LabelInGrid, {
       for: "text-name",
       value: "Text Name:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "text-name",
       value: this.props.data.name,
-      onChange: this.props.updateName
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+      onChange: this.updateName
+    }), React.createElement(LabelInGrid, {
       for: "text-content",
       value: "Edit Text Body:"
-    }), /*#__PURE__*/React.createElement(TextareaInGrid, {
+    }), React.createElement(TextareaInGrid, {
       ID: "text-content",
       value: this.props.data.content,
       onChange: this.updateContent
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "text-indent",
       value: "Auto-Indent:"
-    }), /*#__PURE__*/React.createElement("div", {
+    }), React.createElement("div", {
       id: "text-indent-cell"
-    }, /*#__PURE__*/React.createElement("input", {
+    }, React.createElement("input", {
       id: "text-indent",
       type: "checkbox",
       value: this.props.data.indented,
       onChange: this.indentToggler
-    })), /*#__PURE__*/React.createElement(LabelInGrid, {
+    })), React.createElement(LabelInGrid, {
       for: "link-selection",
       value: "Selected Link:"
-    }), /*#__PURE__*/React.createElement("div", {
+    }), React.createElement("div", {
       id: "link-selection-cell"
-    }, /*#__PURE__*/React.createElement("select", {
+    }, React.createElement("select", {
       id: "link-selection",
       onChange: this.selectLink
-    }, /*#__PURE__*/React.createElement("option", {
+    }, React.createElement("option", {
       selected: this.state.selected == null
-    }, "--None--"), Object.keys(this.props.data.links).map(link => /*#__PURE__*/React.createElement("option", null, link)))), /*#__PURE__*/React.createElement(ButtonInGrid, {
+    }, "--None--"), Object.keys(this.props.data.links).map(link => React.createElement("option", null, link)))), React.createElement(ButtonInGrid, {
       ID: "link-delete",
       className: this.state.selected == null ? "disabled" : "enabled",
       value: "Delete This Link",
       onClick: this.removeLink
-    }), /*#__PURE__*/React.createElement(ButtonInGrid, {
+    }), React.createElement(ButtonInGrid, {
       ID: "link-add",
       className: this.state.newlink == "" ? "disabled" : "enabled",
       value: "Create New Link",
       onClick: this.addLink
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "newlink-name",
       value: "New Link:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "newlink-name",
       value: this.state.newlink,
       onChange: this.editNewLink
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "link-source",
       value: "Edit Source:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "link-source",
       className: this.state.selected == null ? "disabled" : "enabled",
       value: this.props.data.links[this.state.selected],
@@ -1425,20 +1455,20 @@ class SubtitleEditor extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: "subtitle-editor",
       className: "component-editor"
-    }, /*#__PURE__*/React.createElement(LabelInGrid, {
+    }, React.createElement(LabelInGrid, {
       for: "subtitle-name",
       value: "Subtitle Name:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "subtitle-name",
       value: this.props.data.name,
       onChange: this.updateName
-    }), /*#__PURE__*/React.createElement(LabelInGrid, {
+    }), React.createElement(LabelInGrid, {
       for: "subtitle-text",
       value: "Subtitle Text:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "subtitle-text",
       value: this.props.data.text,
       onChange: this.updateText
@@ -1476,13 +1506,13 @@ class PlaceholderEditor extends React.Component {
       return null;
     }
 
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: "placeholder-editor",
       className: "component-editor"
-    }, /*#__PURE__*/React.createElement(LabelInGrid, {
+    }, React.createElement(LabelInGrid, {
       for: "placeholder-name",
       value: "Placeholder Name:"
-    }), /*#__PURE__*/React.createElement(TextfieldInGrid, {
+    }), React.createElement(TextfieldInGrid, {
       ID: "placeholder-name",
       value: this.props.data.name,
       onChange: this.updateName
@@ -1497,9 +1527,9 @@ class ButtonInGrid extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: this.props.id + "-cell"
-    }, /*#__PURE__*/React.createElement("button", {
+    }, React.createElement("button", {
       id: this.props.ID,
       className: this.props.className || null,
       onClick: this.props.onClick
@@ -1514,9 +1544,9 @@ class LabelInGrid extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: this.props.for + "-label-cell"
-    }, /*#__PURE__*/React.createElement("label", {
+    }, React.createElement("label", {
       id: this.props.for + "-label",
       className: this.props.className || null,
       for: this.props.for
@@ -1531,9 +1561,9 @@ class TextfieldInGrid extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: this.props.ID + "-cell"
-    }, /*#__PURE__*/React.createElement("input", {
+    }, React.createElement("input", {
       id: this.props.ID,
       className: this.props.className || null,
       type: "text",
@@ -1550,15 +1580,16 @@ class TextareaInGrid extends React.Component {
   }
 
   render() {
-    return /*#__PURE__*/React.createElement("div", {
+    return React.createElement("div", {
       id: this.props.ID + "-cell"
-    }, /*#__PURE__*/React.createElement("textarea", {
+    }, React.createElement("textarea", {
       id: this.props.ID,
+      value: this.props.value,
       className: this.props.className || null,
       onChange: this.props.onChange
-    }, this.props.value));
+    }));
   }
 
 }
 
-ReactDOM.render( /*#__PURE__*/React.createElement(Editor, null), document.getElementById("root"));
+ReactDOM.render(React.createElement(Editor, null), document.getElementById("root"));

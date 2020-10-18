@@ -2,21 +2,8 @@
  * stylesheet for index.html
  */
 
-a {
-    color: rgb(55, 100, 200);
-    text-decoration: none;
-}
-
-a:hover {
-    color: rgb(0, 155, 255);
-}
-
-a:active {
-    color: rgb(255, 100, 55);
-}
-
-a:visited {
-    color: rgb(200, 100, 55);
+body {
+    background: linear-gradient(120deg, moccasin, lightsteelblue, maroon);
 }
 
 b.load {
@@ -27,17 +14,8 @@ b.error {
     color: rgb(200, 0, 55);
 }
 
-p {
-    text-align: justify;
-    margin: 8%;
-}
-
-p.indented {
-    text-indent: 8%;
-}
-
 canvas {
-    position: absolute;
+    position: fixed;
     width: 900px;
     height: 400px;
     left: 50%;
@@ -45,6 +23,7 @@ canvas {
     margin-left: -450px;
     margin-top: -200px;
     border: 1px solid grey;
+    z-index: 3;
 }
 
 h1 {
@@ -52,87 +31,153 @@ h1 {
     text-align: center;
 }
 
-.WelcomeHeader {
-    border: 1px solid red;
+.welcome-header {
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 300px;
     text-align: center;
-    border-radius: 10px;
+    border-radius: 20px;
 }
 
-.NavigationMenu {
+.navigation-menu {
     float: left;
-    text-align: left;
-    width: 20%;
-    height: 350px;
-    border: 1px solid green;
-    border-radius: 10px;
-}
-
-.ContentsArea {
-    float: right;
+    overflow: visible;
+    margin-top: 15px;
     text-align: center;
-    width: 75%;
-    border: 1px solid black;
-    border-radius: 10px;
+    width: 20%;
+    min-height: 600px;
+    border-radius: 20px;
 }
 
-div.Runnable {
+.content-area {
+    float: right;
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    text-align: center;
+    min-height: 600px;
+    width: 75%;
+    background: white;
+    padding-bottom: 30px;
+    border: 1px solid black;
+    border-radius: 20px;
+}
+
+#home-button {
+    display: block;
+    width: 75px;
+    height: 75px;
+    margin: auto;
+    margin-top: 20px;
+    border-radius: 20%;
+    border: 2px solid transparent;
+}
+
+#home-button:hover {
+    background: cornsilk;
+    border: 2px solid coral;
+    transform: scale(1.05, 1.05);
+}
+
+#home-button:active {
+    transform: scale(.95, .95);
+}
+
+#back-button {
+    width: 75px;
+    height: 75px;
+    margin-bottom: 20px;
+}
+
+#back-button:hover {
+    transform: scale(1.05, 1.05);
+}
+
+#back-button:active {
+    transform: scale(.95, .95);
+}
+
+h3.navigation-button {
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-right: 20%;
+}
+
+h3.selected {
+    color: black;
+}
+
+h3.unselected {
+    color: grey;
+}
+
+h3.top {
+    margin-left: 20%;
+}
+
+h3.item {
+    margin-left: 20%;
+}
+
+h3.top:hover {
+    color: coral;
+    cursor: pointer;
+}
+
+h3.top:active {
+    color: steelblue;
+}
+
+h3.item:hover {
+    overflow: visible;
+    color: coral;
+    background-color: lightgray;
+    transform: scale(1.1, 1.1);
+    cursor: pointer;
+}
+
+h3.item:active {
+    transform: scale(1.0, 1.0);
+    color: steelblue;
+}
+
+h3.item > span {
+    display: none;
+}
+
+h3.item:hover > span {
+    display: inline;
+}
+
+div.runnable {
     float: left;
     text-align: center;
     border: hidden;
     border-radius: 20px;
 }
 
-.Runnable#Cartpole {
+.runnable#cartpole {
     width: 30%;
     margin-left: 2.5%;
     background-color: rgba(255, 55, 55, 0.4);
 }
 
-.Runnable#Minesweeper {
+.runnable#minesweeper {
     width: 30%;
     margin-left: 2.5%;
     background-color: rgba(255, 155, 0, 0.4);
 }
 
-.Runnable#Snake {
+.runnable#snake {
     width: 30%;
     margin-left: 2.5%;
     background-color: rgba(55, 155, 255, 0.4);
 }
 
-h3.SelectedButton {
-    margin-top: 30px;
-    margin-left: 15%;
-    margin-right: 15%;
-    color: black;
-}
 
-h3.UnselectedButton {
-    margin-top: 30px;
-    margin-left: 15%;
-    margin-right: 15%;
-    color: grey;
-}
-
-h3:hover {
-    color: coral;
-    background-color: silver;
-    cursor: pointer;
-}
-
-.LoadIndicator {
-    margin-left: auto;
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-
-.ErrorIndicator {
-    margin-left: auto;
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-
-.runnableButton{
+.runnable-button {
     position: relative;
     text-align: center;
     margin: auto;
@@ -145,17 +190,17 @@ h3:hover {
     background-color: rgb(10, 150, 20);
 }
 
-.runnableButton:hover {
+.runnable-button:hover {
     border: 3px outset white;
     cursor: pointer;
     background-color: rgb(20, 180, 30);
 }
 
-.runnableButton:active {
+.runnable-button:active {
     border: 3px inset white;
 }
 
-.runnableIcon {
+.runnable-icon {
     position: absolute;
     width: 95%;
     height: 95%;
@@ -165,12 +210,12 @@ h3:hover {
     transform: translate(-50%, -50%);
 }
 
-.runnableButton:hover .runnableIcon {
+.runnable-button:hover .runnable-icon {
     width: 100%;
     height: 100%;
 }
 
-.runnableButton:active .runnableIcon {
+.runnable-button:active .runnable-icon {
     width: 90%;
     height: 90%;
 }
@@ -184,8 +229,443 @@ span.status {
     transform: translate(-50%, -50%);
 }
 
-img#avatar {
+.load-indicator {
+    display: block;
+    margin: 20px auto;
+    width: 75px;
+    height: 75px;
+}
+
+.error-indicator {
+    position: relative;
+    display: block;
+    overflow: visible;
+    width: 160px;
+    height: 160px;
+    border-radius: 20%;
+    margin: 20px auto;
+}
+
+img.error-image {
+    width: 100%;
+    width: 100%;
+}
+
+span.error-text {
+    display: block;
+    position: absolute;
+    font: bold small-caps 20px cursive;
+    color: rgb(20, 55, 55);
+    width: 100%;
+    top: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+img.empty-article {
+    display: block;
+    margin: 15px auto;
+    pointer-events: none;
+}
+
+/* header styling
+ */
+
+@keyframes swing-left {
+    from {transform: translateX(0%);}
+    to {transform: translateX(-100%);}
+}
+
+@keyframes fade-in {
+    from {opacity: 0;}
+    to {opacity: 1.0;}
+}
+
+@keyframes fade-out {
+    from {opacity: 1.0;}
+    to {opacity: 0;}
+}
+
+.header-banner {
+    visibility: visible;
+    position: absolute;
+    top: 40px;
+    left: calc(100px + 50%);
+    width: 40%;
+    height: 175px;
+    font-size: 20px;
+    font-family: "Palatino Linotype", serif;
+    background-color: rgba(255, 255, 200, 0.6);
+    color: maroon;
+    border-radius: 25px;
+    text-shadow: 2px 5px 6px darkslategray;
+    transform: translateX(-50%);
+    cursor: default;
+    z-index: 1;
+}
+
+#static-banner {
+    animation: none;
+}
+
+#current-banner {
+    animation: fade-out 1s both;
+    animation-delay: 0.5s;
+}
+
+#next-banner {
+    animation: fade-in 2s both;
+    animation-delay: 3s;
+}
+
+#message-banner {
+    text-align: right;
+}
+
+#selection-bar {
+    position: absolute;
+    left: calc(100px + 50%);
+    bottom: 20px;
+    white-space: nowrap;
+    transform: translateX(-50%);
+}
+
+span.bar-button {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin: 0px 10px;
+    background-color: ivory;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1;
+}
+
+span.selected-bar-button {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin: 0px 10px;
+    background-color: royalblue;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1;
+}
+
+svg#my-name {
+    position: absolute;
+    top: 210px;
+    left: 10px;
     width: 200px;
-    height: 200px;
+    height: 80px;
+    z-index: 1;
+    font-size: 24px;
+    text-shadow: 2px 2px 4px darkslategray;
+    fill: ivory;
+}
+
+img#avatar:hover + svg#my-name {
+    text-shadow: 2px 2px 8px silver;
+    fill: gold;
+}
+
+img#avatar {
+    position: absolute;
+    padding: 2px;
+    width: 190px;
+    height: 190px;
+    top: 10px;
+    left: 10px;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+img#avatar:hover {
+    border: 3px solid silver;
+}
+
+img#avatar:active {
+    border: 3px solid ivory;
+}
+
+img.header-background {
+    position: absolute;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+img#static-background {
+    left: 0%;
+    animation: none;
+}
+
+img#current-background {
+    left: 0%;
+    animation: swing-left 2s both;
+    animation-delay: 1s;
+}
+
+img#next-background {
+    left: 100%;
+    animation: swing-left 2s both;
+    animation-delay: 1s;
+}
+
+textarea#message-textarea {
+    position: absolute;
+    top: 20px;
+    left: 5%;
+    width: 90%;
+    height: 75px;
+    color: darkslategray;
+    border: 1px solid cadetblue;
+    background-color: lightgoldenrodyellow;
+    outline: none;
+    resize: none;
+}
+
+textarea#message-textarea:focus {
+    color: black;
+    border: 1px solid orangered;
+    background-color: ivory;
+}
+
+button.form-button {
+    position: absolute;
+    width: 75px;
+    bottom: 20px;
+    font: small-caps 15px sans-serif;
+    color: black;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+}
+
+button.form-button:hover {
+    color: white;
+    border: 2px solid cadetblue;
+}
+
+button.form-button:active {
+    color: orangered;
+    border: 2px solid white;
+}
+
+button#message-sendbutton {
+    right: 120px;
+    background-color: lightblue;
+}
+
+button#message-cancelbutton {
+    right: 20px;
+    background-color: tan;
+}
+
+span.count {
+    position: absolute;
+    display: inline-block;
+    font: 18px cursive;
+    color: black;
+    bottom: 20px;
+    left: 25px;
+}
+
+span.maximum {
+    color: red;
+}
+
+span.message-status {
+    display: inline-block;
+    position: absolute;
+    font: 16px sans-serif;
+    right: 20px;
+    bottom: 50px;
+}
+
+span.idle {
+    color: black;
+}
+
+span.editing {
+    color: saddlebrown;
+}
+
+span.pending {
+    color: goldenrod;
+}
+
+span.success {
+    color: forestgreen;
+}
+
+span.failure {
+    color: firebrick;
+}
+
+/* content area navigation path styling
+ */
+p#navigation-path {
+    margin: 25px 6%;
+    color: gray;
+    white-space: pre-wrap;
+    cursor: default;
+}
+
+p#navigation-path > span {
+    color: dodgerblue;
+    cursor: pointer;
+}
+
+p#navigation-path > span:hover {
+    color: orangered;
+    text-decoration: underline;
+}
+
+p#navigation-path > span:active {
+    color: indigo;
+}
+
+/* content area article styling
+ */
+
+div.article {
+    display: block;
+    text-align: center;
+    width: 100%;
+    margin-top: 25px;
+}
+
+h1.title {
+    margin-left: 10%;
+    margin-right: 10%;
+    color: black;
+}
+
+h3.subtitle {
+    text-align: left;
+    margin-left: 6%;
+}
+
+h4.author {
+    margin-left: 20%;
+    margin-right: 20%;
+    color: firebrick;
+}
+
+h4.date {
+    text-align: left;
+    color: dimgray;
+    font-style: italic;
+    font-weight: normal;
+    margin-left: 6%;
+}
+
+div.image-element {
+    display: inline-block;
+    margin: 5px;
+}
+
+div.image-container {
+    display: table;
+    margin: auto;
+}
+
+div.text {
+    width: 100%;
+}
+
+div.quote {
+    display: inline-block;
+    text-align: right;
+    width: 40%;
+    margin-left: 48%;
+    background-color: wheat;
+    border-radius: 15px;
+}
+
+p {
+    white-space: pre-wrap;
+    line-height: 1.5;
+    text-align: justify;
+    margin-left: 6%;
+    margin-right: 6%;
+}
+
+.header-banner > p {
+    line-height: 1.05;
+}
+
+p.quote-text {
+    color: lightslategray;
+    line-height: 1.15;
+    margin: 10px 15px 0px 15px;
+}
+
+
+p.indented {
+    text-indent: 6%;
+}
+
+pre {
+    text-align: left;
+    margin: 15px 6%;
+}
+
+span.quote-source {
+    display: inline-block;
+    text-align: left;
+    margin: 0px 15px 10px;
+    max-width: 60%;
+}
+
+span.caption-text {
+    display: inline-block;
+    font: 12px arial;
+    text-align: justify;
+    margin: auto;
+    max-width: 90%;
+}
+
+.image-container > .figure {
+    display: table-row;
+    margin: 0px;
+    width: 1px;
+}
+
+.image-container > .figure + .caption {
+    display: table-cell;
+    text-align: center;
+    color: steelblue;
+    width: 1px;
+}
+
+a {
+    color: royalblue;
+    text-decoration: none;
+}
+
+a:visited {
+    color: darkslateblue;
+}
+
+a:hover {
+    color: darkorange;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+a:active {
+    color: darkorange;
+}
+
+/* other gobal styles */
+.hidden {
+    visibility: hidden;
 }
 

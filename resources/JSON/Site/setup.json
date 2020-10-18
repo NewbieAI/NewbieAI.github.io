@@ -1,0 +1,92 @@
+{
+    "header": { 
+        "avatarImg": "resources/Images/Site/avatar.png", 
+        "avatarGifs": [
+            "resources/Images/Site/gif_motion.webp"
+        ],
+        "backgrounds": [ 
+            "resources/Images/Site/background1.jpg", 
+            "resources/Images/Site/background2.jpg", 
+            "resources/Images/Site/background3.jpg",
+            "resources/Images/Site/background4.jpg",
+            "resources/Images/Site/background5.jpg" 
+        ], 
+        "announcements": [
+            "Welcome everyone! I am happy to annouce that my website is offically online.",
+            "Here, you can take a detailed look at some of my past projects, find out who I am and what I do, or check out my Blog for perspectives on many interesting subjects.",
+            "This site was built with the React web framework and uses AWS Lambda to handle API calls. A custom Article Editor, which I also built with React, was used to create articles.",
+            "I am currently seeking a position in Software Engineering. If you have open positions and would like to setup an interview, please send me an Email or leave me a message from this website.",
+            "A new blog article - 'A Cautionary Tale on the Dangers of Deploying AI in Social Media'  has been posted."
+        ] 
+    },
+    "name": "__HOME__",
+    "articles": [
+        "resources/JSON/Site/home.json"
+    ],
+    "contents": [
+        {
+            "name": "About Me",
+            "articles": [
+                "resources/JSON/Site/about.json"
+            ],
+            "contents": [
+            ]
+        },
+        {
+            "name": "Projects",
+            "articles": [
+                "bad-src2",
+                "resources/JSON/Site/projects/code.json"
+            ], "contents": [
+                {
+                    "name": "Webgame Samples",
+                    "articles": [
+                        "resources/JSON/Site/projects/samples.json"
+                    ],
+                    "contents": [
+                    ]
+                },
+                {
+                    "name": "Building a Single Page React Website",
+                    "articles": [
+                        "resources/JSON/Site/projects/building_react_site.json"
+                    ],
+                    "contents": [
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Blog",
+            "articles": [
+                "resources/JSON/Site/blog.json"
+            ],
+            "contents": [
+                {
+                    "name": "A Cautionary Tale on the Dangerous of Deploying AI in Social Media",
+                    "articles": [
+                        "resources/JSON/Site/blog/a_cautionary_tale.json"
+                    ],
+                    "contents": [
+                    ]
+                },
+                {
+                    "name": "A Thought Exercise: Exploring a Plausible Sequence of Events That Could Lead to the First Strong AI Agent",
+                    "articles": [
+                        "resources/JSON/Site/blog/a_thought_exercise.json"
+                    ],
+                    "contents": [
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Contact",
+            "articles": [
+                "resources/JSON/Site/contact.json"
+            ],
+            "contents": [
+            ]
+        }
+    ]
+}

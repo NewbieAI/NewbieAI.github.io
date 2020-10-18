@@ -242,7 +242,7 @@ class Editor extends React.Component {
     download() {
         let a = document.createElement("a");
         let file = new Blob(
-            [ JSON.stringify(this.state.data) ], 
+            [ JSON.stringify(this.state.data, null, 2) ], 
             {type: "text/json"}
         );
         a.href = URL.createObjectURL(file);
@@ -505,6 +505,53 @@ class InsertionForm extends React.Component {
     }
 }
 
+class Code extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: null,
+        }
+    }
+
+    componentDidMount() {
+        fetch(this.props.src)
+            .then( response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error("http status error");
+                }
+            })
+            .then( text => {
+                this.setState({data: text});
+            })
+            .catch( err => {
+                this.setState({data: err});
+            })
+    }
+
+    componentDidUpdate() {
+        if (this.state.data != undefined) {
+            let cur = ReactDOM.findDOMNode(this);
+            hljs.highlightBlock(cur);
+        }
+    }
+
+    render() {
+        if (this.state.data == undefined) {
+            return null;
+        }
+        if (this.state.data instanceof Error) {
+            return null;
+        }
+        return (
+            <pre><code>
+            {this.state.data}
+            </code></pre>
+        );
+    }
+}
+
 class Article extends React.Component {
     constructor(props) {
         super(props);
@@ -550,42 +597,68 @@ class Article extends React.Component {
     }
     
     renderTextElement(element) {
+        function buildParagraph(p) {
+            if ( codeMatcher.test(p) ) {
+                let codeSrc = p.match(codeMatcher)[1];
+                return <Code src = {codeSrc}/>
+            }
+            let arr = p.split( linkSplitter );
+            return (
+                <p className = {element.indented ? "indented" : null}>
+                {arr.map(
+                    s => {
+                        if ( linkMatcher.test(s) ) {
+                            return buildLink(s);
+                        }
+                        return s;
+                    }
+                )}
+                </p>
+            );
+        }
+
+        function buildLink(s) {
+            const t = s.slice(1, s.length - 1);
+            let link, clicker, target;
+            if (element.links[t] == undefined) {
+                link = "#";
+                clicker = () => {
+                    return false;
+                };
+                target = null;
+            } else if ( internalLink.test( element.links[t] ) ) {
+                link  = "#";
+                clicker = () => {
+                    let pathString = element.links[t].match(
+                        internalLink
+                    )[1];
+                    alert("internal link: " + pathString);
+                    return false;
+                }
+                target = null;
+            } else {
+                link = element.links[t];
+                clicker = null;
+                target = "_blank";
+            }
+            return (
+                <a
+                    href = {link}
+                    onClick = {clicker}
+                    target = {target} >
+                {t}
+                </a>
+            );
+        }
+
         let paragraphs = element.content.split(/\n+/);
+        const linkSplitter = /({[^{}]+})/g;
+        const linkMatcher = /^{[^{}]+}$/;
+        const codeMatcher = /^<(.*)>$/;
+        const internalLink = /^internal::(.*)$/;
         return (
             <div className = "text">
-            {paragraphs.map(
-                p => {
-                    if (p == "") {
-                        return <br/>
-                    }
-                    let arr = p.split( /({[^{}]+})/g );
-                    return (
-                        <p 
-                            className = {
-                                element.indented ? 
-                                "indented" : null
-                            }>
-                        {arr.map(
-                            s => {
-                                if ( /{[^{}]+}/.test(s) ) {
-                                    const t = s.slice(1, s.length - 1);
-                                    return (
-                                        <a 
-                                            href = {
-                                                element.links[t] || ""
-                                            }
-                                            target = "_blank">
-                                        {t}
-                                        </a>
-                                    );
-                                }
-                                return s;
-                            }
-                        )}
-                        </p>
-                    );
-                }
-            )}
+            {paragraphs.map( buildParagraph )}
             </div>
         );
     }
@@ -1389,7 +1462,7 @@ class TextEditor extends React.Component {
         const newLinks = Object.assign(
             {},
             this.props.data.links,
-            {[newLink]: ""},
+            {[newLink]: "internal::"},
         );
         this.props.updateHandler(
             state => ({
@@ -1413,14 +1486,11 @@ class TextEditor extends React.Component {
     }
 
     removeLink() {
-        const newLinks = Object.assign(
-            {},
-            ...Object.keys(this.props.data.links).filter(
-                key => key != this.state.selected
-            ).map(
-                key => {key: this.props.data.links[key]}
-            ),
-        );
+        const deletedKey = this.state.selected;
+        let {
+            [deletedKey] : deletedLink, 
+            ...newLinks
+        } = this.props.data.links;
         this.setState({selected: null});
         this.props.updateHandler(
             state => ({
@@ -1495,7 +1565,7 @@ class TextEditor extends React.Component {
                 <TextfieldInGrid
                     ID = "text-name"
                     value = {this.props.data.name}
-                    onChange = {this.props.updateName} />
+                    onChange = {this.updateName} />
                 <LabelInGrid
                     for = "text-content"
                     value = "Edit Text Body:" />
@@ -1758,9 +1828,9 @@ class TextareaInGrid extends React.Component {
             <div id = {this.props.ID + "-cell"}>
                 <textarea 
                     id = {this.props.ID} 
+                    value = {this.props.value}
                     className = {this.props.className || null}
                     onChange = {this.props.onChange}>
-                {this.props.value}
                 </textarea>
             </div>
         );

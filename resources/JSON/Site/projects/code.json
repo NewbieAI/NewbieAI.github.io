@@ -1,0 +1,15 @@
+{
+  "title": "[untitled article]",
+  "authors": [],
+  "creationDate": "10/17/2020",
+  "lastModified": "10/17/2020, 1:50:40 PM",
+  "components": [
+    {
+      "type": "text",
+      "name": "[unnamed]",
+      "content": "<scripts/snake.js>",
+      "links": {},
+      "indented": false
+    }
+  ]
+}

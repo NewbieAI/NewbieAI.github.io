@@ -1,0 +1,64 @@
+{
+  "title": "Contact",
+  "authors": [],
+  "creationDate": "10/2/2020",
+  "lastModified": "10/7/2020, 4:29:32 PM",
+  "components": [
+    {
+      "type": "quote",
+      "name": "notice",
+      "text": "It's generally not a good idea to put one's private contact information on the Internet.",
+      "src": "Ming"
+    },
+    {
+      "type": "subtitle",
+      "name": "direct_message_title",
+      "text": "Leaving a Direct Message:"
+    },
+    {
+      "type": "text",
+      "name": "[unnamed]",
+      "content": "1. Scroll to the top of the page and click my smiley picture. A dialog box should appear. \n2. Type your message into the box and click \"Send\", the website will tell you if the message arrives successfully.",
+      "links": {},
+      "indented": true
+    },
+    {
+      "type": "subtitle",
+      "name": "Phone",
+      "text": "Phone:"
+    },
+    {
+      "type": "text",
+      "name": "phone_text",
+      "content": "(412)-XXX-9737",
+      "links": {},
+      "indented": true
+    },
+    {
+      "type": "subtitle",
+      "name": "email_title",
+      "text": "E-mail:"
+    },
+    {
+      "type": "text",
+      "name": "email_text",
+      "content": "{mingztian@gmail.com}",
+      "links": {
+        "mingztian@gmail.com": "mailto:mingztian@gmail.com"
+      },
+      "indented": true
+    },
+    {
+      "type": "subtitle",
+      "name": "mail_title",
+      "text": "Business Mail:"
+    },
+    {
+      "type": "text",
+      "name": "mail_text",
+      "content": "Unavailable at this time.",
+      "links": {},
+      "indented": true
+    }
+  ]
+}

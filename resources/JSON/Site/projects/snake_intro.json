@@ -1,0 +1,7 @@
+{
+    "text": "Eat food and grow longer! In this widely popular classic arcade game, the player controls a gluttonous snake that roams freely the open field. Given enough time, the snake will grow so long that its body will form a dynamic maze in which the player must navigate cautiously. The game is beatten when the snake fills the entire game screen.\nMy custom implementation of Snake retains the essental gameplay elements. However, the classic 8-bit pixalated graphic is replaced by smooth slitering animation, which took quite a bit of {effort} to create. If you want to see the source code, you can check it out {here}.",
+    "links": {
+        "effort": "",
+        "here": ""
+    }
+}

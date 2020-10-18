@@ -115,6 +115,15 @@ input#json-upload {
     display: none;
 }
 
+form.insert {
+    margin: auto;
+    width: 90%;
+}
+
+form.insert > label {
+    display: block;
+}
+
 input.insert {
     margin-top: 5px;
     width: 20px;
@@ -694,6 +703,8 @@ div.quote {
 }
 
 p {
+    white-space: pre-wrap;
+    line-height: 1.5;
     text-align: justify;
     margin-left: 6%;
     margin-right: 6%;
@@ -701,12 +712,19 @@ p {
 
 p.quote-text {
     color: lightslategray;
+    line-height: 1.15;
     margin: 10px 15px 0px 15px;
+    padding: 20px;
 }
 
 
 p.indented {
     text-indent: 6%;
+}
+
+pre {
+    text-align: left;
+    margin: 15px 6%;
 }
 
 span.quote-source {
@@ -735,4 +753,23 @@ span.caption-text {
     text-align: center;
     color: steelblue;
     width: 1px;
+}
+
+a {
+    color: royalblue;
+    text-decoration: none;
+}
+
+a:visited {
+    color: darkslateblue;
+}
+
+a:hover {
+    color: darkorange;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+a:active {
+    color: darkorange;
 }

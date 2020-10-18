@@ -1,0 +1,8 @@
+{
+    "text": "Don't blink or it might fall over! {Cartpole} is a well-known physics system in control theory, where a pole (inverted pendulum) is mounted on a movable cart. The pole, being what it is, is inherently unstable and will fall to one side or the other if left unattended.\nThis game features a cartpole system simulation, where the player needs to control the cart with arrow keys in order to balance the pole. Addiional perturbation to the system is added in the form of weather to make the game more challenging. The javascript source code can be found {here} for those interested, and a more detailed account of this project is also {available}.",
+    "links": {
+        "Cartpole": "",
+        "here": "",
+        "available": ""
+    }
+}

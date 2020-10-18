@@ -157,10 +157,9 @@ class Minesweeper {
         this.musicOn = true;
         this.helpOpen = false;
         this.settingsOpen = false;
-        this.difficulty = Minesweeper.HARD;
+        this.difficulty = Minesweeper.MEDIUM;
         this.allowHint = true;
         this.autoFlag = true;
-        this.cacheImg = null;
 
         this.canvas = document.createElement("canvas");
         this.canvas.setAttribute("id", "minesweeper");
@@ -225,6 +224,9 @@ class Minesweeper {
             800, 200,
         );
         this.renderMenu();
+
+        this.cacheImg = this.screen.getImageData(0, 0, 1800, 800);
+        this.screen.putImageData(this.cacheImg, 0, 0);
         this.playMusic(Minesweeper.music1);
 
     }
@@ -1023,7 +1025,7 @@ class Minesweeper {
                 (resolve) => {
                     Minesweeper.helpImage.onload = resolve
                     Minesweeper.helpImage.src = (
-                        `resources/Images/help${page}.png`
+                        `resources/Images/Minesweeper/help${page}.png`
                     );
                 },
             );
@@ -1552,7 +1554,7 @@ class Minesweeper {
 
         let x = 1625, y = 400 + 50 * buttonNumber;
 
-        this.screen.fillStyle = "white";
+        this.screen.fillStyle = "rgb(255, 255, 255)";
         this.screen.fillRect(x, y - 50, 250, 55);
         this.screen.fillStyle = "rgba(255, 155, 0, 0.4)";
         this.screen.fillRect(x, y - 50, 250, 55);

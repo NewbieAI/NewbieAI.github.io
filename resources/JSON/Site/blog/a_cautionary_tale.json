@@ -1,0 +1,28 @@
+{
+  "title": "A Cautionary Tale on the Dangers Deploying AI in Social Media",
+  "authors": [
+    "Mingzhi Tian"
+  ],
+  "creationDate": "10/8/2020",
+  "lastModified": "10/8/2020, 6:14:19 PM",
+  "components": [
+    {
+      "type": "quote",
+      "name": "open_quote",
+      "text": "Forget artificial intelligence - in the brave new world of big data, it's artificial idiocy we should be looking out for.",
+      "src": "Tom Chatfield"
+    },
+    {
+      "type": "subtitle",
+      "name": "intro",
+      "text": "Introduction"
+    },
+    {
+      "type": "text",
+      "name": "intro_text",
+      "content": "In August 2018, several major tech companies including YouTube, Facebook, and Apple, banned {Alex Jones}, the infamous radio talk show host best known for spreading conspiracy theories, from their platforms. It was a rare display of content moderation",
+      "links": {},
+      "indented": false
+    }
+  ]
+}

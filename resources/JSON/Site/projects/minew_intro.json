@@ -1,7 +1,7 @@
 {
     "text": "Heed the Numbers! Few who grew up with Windows operating systems hasn't tried the simple and elegant game called \"Minesweeper\". Use your deductive reasoning skills to locate and mark all the hidden mines that were randomly planted in the grid at the start of the game. The numbers displayed in each cell tells you how many mines are buried in its 8 adjacent neighboring cells.\nThere are a few improvements over the original game, including hints for players who are stuck and the option to autoflag mines with dual-clicks. The javascript source code is available {here} and you can read {this post} in you are interested in how the game was built",
     "links": {
-        "here": "",
-        "this post": ""
+        "here": "https://github.com/NewbieAI/NewbieAI.github.io/blob/master/scripts/minesweeper.js",
+        "this post": "internal::1, 0, 1"
     }
 }

@@ -65,8 +65,9 @@ the following nested structure:
 */ 
 
 
-// React page
 
+
+// React page
 class MainPage extends React.Component {
     constructor(props) {
         super(props);
@@ -80,6 +81,9 @@ class MainPage extends React.Component {
         this.setState({
             currentPath: newPath,
         });
+        window.scrollTo(
+            {top: 300, left: 0, behavior: "smooth"},
+        );
     }
 
     getPathNames(path) {
@@ -920,6 +924,19 @@ class Article extends React.Component {
         );
     }
 
+    renderPlaceholder(element) {
+        switch (this.props.fillers[element.name].filler_type) {
+            case "Runnable":
+                return (
+                    <Runnable 
+                        {...this.props.fillers[element.name]} 
+                        navigator = {this.props.navigator} />
+                )
+            default:
+                return null;
+        }
+    }
+
     renderElement(element) {
         switch (element.type) {
             case "text":
@@ -931,7 +948,7 @@ class Article extends React.Component {
             case "subtitle":
                 return this.renderSubtitleElement(element);
             case "placeholder":
-                return this.props.fillers[element.name];
+                return this.renderPlaceholder(element);
             default:
                 return null;
         }
@@ -956,6 +973,63 @@ class Article extends React.Component {
         );
     }
 
+}
+
+class Runnable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: false,
+            isError: false,
+        };
+    }
+
+    getMessage() {
+        if (this.state.isLoading) {
+            return <b className = "load">LOADING...</b>;
+        }
+        if (this.state.isError) {
+            return <b className = "error">Critical Failure</b>;
+        }
+        return null;
+    }
+
+    clickHandler() {
+        this.setState({isLoading: true});
+        this.props.loader().
+            then( () => {
+                this.setState({
+                    isLoading: false,
+                });
+                this.props.runner();
+            }).
+            catch( err => {
+                this.setState({isLoading: false});
+                this.setState({isError: true});
+            });
+    }
+
+    render() {
+        return (
+            <div className = "runnable" id = {this.props.id}>
+                <h4 className = "runnable-title">{this.props.name}</h4>
+                <div 
+                    className = "runnable-button"
+                    onClick = {this.clickHandler.bind(this)}>
+                <img 
+                    className = "runnable-icon"
+                    src = {this.props.iconSource} />
+                <span className = "status">
+                {this.getMessage()}
+                </span>
+                </div>
+                <br/>
+                <LinkEmbedText 
+                    src = {this.props.introSource}
+                    navigator = {this.props.navigator} />
+            </div>
+        );
+    }
 }
 
 class Code extends React.Component {
@@ -1029,6 +1103,50 @@ class LinkEmbedText extends React.Component {
     }
 
     renderData() {
+        function buildLink(s) {
+            const t = s.slice(1, s.length - 1);
+            let link, clicker, target;
+            if (data.links[t] == undefined) {
+                link = null;
+                clicker = (e) => {
+                    e.preventDefault();
+                    return false;
+                };
+                target = null;
+            } else if ( internalLink.test( data.links[t] ) ) {
+                link = null;
+                clicker = (e) => {
+                    e.preventDefault();
+                    let pathString = data.links[t].match(
+                        internalLink
+                    )[1];
+                    let path = (
+                        pathString == "" ?
+                        [] : pathString.split( /, */ ).map( n => +n )
+                    );
+                    navigator(path);
+                    return false;
+                }
+                target = null;
+            } else {
+                link = data.links[t];
+                clicker = null;
+                target = "_blank";
+            }
+            return (
+                <a
+                    href = {link}
+                    onClick = {clicker}
+                    target = {target}>
+                {t}
+                </a>
+            );
+        }
+
+        const data = this.state.data;
+        const internalLink = /^internal::(.*)$/;
+        const navigator = this.props.navigator;
+
         let arr = this.state.data.text.split( /({[^{}]+})/g );
         return (
             <p className = "link-embed-text">
@@ -1036,13 +1154,7 @@ class LinkEmbedText extends React.Component {
                 s => {
                     if ( /^{[^{}]+}$/.test(s) ) {
                         const t = s.slice(1, s.length - 1);
-                        return (
-                            <a 
-                                href = {this.state.data.links[t] ?? ""}
-                                target = "_blank" >
-                            {t}
-                            </a>
-                        );
+                        return buildLink(s);
                     }
                     return s;
                 }
@@ -1061,61 +1173,7 @@ class LinkEmbedText extends React.Component {
     }
 }
 
-class Runnable extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isLoading: false,
-            isError: false,
-        };
-    }
 
-    getMessage() {
-        if (this.state.isLoading) {
-            return <b className = "load">LOADING...</b>;
-        }
-        if (this.state.isError) {
-            return <b className = "error">Critical Failure</b>;
-        }
-        return null;
-    }
-
-    clickHandler() {
-        this.setState({isLoading: true});
-        this.props.loader().
-            then( () => {
-                this.setState({
-                    isLoading: false,
-                });
-                this.props.runner();
-            }).
-            catch( err => {
-                this.setState({isLoading: false});
-                this.setState({isError: true});
-            });
-    }
-
-    render() {
-        return (
-            <div className = "runnable" id = {this.props.id}>
-                <h4 className = "runnable-title">{this.props.name}</h4>
-                <div 
-                    className = "runnable-button"
-                    onClick = {this.clickHandler.bind(this)}>
-                <img 
-                    className = "runnable-icon"
-                    src = {this.props.iconSource} />
-                <span className = "status">
-                {this.getMessage()}
-                </span>
-                </div>
-                <br/>
-                <LinkEmbedText 
-                    src = {this.props.introSource}/>
-            </div>
-        );
-    }
-}
 
 function LoadIndicator(props) {
     // in the future it will be updated to more cool-looking
@@ -1142,47 +1200,41 @@ function ErrorIndicator(props) {
 }
 
 const fillers = {
-    Cartpole: (
-        <Runnable
-            id = "cartpole"
-            name = "Cartpole"
-            iconSource = "resources/Images/Cartpole/cartpole.png"
-            introSource = "resources/JSON/Site/projects/cartp_intro.json"
-            loader = {Cartpole.loadAssets}
-            runner = {
-                () => {
-                    let game = new Cartpole();
-                }
-            } />
-    ),
-    Minesweeper: (
-        <Runnable
-            id = "minesweeper"
-            name = "Minesweeper"
-            className = "gameSample"
-            iconSource = "resources/Images/Minesweeper/mine.png"
-            introSource = "resources/JSON/Site/projects/minew_intro.json"
-            loader = {Minesweeper.loadAssets}
-            runner = {
-                () => {
-                    let game = new Minesweeper();
-                }
-            } />
-    ),
-    Snake: (
-        <Runnable
-            id = "snake"
-            name = "Snake"
-            className = "gameSample"
-            iconSource = "resources/Images/Snake/snake.png"
-            introSource = "resources/JSON/Site/projects/snake_intro.json"
-            loader = {Snake.loadAssets}
-            runner = {
-                () => {
-                    let game = new Snake();
-                }
-            } />
-    ),
+    Cartpole: {
+        filler_type: "Runnable",
+        id: "cartpole",
+        name: "Cartpole",
+        iconSource: "resources/Images/Cartpole/cartpole.png",
+        introSource: "resources/JSON/Site/projects/cartp_intro.json",
+        loader: Cartpole.loadAssets,
+        runner: () => {
+            let game = new Cartpole();
+        },
+    },
+    Minesweeper: {
+        filler_type: "Runnable",
+        id: "minesweeper",
+        name: "Minesweeper",
+        className: "gameSample",
+        iconSource: "resources/Images/Minesweeper/mine.png",
+        introSource: "resources/JSON/Site/projects/minew_intro.json",
+        loader: Minesweeper.loadAssets,
+        runner: () => {
+            let game = new Minesweeper();
+        },
+    },
+    Snake: {
+        filler_type: "Runnable",
+        id: "snake",
+        name: "Snake",
+        className: "gameSample",
+        iconSource: "resources/Images/Snake/snake.png",
+        introSource: "resources/JSON/Site/projects/snake_intro.json",
+        loader: Snake.loadAssets,
+        runner: () => {
+            let game = new Snake();
+        },
+    },
 };
 
 fetch("resources/JSON/Site/setup.json").

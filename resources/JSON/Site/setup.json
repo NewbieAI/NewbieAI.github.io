@@ -27,29 +27,91 @@
         {
             "name": "About Me",
             "articles": [
-                "resources/JSON/Site/about.json"
+                "resources/JSON/Site/aboutme.json"
             ],
             "contents": [
+                {
+                    "name": "My Skills",
+                    "articles": [
+                        "resources/JSON/Site/skills.json"
+                    ],
+                    "contents": [
+                    ]
+                },
+                {
+                    "name": "My Interests",
+                    "articles": [
+                        "resources/JSON/Site/interests.json"
+                    ],
+                    "contents": [
+                    ]
+                }
             ]
         },
         {
             "name": "Projects",
             "articles": [
-                "bad-src2",
-                "resources/JSON/Site/projects/code.json"
-            ], "contents": [
+                "resources/JSON/Site/project.json"
+            ], 
+            "contents": [
                 {
                     "name": "Webgame Samples",
                     "articles": [
                         "resources/JSON/Site/projects/samples.json"
                     ],
                     "contents": [
+                        {
+                            "name": "Building Cartpole",
+                            "articles": [
+                                "resources/JSON/Site/unifinished.json",
+                                "bad_src"
+                            ],
+                            "contents": [
+                            ]
+                        },
+                        {
+                            "name": "Building Minesweeper",
+                            "articles": [
+                            ],
+                            "contents": [
+                            ]
+                        },
+                        {
+                            "name": "Building Snake",
+                            "articles": [
+                            ],
+                            "contents": [
+                            ]
+                        }
                     ]
                 },
                 {
                     "name": "Building a Single Page React Website",
                     "articles": [
                         "resources/JSON/Site/projects/building_react_site.json"
+                    ],
+                    "contents": [
+                        {
+                            "name": "Building an Article Editor with React",
+                            "articles": [
+                                "resources/JSON/Site/unifinished.json",
+                                "resources/JSON/Site/projects/building_article_editor.json"
+                            ],
+                            "contents": [
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Building an Windows Multiplayer Game Client",
+                    "articles": [
+                    ],
+                    "contents": [
+                    ]
+                },
+                {
+                    "name": "Creating a Neural Network Framework For Deep Learning",
+                    "articles": [
                     ],
                     "contents": [
                     ]
@@ -59,12 +121,13 @@
         {
             "name": "Blog",
             "articles": [
-                "resources/JSON/Site/blog.json"
+                "resources/JSON/Site/Blog/intro.json"
             ],
             "contents": [
                 {
                     "name": "A Cautionary Tale on the Dangerous of Deploying AI in Social Media",
                     "articles": [
+                        "resources/JSON/Site/projects/a_cautionary_tale.json"
                     ],
                     "contents": [
                     ]
@@ -72,6 +135,8 @@
                 {
                     "name": "A Thought Exercise: Exploring a Plausible Sequence of Events That Could Lead to the First Strong AI Agent",
                     "articles": [
+                        "resources/JSON/Site/unifinished.json",
+                        "resources/JSON/Site/projects/a_thought_exercise.json"
                     ],
                     "contents": [
                     ]

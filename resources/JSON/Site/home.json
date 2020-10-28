@@ -2,7 +2,7 @@
   "title": "",
   "authors": [],
   "creationDate": "10/11/2020",
-  "lastModified": "10/18/2020, 7:48:44 PM",
+  "lastModified": "10/24/2020, 4:01:43 PM",
   "components": [
     {
       "type": "quote",
@@ -13,15 +13,16 @@
     {
       "type": "text",
       "name": "intro_message",
-      "content": "Welcome everyone ! ! !  After quite a bit of effort, my personal website is finally online.\n\nWhether you came here through a link, entered in the URL yourself, or maybe stumbled onto my website accidentally, feel free to take a look around. All the contents on this website can be accessed through the navigation menu on the left.\nHere, you can find out {more} about me, {what I can do}, and {what my interests are}. You can also take a detailed look at some of my past {projects}. If you'd like to see some sample code in action, here are some {web games} that I wrote in Javascript. In addition, I will also be maintaining a personal {blog} in which I will offer some fun discussions on various technical subjects.\nIf you like the design of my website and want to find out how it is done, you can read about it {here} or check out the source code from this Github {repository}.\n",
+      "content": "Welcome everyone ! ! !  After quite a bit of effort, my personal website is finally online.\n\nWhether you came here through a link, entered in the URL yourself, or maybe stumbled onto my website accidentally, feel free to take a look around. All the contents on this website can be accessed through the navigation menu on the left.\nHere, you can find out {more} about me, {what I can do}, and {what my interests are}. You can also take a detailed look at some of my past {projects}. If you'd like to see some sample code in action, here are some {web games} that I wrote in Javascript and I encourage you to try them. In addition, I will also be maintaining a personal {blog} in which I will offer some fun discussions on various technical subjects.\nIf you like the design of my website and want to find out how it is done, you can read about it {here} or check out the source code from this Github {repository}.\n",
       "links": {
-        "more": "internal::",
-        "what I can do": "internal::",
-        "what my interests are": "internal::",
-        "projects": "internal::",
-        "here": "internal::",
-        "repository": "internal::",
-        "web games": "internal::"
+        "more": "internal::0",
+        "what I can do": "internal::0, 0",
+        "what my interests are": "internal::0, 1",
+        "projects": "internal::1",
+        "here": "internal::1, 1",
+        "repository": "https://github.com/NewbieAI/NewbieAI.github.io/",
+        "web games": "internal::1, 0",
+        "blog": "internal::2"
       },
       "indented": false
     },
@@ -33,10 +34,11 @@
     {
       "type": "text",
       "name": "new_content",
-      "content": "1. My first {blog post}, \"A Cautionary Tale on the Dangers of Deploying AI in Social Media\", has been added.\n2. My custom {article editor} has been updated to support highlighted code blocks. For example, the html file for this website can be seen below:\n<>\n",
+      "content": "1. My first {blog post}, \"A Cautionary Tale on the Dangers of Deploying AI in Social Media\", has been added.\n2. My custom {article} {editor}, which I used to add much of my website content, has been updated to support highlighted code blocks. For example, the html file for this website can be seen below:\n<>\n",
       "links": {
-        "blog post": "internal::",
-        "article editor": "internal::"
+        "blog post": "internal::2, 0",
+        "article": "internal::1, 1, 0",
+        "editor": "editor.html"
       },
       "indented": false
     }

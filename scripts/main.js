@@ -1,5 +1,73 @@
 "use strict";
 
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+class Runnable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      isError: false
+    };
+  }
+
+  getMessage() {
+    if (this.state.isLoading) {
+      return React.createElement("b", {
+        className: "load"
+      }, "LOADING...");
+    }
+
+    if (this.state.isError) {
+      return React.createElement("b", {
+        className: "error"
+      }, "Critical Failure");
+    }
+
+    return null;
+  }
+
+  clickHandler() {
+    this.setState({
+      isLoading: true
+    });
+    this.props.loader().then(() => {
+      this.setState({
+        isLoading: false
+      });
+      this.props.runner();
+    }).catch(err => {
+      this.setState({
+        isLoading: false
+      });
+      this.setState({
+        isError: true
+      });
+    });
+  }
+
+  render() {
+    return React.createElement("div", {
+      className: "runnable",
+      id: this.props.id
+    }, React.createElement("h4", {
+      className: "runnable-title"
+    }, this.props.name), React.createElement("div", {
+      className: "runnable-button",
+      onClick: this.clickHandler.bind(this)
+    }, React.createElement("img", {
+      className: "runnable-icon",
+      src: this.props.iconSource
+    }), React.createElement("span", {
+      className: "status"
+    }, this.getMessage())), React.createElement("br", null), React.createElement(LinkEmbedText, {
+      src: this.props.introSource,
+      navigator: this.props.navigator
+    }));
+  }
+
+}
+
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
@@ -12,6 +80,11 @@ class MainPage extends React.Component {
   navigateTo(newPath) {
     this.setState({
       currentPath: newPath
+    });
+    window.scrollTo({
+      top: 300,
+      left: 0,
+      behavior: "smooth"
     });
   }
 
@@ -669,6 +742,18 @@ class Article extends React.Component {
     }, element.text);
   }
 
+  renderPlaceholder(element) {
+    switch (this.props.fillers[element.name].filler_type) {
+      case "Runnable":
+        return React.createElement(Runnable, _extends({}, this.props.fillers[element.name], {
+          navigator: this.props.navigator
+        }));
+
+      default:
+        return null;
+    }
+  }
+
   renderElement(element) {
     switch (element.type) {
       case "text":
@@ -684,7 +769,7 @@ class Article extends React.Component {
         return this.renderSubtitleElement(element);
 
       case "placeholder":
-        return this.props.fillers[element.name];
+        return this.renderPlaceholder(element);
 
       default:
         return null;
@@ -785,16 +870,54 @@ class LinkEmbedText extends React.Component {
   }
 
   renderData() {
+    function buildLink(s) {
+      const t = s.slice(1, s.length - 1);
+      let link, clicker, target;
+
+      if (data.links[t] == undefined) {
+        link = null;
+
+        clicker = e => {
+          e.preventDefault();
+          return false;
+        };
+
+        target = null;
+      } else if (internalLink.test(data.links[t])) {
+        link = null;
+
+        clicker = e => {
+          e.preventDefault();
+          let pathString = data.links[t].match(internalLink)[1];
+          let path = pathString == "" ? [] : pathString.split(/, */).map(n => +n);
+          navigator(path);
+          return false;
+        };
+
+        target = null;
+      } else {
+        link = data.links[t];
+        clicker = null;
+        target = "_blank";
+      }
+
+      return React.createElement("a", {
+        href: link,
+        onClick: clicker,
+        target: target
+      }, t);
+    }
+
+    const data = this.state.data;
+    const internalLink = /^internal::(.*)$/;
+    const navigator = this.props.navigator;
     let arr = this.state.data.text.split(/({[^{}]+})/g);
     return React.createElement("p", {
       className: "link-embed-text"
     }, arr.map(s => {
       if (/^{[^{}]+}$/.test(s)) {
         const t = s.slice(1, s.length - 1);
-        return React.createElement("a", {
-          href: this.state.data.links[t] ?? "",
-          target: "_blank"
-        }, t);
+        return buildLink(s);
       }
 
       return s;
@@ -811,71 +934,6 @@ class LinkEmbedText extends React.Component {
     }
 
     return this.renderData();
-  }
-
-}
-
-class Runnable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false,
-      isError: false
-    };
-  }
-
-  getMessage() {
-    if (this.state.isLoading) {
-      return React.createElement("b", {
-        className: "load"
-      }, "LOADING...");
-    }
-
-    if (this.state.isError) {
-      return React.createElement("b", {
-        className: "error"
-      }, "Critical Failure");
-    }
-
-    return null;
-  }
-
-  clickHandler() {
-    this.setState({
-      isLoading: true
-    });
-    this.props.loader().then(() => {
-      this.setState({
-        isLoading: false
-      });
-      this.props.runner();
-    }).catch(err => {
-      this.setState({
-        isLoading: false
-      });
-      this.setState({
-        isError: true
-      });
-    });
-  }
-
-  render() {
-    return React.createElement("div", {
-      className: "runnable",
-      id: this.props.id
-    }, React.createElement("h4", {
-      className: "runnable-title"
-    }, this.props.name), React.createElement("div", {
-      className: "runnable-button",
-      onClick: this.clickHandler.bind(this)
-    }, React.createElement("img", {
-      className: "runnable-icon",
-      src: this.props.iconSource
-    }), React.createElement("span", {
-      className: "status"
-    }, this.getMessage())), React.createElement("br", null), React.createElement(LinkEmbedText, {
-      src: this.props.introSource
-    }));
   }
 
 }
@@ -900,7 +958,8 @@ function ErrorIndicator(props) {
 }
 
 const fillers = {
-  Cartpole: React.createElement(Runnable, {
+  Cartpole: {
+    filler_type: "Runnable",
     id: "cartpole",
     name: "Cartpole",
     iconSource: "resources/Images/Cartpole/cartpole.png",
@@ -909,8 +968,9 @@ const fillers = {
     runner: () => {
       let game = new Cartpole();
     }
-  }),
-  Minesweeper: React.createElement(Runnable, {
+  },
+  Minesweeper: {
+    filler_type: "Runnable",
     id: "minesweeper",
     name: "Minesweeper",
     className: "gameSample",
@@ -920,8 +980,9 @@ const fillers = {
     runner: () => {
       let game = new Minesweeper();
     }
-  }),
-  Snake: React.createElement(Runnable, {
+  },
+  Snake: {
+    filler_type: "Runnable",
     id: "snake",
     name: "Snake",
     className: "gameSample",
@@ -931,7 +992,7 @@ const fillers = {
     runner: () => {
       let game = new Snake();
     }
-  })
+  }
 };
 fetch("resources/JSON/Site/setup.json").then(response => {
   if (response.ok) {

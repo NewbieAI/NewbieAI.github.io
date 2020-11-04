@@ -981,7 +981,9 @@ class Runnable extends React.Component {
         this.state = {
             isLoading: false,
             isError: false,
+            isHidden: true,
         };
+        this.hideToggler = this.hideToggler.bind(this);
     }
 
     getMessage() {
@@ -1004,14 +1006,28 @@ class Runnable extends React.Component {
                 this.props.runner();
             }).
             catch( err => {
-                this.setState({isLoading: false});
-                this.setState({isError: true});
+                this.setState(
+                    {
+                        isLoading: false,
+                        isError: true,
+                    }
+                );
             });
+    }
+
+    hideToggler() {
+        this.setState(
+            state => ({isHidden: !state.isHidden})
+        );
     }
 
     render() {
         return (
-            <div className = "runnable" id = {this.props.id}>
+            <div 
+                className = {"runnable" + 
+                    (this.state.isHidden ? "" : " expanded")
+                }
+                id = {this.props.id}>
                 <h4 className = "runnable-title">{this.props.name}</h4>
                 <div 
                     className = "runnable-button"
@@ -1027,6 +1043,9 @@ class Runnable extends React.Component {
                 <LinkEmbedText 
                     src = {this.props.introSource}
                     navigator = {this.props.navigator} />
+                <HideToggler 
+                    isHidden = {this.state.isHidden}
+                    hideToggler = {this.hideToggler} />
             </div>
         );
     }
@@ -1037,7 +1056,20 @@ class Code extends React.Component {
         super(props);
         this.state = {
             data: null,
+            isHidden: true,
         }
+        this.hideToggler = this.hideToggler.bind(this);
+    }
+
+    hideToggler() {
+        this.setState(
+            state => ({isHidden: !state.isHidden})
+        );
+    }
+
+    countLines(str) {
+        const lineBreaks = /[\r\n]|\r\n/
+        return str.split( lineBreaks ).length;
     }
 
     componentDidMount() {
@@ -1050,7 +1082,12 @@ class Code extends React.Component {
                 }
             })
             .then( text => {
-                this.setState({data: text});
+                this.setState(
+                    {
+                        data: text,
+                        isHidden: this.countLines(text) > 20
+                    }
+                );
             })
             .catch( err => {
                 this.setState({data: err});
@@ -1060,7 +1097,8 @@ class Code extends React.Component {
     componentDidUpdate() {
         if (this.state.data != undefined) {
             let cur = ReactDOM.findDOMNode(this);
-            hljs.highlightBlock(cur);
+            //highlight the <pre><code></code></pre> block
+            hljs.highlightBlock( cur.firstChild );
         }
     }
 
@@ -1072,9 +1110,18 @@ class Code extends React.Component {
             return null;
         }
         return (
-            <pre><code>
-            {this.state.data}
-            </code></pre>
+            <div className = {"code" + 
+                    (this.state.isHidden ? "" : " expanded")
+                }>
+                <pre><code>
+                {this.state.data}
+                </code></pre>
+                {this.countLines( this.state.data ) > 20 &&
+                <HideToggler 
+                    isHidden = {this.state.isHidden}
+                    hideToggler = {this.hideToggler} />
+                }
+            </div>
         );
     }
 }
@@ -1173,7 +1220,23 @@ class LinkEmbedText extends React.Component {
     }
 }
 
+class HideToggler extends React.Component {
+    constructor(props) {
+        super(props);
+    }
 
+    render() {
+        return (
+            <div 
+                className = {"hide-toggler" + 
+                    (this.props.isHidden ? "" : " show")
+                }
+                onClick = {this.props.hideToggler}>
+                <b>{this.props.isHidden ? "Show More" : "Hide"}</b>
+            </div>
+        )
+    }
+}
 
 function LoadIndicator(props) {
     // in the future it will be updated to more cool-looking

@@ -135,8 +135,7 @@ class Editor extends React.Component {
     }
 
     deleteElement() {
-        if (this.state.isEditing && 
-            !confirm("Are you sure? (element is being edited)")) {
+        if ( !confirm("Are you sure? This will permanently delete the selected element.") ) {
             return;
         }
         this.setState(

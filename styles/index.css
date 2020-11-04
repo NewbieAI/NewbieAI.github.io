@@ -153,7 +153,10 @@ h3.item:hover > span {
 
 div.runnable {
     float: left;
+    position: relative;
     text-align: center;
+    height: 500px;
+    overflow: hidden;
     border: hidden;
     border-radius: 20px;
 }
@@ -218,6 +221,39 @@ div.runnable {
 .runnable-button:active .runnable-icon {
     width: 90%;
     height: 90%;
+}
+
+div.hide-toggler {
+    position: absolute;
+    height: 100px;
+    left: 0px;
+    width: 100%;
+    bottom: 0px;
+    font: small-caps 20px georgia;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+}
+
+div.hide-toggler.show {
+    position: relative;
+    display: block;
+    height: 40px;
+    background: none;
+}
+
+div.hide-toggler > b {
+    display: inline-block;
+    position: relative;
+    margin-top: 70px;
+    color: brown;
+}
+
+div.hide-toggler.show > b {
+    margin-top: 0px;
+}
+
+div.hide-toggler > b:hover {
+    color: darkblue;
+    cursor: pointer;
 }
 
 span.status {
@@ -612,6 +648,12 @@ p.indented {
     text-indent: 6%;
 }
 
+.code {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
 pre {
     text-align: left;
     margin: 15px 6%;
@@ -669,3 +711,6 @@ a:active {
     visibility: hidden;
 }
 
+div.expanded {
+    height: auto;
+}

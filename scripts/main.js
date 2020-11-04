@@ -2,72 +2,6 @@
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-class Runnable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: false,
-      isError: false
-    };
-  }
-
-  getMessage() {
-    if (this.state.isLoading) {
-      return React.createElement("b", {
-        className: "load"
-      }, "LOADING...");
-    }
-
-    if (this.state.isError) {
-      return React.createElement("b", {
-        className: "error"
-      }, "Critical Failure");
-    }
-
-    return null;
-  }
-
-  clickHandler() {
-    this.setState({
-      isLoading: true
-    });
-    this.props.loader().then(() => {
-      this.setState({
-        isLoading: false
-      });
-      this.props.runner();
-    }).catch(err => {
-      this.setState({
-        isLoading: false
-      });
-      this.setState({
-        isError: true
-      });
-    });
-  }
-
-  render() {
-    return React.createElement("div", {
-      className: "runnable",
-      id: this.props.id
-    }, React.createElement("h4", {
-      className: "runnable-title"
-    }, this.props.name), React.createElement("div", {
-      className: "runnable-button",
-      onClick: this.clickHandler.bind(this)
-    }, React.createElement("img", {
-      className: "runnable-icon",
-      src: this.props.iconSource
-    }), React.createElement("span", {
-      className: "status"
-    }, this.getMessage())), React.createElement("br", null), React.createElement(LinkEmbedText, {
-      src: this.props.introSource,
-      navigator: this.props.navigator
-    }));
-  }
-
-}
-
 class MainPage extends React.Component {
   constructor(props) {
     super(props);
@@ -792,12 +726,100 @@ class Article extends React.Component {
 
 }
 
+class Runnable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      isError: false,
+      isHidden: true
+    };
+    this.hideToggler = this.hideToggler.bind(this);
+  }
+
+  getMessage() {
+    if (this.state.isLoading) {
+      return React.createElement("b", {
+        className: "load"
+      }, "LOADING...");
+    }
+
+    if (this.state.isError) {
+      return React.createElement("b", {
+        className: "error"
+      }, "Critical Failure");
+    }
+
+    return null;
+  }
+
+  clickHandler() {
+    this.setState({
+      isLoading: true
+    });
+    this.props.loader().then(() => {
+      this.setState({
+        isLoading: false
+      });
+      this.props.runner();
+    }).catch(err => {
+      this.setState({
+        isLoading: false,
+        isError: true
+      });
+    });
+  }
+
+  hideToggler() {
+    this.setState(state => ({
+      isHidden: !state.isHidden
+    }));
+  }
+
+  render() {
+    return React.createElement("div", {
+      className: "runnable" + (this.state.isHidden ? "" : " expanded"),
+      id: this.props.id
+    }, React.createElement("h4", {
+      className: "runnable-title"
+    }, this.props.name), React.createElement("div", {
+      className: "runnable-button",
+      onClick: this.clickHandler.bind(this)
+    }, React.createElement("img", {
+      className: "runnable-icon",
+      src: this.props.iconSource
+    }), React.createElement("span", {
+      className: "status"
+    }, this.getMessage())), React.createElement("br", null), React.createElement(LinkEmbedText, {
+      src: this.props.introSource,
+      navigator: this.props.navigator
+    }), React.createElement(HideToggler, {
+      isHidden: this.state.isHidden,
+      hideToggler: this.hideToggler
+    }));
+  }
+
+}
+
 class Code extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: null
+      data: null,
+      isHidden: true
     };
+    this.hideToggler = this.hideToggler.bind(this);
+  }
+
+  hideToggler() {
+    this.setState(state => ({
+      isHidden: !state.isHidden
+    }));
+  }
+
+  countLines(str) {
+    const lineBreaks = /[\r\n]|\r\n/;
+    return str.split(lineBreaks).length;
   }
 
   componentDidMount() {
@@ -809,7 +831,8 @@ class Code extends React.Component {
       }
     }).then(text => {
       this.setState({
-        data: text
+        data: text,
+        isHidden: this.countLines(text) > 20
       });
     }).catch(err => {
       this.setState({
@@ -821,7 +844,7 @@ class Code extends React.Component {
   componentDidUpdate() {
     if (this.state.data != undefined) {
       let cur = ReactDOM.findDOMNode(this);
-      hljs.highlightBlock(cur);
+      hljs.highlightBlock(cur.firstChild);
     }
   }
 
@@ -834,7 +857,12 @@ class Code extends React.Component {
       return null;
     }
 
-    return React.createElement("pre", null, React.createElement("code", null, this.state.data));
+    return React.createElement("div", {
+      className: "code" + (this.state.isHidden ? "" : " expanded")
+    }, React.createElement("pre", null, React.createElement("code", null, this.state.data)), this.countLines(this.state.data) > 20 && React.createElement(HideToggler, {
+      isHidden: this.state.isHidden,
+      hideToggler: this.hideToggler
+    }));
   }
 
 }
@@ -934,6 +962,20 @@ class LinkEmbedText extends React.Component {
     }
 
     return this.renderData();
+  }
+
+}
+
+class HideToggler extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return React.createElement("div", {
+      className: "hide-toggler" + (this.props.isHidden ? "" : " show"),
+      onClick: this.props.hideToggler
+    }, React.createElement("b", null, this.props.isHidden ? "Show More" : "Hide"));
   }
 
 }

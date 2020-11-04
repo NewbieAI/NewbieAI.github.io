@@ -33,7 +33,7 @@
                 {
                     "name": "My Skills",
                     "articles": [
-                        "resources/JSON/Site/skills.json"
+                        "resources/JSON/Site/unfinished.json"
                     ],
                     "contents": [
                     ]
@@ -41,7 +41,7 @@
                 {
                     "name": "My Interests",
                     "articles": [
-                        "resources/JSON/Site/interests.json"
+                        "resources/JSON/Site/unfinished.json"
                     ],
                     "contents": [
                     ]
@@ -105,6 +105,8 @@
                 {
                     "name": "Building an Windows Multiplayer Game Client",
                     "articles": [
+                                "resources/JSON/Site/unifinished.json",
+                                "resources/JSON/Site/projects/building_game_client.json"
                     ],
                     "contents": [
                     ]
@@ -112,6 +114,8 @@
                 {
                     "name": "Creating a Neural Network Framework For Deep Learning",
                     "articles": [
+                                "resources/JSON/Site/unifinished.json",
+                                "resources/JSON/Site/projects/building_nn_framework.json"
                     ],
                     "contents": [
                     ]

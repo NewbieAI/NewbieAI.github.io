@@ -66,7 +66,7 @@ class Editor extends React.Component {
   }
 
   deleteElement() {
-    if (this.state.isEditing && !confirm("Are you sure? (element is being edited)")) {
+    if (!confirm("Are you sure? This will permanently delete the selected element.")) {
       return;
     }
 
@@ -439,17 +439,19 @@ class Code extends React.Component {
   }
 
   componentDidUpdate() {
-    let cur = ReactDOM.findDOMNode(this);
-    hljs.highlightBlock(cur);
+    if (this.state.data != undefined) {
+      let cur = ReactDOM.findDOMNode(this);
+      hljs.highlightBlock(cur);
+    }
   }
 
   render() {
     if (this.state.data == undefined) {
-      return React.createElement("div", null);
+      return null;
     }
 
     if (this.state.data instanceof Error) {
-      return React.createElement("div", null);
+      return null;
     }
 
     return React.createElement("pre", null, React.createElement("code", null, this.state.data));

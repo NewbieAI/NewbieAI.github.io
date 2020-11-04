@@ -4,14 +4,19 @@
     "Ming"
   ],
   "creationDate": "9/22/2020",
-  "lastModified": "9/22/2020, 2:50:48 PM",
+  "lastModified": "10/29/2020, 7:21:58 PM",
   "components": [
     {
       "type": "text",
-      "name": "[unnamed]",
-      "content": "The following three browser games were written in Javascript ES6, using primarily canvas API for animation and graphics.",
+      "name": "intro",
+      "content": "The following three browser games were written in Javascript ES6, using primarily canvas API for animation and graphics. Each game has its own technical focus: Minesweeper requires a responsive and interactive user interface, fast grid search algorithms, and an efficient representation of the game state. Snake, on the other hand, requires some non-trivial work in producing a smooth slithering animation. Cartpole is a relatively a accurate real-time 2D physics system, which requires some intermediate level mathematical derivations, particularly when external wind force is factored in. All three games were fun to make and served as interesting but serious exercises in modern Javascript programing.\n\nTo play the games, simply click the icons below. They may take a few seconds to load. I recommended that you read the descriptions if you haven't heard of any of the games. In addition, in-game tutorials were added during the creation of these games. Check the in-game instructions if you aren't sure how to play.",
       "links": {},
       "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "Games",
+      "text": "Try the Games:"
     },
     {
       "type": "placeholder",

@@ -1,0 +1,75 @@
+{
+  "title": "Technical Skills",
+  "authors": [],
+  "creationDate": "10/25/2020",
+  "lastModified": "10/28/2020, 10:02:00 PM",
+  "components": [
+    {
+      "type": "text",
+      "name": "intro",
+      "content": "[Intro]",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "frontend",
+      "text": "Front End Development:"
+    },
+    {
+      "type": "text",
+      "name": "front_end",
+      "content": "[CSS]\n    [page layout and element styling]\n    [CSS animation]\n[html]\n    [svg]\n    [canvas graphics API]\n[Javascript:]\n    [ES6+]\n    [JQuery]\n    [node.js]\n    [React]\n    [Asynchronous API Calls]\n    [JSON]",
+      "links": {},
+      "indented": true
+    },
+    {
+      "type": "subtitle",
+      "name": "back_end",
+      "text": "Back End  Development:"
+    },
+    {
+      "type": "text",
+      "name": "back_end",
+      "content": "[Python 3]\n[PHP]\n[SQL Database]\n[RESTful API Design]\n[AWS]\n    [serverless architecture]\n    [Lambda]\n    [Dynamo Database]",
+      "links": {},
+      "indented": true
+    },
+    {
+      "type": "subtitle",
+      "name": "cs",
+      "text": "General CS:"
+    },
+    {
+      "type": "text",
+      "name": "cs",
+      "content": "[C/C++]\n[Python]\n[Java]\n[Data Structure and Algorithms]",
+      "links": {},
+      "indented": true
+    },
+    {
+      "type": "subtitle",
+      "name": "machine_learning",
+      "text": "Machine Learning:"
+    },
+    {
+      "type": "text",
+      "name": "machine_learning",
+      "content": "[Data Preprocessing]\n    [Numpy]\n    [Pandas]\n[Neural Network Implementation]\n    [Supervised Learning]\n    [Gradient Descent & Back-Propagaion]\n    [Classification Models]\n    [Regression Models]\n[TensorFlow]\n[Strong Mathematical Foundation]\n    [Linear Algebra]\n    [Multivariate Calculus] \n    [Probability and Statistics]",
+      "links": {},
+      "indented": true
+    },
+    {
+      "type": "subtitle",
+      "name": "other",
+      "text": "Other:"
+    },
+    {
+      "type": "text",
+      "name": "other",
+      "content": "[Strong technical writing and communication]\n[Signal Processing]\n    [Image Processing]\n    [Audio Processing]\n[Control\n[Graphics]\n[Physics System Simulation]\n[Networking & Socket Programming]",
+      "links": {},
+      "indented": true
+    }
+  ]
+}

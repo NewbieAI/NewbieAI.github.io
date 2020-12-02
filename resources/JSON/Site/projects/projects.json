@@ -1,0 +1,32 @@
+{
+  "title": "Projects",
+  "authors": [],
+  "creationDate": "10/18/2020",
+  "lastModified": "11/2/2020, 11:18:33 PM",
+  "components": [
+    {
+      "type": "text",
+      "name": "intro",
+      "content": "[introductory text, finish this section today]\nThis section contains various software projects that I've built. Since it does take some effort the to create project articles, I regret to say that I am unable to make the list exhaustive.\n\nOld projects for which it is too cumbersome to extract files and assets from old computers will be omitted. Proprietary intellectual property that belongs to myself, clients, or employers will also not be included on my website. \n\nThe array of projects spans multiple programming languages and features different technologies. From native Windows desktop application written in C++, to application server written in PHP, from front-end Javascript and CSS, to serverless backend code written in Python, completing these projects provided valuable experiences across the vast domain that is software engineering.\n\nYou can view the projects by clicking on list below, or alternatively you can also use the navigation menu on the left of the page. Over time, newer projects will be added to the website, and they will likely increase in functionality and complexity.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "list",
+      "text": "Current List of Projects"
+    },
+    {
+      "type": "text",
+      "name": "list",
+      "content": "[project list text]\n\n1. {Javascript Browser Games}:\n          {Cartpole}\n          {Minesweeper}\n          {Snake}\n\n2. {Creating a React Website}\n          {React Source Code}\n          {Website CSS File}\n          {Creating a Custom Website Editor}\n                    {Editor React Source Code}\n                    {Editor CSS File}\n          {Creating Serverless API with AWS}\n\n3. {Creating a Windows Multiplayer Client}\n          {C++/OpenGL Source Code Folder}\n          {Hosted Application Server Files}\n\n4. {Creating a Library for Deep Neural Network}\n          {Python Source Code}\n",
+      "links": {
+        "Javascript Browser Games": "internal::1",
+        "Cartpole": "internal::1, 0",
+        "Minesweeper": "internal::1, 1",
+        "Snake": "internal::1, 2"
+      },
+      "indented": false
+    }
+  ]
+}

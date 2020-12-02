@@ -1,8 +1,8 @@
 {
-  "title": "",
+  "title": "Welcome",
   "authors": [],
   "creationDate": "10/11/2020",
-  "lastModified": "10/24/2020, 4:01:43 PM",
+  "lastModified": "11/11/2020, 6:18:59 PM",
   "components": [
     {
       "type": "quote",
@@ -13,7 +13,7 @@
     {
       "type": "text",
       "name": "intro_message",
-      "content": "Welcome everyone ! ! !  After quite a bit of effort, my personal website is finally online.\n\nWhether you came here through a link, entered in the URL yourself, or maybe stumbled onto my website accidentally, feel free to take a look around. All the contents on this website can be accessed through the navigation menu on the left.\nHere, you can find out {more} about me, {what I can do}, and {what my interests are}. You can also take a detailed look at some of my past {projects}. If you'd like to see some sample code in action, here are some {web games} that I wrote in Javascript and I encourage you to try them. In addition, I will also be maintaining a personal {blog} in which I will offer some fun discussions on various technical subjects.\nIf you like the design of my website and want to find out how it is done, you can read about it {here} or check out the source code from this Github {repository}.\n",
+      "content": "Greetings! ! !  After much effort, my personal website is finally online.\n\nWhether you came here through a link, entered in the URL yourself, or maybe stumbled onto my website accidentally, feel free to take a look around. All the contents on this website can be accessed through the navigation menu on the left.\nHere, you can find out {more} about me, {what I can do}, and {what my interests are}. You can also take a detailed look at some of my past {projects}. If you'd like to see some sample code in action, here are some {web games} that I wrote in Javascript and I strongly encourage you to try them. In addition, I will also be maintaining a personal tech {blog} in which I will offer some fun discussions on various technical subjects.\nIf you like the design of my website and want to find out how it is done, you can read about it {here} or check out the source code from this Github {repository}.\n",
       "links": {
         "more": "internal::0",
         "what I can do": "internal::0, 0",
@@ -34,11 +34,26 @@
     {
       "type": "text",
       "name": "new_content",
-      "content": "1. My first {blog post}, \"A Cautionary Tale on the Dangers of Deploying AI in Social Media\", has been added.\n2. My custom {article} {editor}, which I used to add much of my website content, has been updated to support highlighted code blocks. For example, the html file for this website can be seen below:\n<>\n",
+      "content": "1. My first {blog post}, \"A Cautionary Tale on the Dangers of Deploying AI in Social Media\", has been added.\n2. My custom {article} {editor}, which I used to create much of my website content, has been updated to support highlighted code blocks. For example the html file for this page can be seen below:\n<>\n3. My website and its corresponding editor, have been updated to support a subsection of the {Markdown} standards. \nFor example: **bold**, *italic*, ~~strikethrough~~, ~underline~, [word]^superscript^, and [word]^^subscript^^ can all be added to my website articles via the article editor. These new features will allow me put emphasis, add citations, or issue corrections on my website.",
       "links": {
         "blog post": "internal::2, 0",
         "article": "internal::1, 1, 0",
-        "editor": "editor.html"
+        "editor": "editor.html",
+        "Markdown": "https://en.wikipedia.org/wiki/Markdown"
+      },
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "next",
+      "text": "What's Next"
+    },
+    {
+      "type": "text",
+      "name": "new",
+      "content": "1. A new blog post is in progress. It will be a fun exposition on the emergence of strong AI in the not so distant future.\n2. A Websocket implementation of my {GoVariantClient} project is planned. It is expected to be significantly less complex that the original C++ equivalent.",
+      "links": {
+        "GoVariantClient": "internal::1, 2"
       },
       "indented": false
     }

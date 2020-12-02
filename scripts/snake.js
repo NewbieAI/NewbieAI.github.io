@@ -51,7 +51,7 @@ class Snake {
                     asset.addEventListener(
                         "load",
                         (e) => {
-                            resolve()
+                            resolve();
                         },
                     );
                     asset.addEventListener(

@@ -512,12 +512,42 @@ class Article extends React.Component {
         });
       }
 
-      let arr = p.split(linkSplitter);
+      let arr = p.split(splitter);
+      console.log(arr);
       return React.createElement("p", {
         className: element.indented ? "indented" : null
       }, arr.map(s => {
         if (linkMatcher.test(s)) {
+          console.log("link detected");
           return buildLink(s);
+        }
+
+        if (boldMatcher.test(s)) {
+          return React.createElement("b", null, s.match(boldMatcher)[1]);
+        }
+
+        if (italicMatcher.test(s)) {
+          return React.createElement("i", null, s.match(italicMatcher)[1]);
+        }
+
+        if (delMatcher.test(s)) {
+          return React.createElement("del", null, s.match(delMatcher)[1]);
+        }
+
+        if (insMatcher.test(s)) {
+          return React.createElement("ins", null, s.match(insMatcher)[1]);
+        }
+
+        if (supMatcher.test(s)) {
+          return React.createElement("sup", null, s.match(supMatcher)[1]);
+        }
+
+        if (subMatcher.test(s)) {
+          return React.createElement("sub", null, s.match(subMatcher)[1]);
+        }
+
+        if (inlineMatcher.test(s)) {
+          return React.createElement("code", null, s.match(inlineMatcher)[1]);
         }
 
         return s;
@@ -560,8 +590,15 @@ class Article extends React.Component {
     }
 
     let paragraphs = element.content.split(/\n+/);
-    const linkSplitter = /({[^{}]+})/g;
-    const linkMatcher = /^{[^{}]+}$/;
+    const splitter = /(\^[\d\s\w]+\^|\^\^[\d\s\w]+\^\^|\*[\d\s\w]+\*|\*\*[\d\s\w]+\*\*|~[\d\s\w]+~|~~[\d\s\w]+~~|<<[^<>]+>>|{[\d\s\w]+})/g;
+    const linkMatcher = /^{[\d\s\w]+}$/;
+    const boldMatcher = /^\*\*([\d\s\w]+)\*\*$/;
+    const italicMatcher = /^\*([\d\s\w]+)\*$/;
+    const delMatcher = /^~~([\d\s\w]+)~~$/;
+    const insMatcher = /^~([\d\s\w]+)~$/;
+    const supMatcher = /^\^([\d\w\s]+)\^$/;
+    const subMatcher = /^\^\^([\d\s\w]+)\^\^$/;
+    const inlineMatcher = /^<<([^<>]+)>>$/;
     const codeMatcher = /^<(.*)>$/;
     const internalLink = /^internal::(.*)$/;
     return React.createElement("div", {

@@ -51,7 +51,7 @@
         {
             "name": "Projects",
             "articles": [
-                "resources/JSON/Site/project.json"
+                "resources/JSON/Site/projects/projects.json"
             ], 
             "contents": [
                 {
@@ -79,6 +79,7 @@
                         {
                             "name": "Building Snake",
                             "articles": [
+                                "resources/JSON/Site/projects/building_snake.json"
                             ],
                             "contents": [
                             ]

@@ -1,0 +1,186 @@
+{
+  "title": "Building a Snake Web Game",
+  "authors": [
+    "Mingzhi Tian"
+  ],
+  "creationDate": "11/21/2020",
+  "lastModified": "12/2/2020, 1:56:21 PM",
+  "components": [
+    {
+      "type": "subtitle",
+      "name": "intro",
+      "text": "Introduction: "
+    },
+    {
+      "type": "text",
+      "name": "intro",
+      "content": "The core mechanics behind Snake is quite simple: The player controls a snake in a rectangular grid in search for food. Every time the snake eats, the score increases and the snake grows. If the snake runs into its own body or into grid boundaries, the game ends.\n\nIt is not difficult to see that, if the snake keeps growing and growing, its body will eventually occupy the entire grid. In fact, one can consistently beat every game of snake by following a closed loop {Hamiltonian Path}.\n\nMost implementations of Snake (this one included) will add elements to the base game to encourage players to aggressively take the shortest path to food. This version of Snake employs two such elements:\n\n1. There is a small score penalty for moving the snake.\n\n2. Bonus food, available for limited time only, will be randomly dispensed.\n\nThe essence of Snake gameplay is therefore to act greedily. To achieve the highest possible score, players cannot simply play it safe, but instead need to eat all available bonus food, and eat regular food as quickly as possible.",
+      "links": {
+        "Hamiltonian Path": "https://en.wikipedia.org/wiki/Hamiltonian_path"
+      },
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "start",
+      "text": "Getting Started: "
+    },
+    {
+      "type": "text",
+      "name": "start0",
+      "content": "**Creating a Game Screen**\nTo build a complete game of Snake, we first start with a simple object oriented framework:\n\n<scripts/segments/snake0.js>\n\nLet's take a look at what we've written. \n\nWe created a <<Snake>> class, which will be responsible for everything inside the Snake game. Inside the class, we've declared a static <<loadAssets()>> function, which will be responsible for loading all the game assets such as images, sound files.\n\nInside the class constructor, we declared an HTML <<canvas>> element and appended the canvas element to the DOM. The entire Snake game will be rendered in the <<canvas>> element, which provides a powerful set of {APIs} for 2D graphics.\n\nTo run the game, we first call the <<loadAssets()>> function, which will return a Javascript <<Promise>> object that tells us whether all the game assets are loaded correctly.\n\nIf the <<Promise>> resolves successfully, we will then run an arrow function which creates a Snake instance. This <<Snake>> object will create a blank game screen in the Browser window. If the <<Promise>> fails to resolve due to errors, an alert message will be displayed.",
+      "links": {
+        "APIs": "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API"
+      },
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "start1",
+      "content": "**Inside the Snake Class**\n\nNext, we define some essential class functions, the implementation of which will be filled in later. Together, these functions will be responsible for all the necessary features in the Snake game:\n\n<scripts/segments/snake1.js>\n\nWell, that was more than a handful.\n\nIt takes many building blocks to create a working game, which brings us to another design decision. Here, we will use a flat class structure instead of a nested class structure for expediency.\n\nIt is possible to adopt a Model-View-Controller(MVC) approach for this game. In fact, I would most certainly refactor the code for cleaner hierarchy and structure if these web games were more complicated. But for now, these class functions will be sufficient, so let's take a look at what they do.\n\nThe <<destroy()>> function will be responsible for exiting the game. It will remove the game <<canvas>> element, <<sound>> elements, and keyboard handlers from the webpage.\n\nThe <<startGame()>> and <<endGame()>> functions are self-explanatory. The <<startGame()>> function will be responsible for resetting the game state, randomly placing the snake into the grid, and starting the game animation. The <<endGame()>> function will stop the animation, and display the \"Game Over\" screen / interface.\n\nThe next two functions, <<playSound()>> and <<playMusic(audio, loop)>>, will be used to play the appropriate sound effects during the game.\n\nSo far, we only have an empty <<canvas>> object. To get the game to work, we need functions to render game objects to the screen. The next few functions does exactly that.\n\nThe function <<renderBackground()>> will draw the game background on the canvas. This function will only run once when the game starts. The function <<renderMenu()>> will display the Main Menu to the game screen. Every time the mouse hovers over the menu, <<renderMenu()>> will be called to redraw the menu and highlight the appropriate buttons. A third function, <<renderSettings()>>, will be responsible for drawing the game settings interface on the side of the screen.\n\nNext, the <<openHelp()>> will run when the the user clicks the \"Help\" button, and it will display the game tutorial. Similarly, the <<openCredit()>> function will run when the user clicks the \"Credit\" button.\n\nAfter the game starts, the game states will be constantly changing. The snake will move every second, and new food needs to be placed on the screen when existing food gets eaten. We need some functions that are responsible for applying changes to game states: The <<dispenseFood()>> function will randomly place food in the game grid. The <<dispenseBonusFood()>> will do the same for bonus food, which is available for limited time only. The <<update()>> function will be responsible for the core mechanics of the game, such as updating the location of the Snake based on user inputs, updating the game score, and ending the game when certain conditions are met.\n\nNote the the three functions only affect the game states, but do not draw anything to the screen. The responsibility of drawing to the screen based on the game states, will go to the next three functions. This separation of responsibility is crucial for debugging and testing, as it helps us isolate where problems occur.\n\nThe function <<renderSnake()>> will draw the snake body on the game screen. It is perhaps the most complicated function in the <<Snake>> class due to the need to implement smooth slithering animations. Rendering the head and tail of snake correctly at all times, especially in intermediate frames, was somewhat challenging. Multiple helper functions were needed to complete the implementation. On the other hand, <<renderFood()>> and <<renderBonusFood()>> are responsible for drawing static food images on the game screen. Those two were much simpler to implement that <<renderSnake()>>.\n\nFinally, we need to handle the user input events fired by the browser. The last five functions in the <<Snake>> class will do exact that: Function <<clickHandler(e)>> will be triggered any time user clicks on the game screen, function <<mousedownHandler(e)>> runs when a mouse button is pressed, function <<mousemoveHandler(e)>> triggers when the mouse pointer moves, functions <<keyupHandler(e)>> or <<keydownHandler(e)>> will run when a keyboard key is pressed or released, respectively.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "states",
+      "text": "Game States:"
+    },
+    {
+      "type": "text",
+      "name": "states0",
+      "content": "Game states are the data stored in the program, which provides a complete set of information on what's happening inside the game. For a game like Snake, the game states will necessarily entail a long list of variables.\n\n**Defining Game States Inside the Constructor**\n\nWe will define most game state variables inside the <<Snake>> class constructor. Here's code for the constructor.\n\n<scripts/segments/snake2.js>\n\nDue the variable naming scheme, the purpose of most game state variables should be self-evident. For example, variables <<this.musicOn>> and <<this.soundOn>> determines whether sound effects should be turned on, <<this.food>> stores an object that contains the current food location, the current bonus food location, and current food image to be displayed, <<this.score>> stores the current game score. There are also some variables whose purpose is less obvious from name alone: \n\nThe variables <<this.body>>, <<this.bodySet>>, <<this.space>>, <<this.spaceMap>> are perhaps the most important ones in the <<Snake>> class. They are queues, hashsets, hashmaps that store indices representing locations in the grid. If a grid location is empty, it is stored in <<this.space>> and <<this.spaceMap>>, otherwise it will be stored in <<this.body>> and <<this.bodySet>>. These data containers allow for the efficient redraw of the snake body, constant time dispense of food. It is fair to say that they underline the core mechanics of the Snake game.\n\nThe variable <<this.tailPrev>> stores the location of empty space that is recently vacated by the snake's tail. It is important in the handling of some edge cases.\n\nVariables such as <<this.currentHelpButton>> or <<this.currentMenuButton>> stores which button is currently selected by the mouse pointer; these are useful for highlighting buttons on the game screen and transitioning from one game interface to another. The variable <<this.foodMultiplier>> is a coefficient that determines the score gain per food eaten.\n\nIn addition to defining variables, the constructor also does another important job: *setting up event handlers*.\n\nEvery time a click happens or key press happens, an <<Event>> is fired(created) by the browser. We need to provide a callback function for every event type, so that every mouse click, key press, mouse motion automatically triggers the correct event handler.\n\nIn the constructor, we used <<document.addEventListener(eventName, callback)>> to tell the program that all \"keyup\" events should be handled by the <<keyupHandler(e)>> function, and that all \"keydown\" events should be handled by the <<keydownHandler(e)>> function. Note that since the keyboard events are fired by the browser <<document>> object, we need to bind the function context for both event handlers.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "states1",
+      "content": "**Controlling Game States**\n\nWe previously listed the primary functions that are responsible for controlling the game states: <<startGame()>>, <<endGame()>>, <<update()>>, <<dispenseFood()>>, and <<dispenseBonusFood()>>. The actual implementation of these functions are shown below. We'll also throw a helper function <<initialize()>> into the mix.\n\n<scripts/segments/snake3.js>\n\nInstead of going over every line of code, we'll discuss the general approach, the algorithms used to implement the Snake game.\n\nFirst, let's talk about the overall time complexity. At every time step, the Snake must move. The program must correctly determine which direction it will move next, and if the snake runs food or obstacles. After updating all the necessary game states, the program must redraw the snake body in its newest position, increasing its length if necessary.\n\nThe fastest algorithm can perform all of the operations above in **O**(**1**) time. However, in order to save development time (animating the snake was already quite complex), we will be redrawing the entire snake at every time step. Therefore, the processing time at every frame will be **O**(**N**) on average.\n\nDue to the need to store the entire grid, the space complexity of the game is trivially **O**(**N**) as well. In fact, the space required for game states will be miniscule compared to space needed for storing game assets.\n\nThe snake body will be stored in a Queue, which is implemented as an Array + two pointers. Updating the location of the snake using a Queue is very simple: push the new head location into the queue, and pop off the old tail location; both operations take constant time.\n\nWe also want to check whether a grid location is occupied by the snake body in constant time. To achieve that, we need to avoid iterating over the entire queue, and instead create a hash set that stores the snake body indices separately.\n\nThe empty spaces in the grid will be stored in an array. Putting food into the grid is as simple as picking a random element from the array, and setting it as the current food location.  Determining whether the game should end is also straightforward: we first check whether the snake's new head location is outside the grid, if not, we then check whether the new location is empty or about to be vacated by the snake's tail.\n\nUpdating the Array of empty spaces was slightly more complicated. Whenever new grid location is vacated, we push its indices to the end of the array. Whenever an empty location gets occupied, we swap it with the tail of the array before popping off the tail. The runtime for these operations was also **O**(**1**).\n\nThere is admittedly still some room for further optimization. However the current version of the game was thoroughly tested and runs quite smoothly, so I considered additional reworking of the game not worth the effort.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "ui",
+      "text": "Building the Game Interface: "
+    },
+    {
+      "type": "text",
+      "name": "ui",
+      "content": "Having built the functions to obtain the correct game states at any given moment, the next task on the list is to render the game objects on the screen.\n\nThe following code \"snippet\" contains functions that are responsible for drawing. Since these functions make heavy use of the <<canvas>> 2D API, the code is quite lengthy.\n\n<scripts/segments/snake4.js>\n\nOnce again, we'll discuss the general approach to building the Game Interface instead of going into the minute details.\n\nThe most complex object to draw is of course the snake itself. We need a <<drawSnake()>> function that correctly depicts the snake at any given frame. This function will draw a thick and continuous line using the data points from the <<this.body>> Queue, the fill the line with pre-generated custom texture. The head and the tail of the snake will be drawn separately in two helper functions: <<_renderHead()>> and <<_renderTail()>>.  Rendering the head or the tail is not trivial, particularly during in-between frames when the snake is going from one grid point to the next, possibly turning clockwise or counterclockwise. If you look at the code, you'll notice that a considerable amount of effort is expended on calculating function parameters.\n\nRendering other elements of the game is much easier in comparison. The following line of code, <<this.screen.drawImage(...args)>>, will draw any static image at an any location on the game screen. Meanwhile the function call <<this.screen.fillText(...args)>> can display text messages of any size, font, color on the game screen. Tasks such as drawing food, drawing score signs, drawing Settings Interface, are usually just a combination of drawing static images and drawing texts. The main challenge, therefore, is to provide the correct function arguments.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "assets",
+      "text": "Working With Game Assets: "
+    },
+    {
+      "type": "text",
+      "name": "assets0",
+      "content": "To get the Snake game to work, we need more than just some code. Things like game music, sound effects, icons, textures, and other game arts do not come out from thin air.\n\nFinding the appropriate game assets, such as sound files, image files, and even video files, may take some time to find and sometimes may cost money to license. If no suitable art works can be found, we might need to create them by ourselves! We'll discuss custom artworks in more details later in this section.\n\nFor now, let's assume that we've already found all the necessary game assets and bundled them in a folder. To use the game assets in the web game, first we need to download them from the website server. The following code segment contains an implementation of the static <<loadAssets()>> function.\n\n<scripts/segments/snake5.js>\n\nLet's take a closer look.\n\nTwo inner functions, <<loadAudio(asset, src)>> and <<loadImage(asset, src)>> were first created. Both functions return a Promise object, which attempts to download a file from the <<src>> path inside the server, and store the downloaded content inside the local static variable <<asset>>. If the download completes successfully, the browser will fire an <<event>>, at which point the Promise object will \"resolve\", telling any code that has been waiting for this Promise that the promised task has been fulfilled.\n\nWith these two inner functions, we can then use the {Javascript Promise API}, more specifically, the <<Promise.all(...promises)>> function to load all our assets simultaneously. This function takes an array Promise objects as input, and returns an aggregate Promise object that resolves only when all of the individual promises inside the array resolve. The moment the aggregate Promise resolves, we will know all the game assets were downloaded correctly and we can run the game.",
+      "links": {
+        "Javascript Promise API": "https://javascript.info/promise-api"
+      },
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "assets1",
+      "content": "**Drawing Snake Title**\n\nOne of the important game asset was the game title. I wanted a custom image of a long serpent that curves it's own body into the shape of cursive \"Snake\" texts. No such open source game art could be found the Internet, so the following Javascript file was created to pre-render the custom graphic asset.\n\n<scripts/snakeTitle.js>\n\nWe used a simple color gradient as texture, and stroke the snake body using Bezier curves. The Snake head was created using similar techniques. The rendered image can be seen below, and it is used as the main menu title in the complete Snake game.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Snake Title",
+      "width": "600",
+      "height": "180",
+      "src": "resources/Images/Snake/title.png",
+      "caption": ""
+    },
+    {
+      "type": "text",
+      "name": "assets2",
+      "content": "**Creating Snake Body Patterns**\n\nThe following images are seamless textures specifically created to fill the snake body during the game. They are among the first custom game asset that I created. Unfortunately, the test script used creating these patterns has been overwritten for other purposes.\n\nCreating these textures is as simple as periodically drawing geometric primitives on a <<canvas>> element, provided that we first calculate the pixel period for these circles, squares, and lines.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Body Pattern 1",
+      "width": "150",
+      "height": "150",
+      "src": "resources/Images/Snake/body1.png",
+      "caption": ""
+    },
+    {
+      "type": "image",
+      "name": "Body Pattern 2",
+      "width": "150",
+      "height": "150",
+      "src": "resources/Images/Snake/body2.png",
+      "caption": ""
+    },
+    {
+      "type": "image",
+      "name": "Body Pattern 3",
+      "width": "150",
+      "height": "150",
+      "src": "resources/Images/Snake/body3.png",
+      "caption": ""
+    },
+    {
+      "type": "text",
+      "name": "assets3",
+      "content": "**Creating Grid Background Patterns**\n\nThe following code creates the background patterns during the game. Three different texture patterns were created to meet the needs of different game settings, large, medium, or small.\n\n<scripts/backgroundPatternMaker.js>\n\nInitially, the game grid was designed to be a blank black screen. During testing, it turned out that some sort of grid indicator would help players execute well-timed turns and speed boosts. Using solid gridlines made the game looked horrible, so I opted to created dark blue blobs that can indicate where the grid cells are without distorting the looks and feels of the game.\n\nThe results are shown below.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Background Pattern 1",
+      "width": "100",
+      "height": "",
+      "src": "resources/Images/Snake/pattern2a.png",
+      "caption": ""
+    },
+    {
+      "type": "image",
+      "name": "Background Pattern 2",
+      "width": "80",
+      "height": "",
+      "src": "resources/Images/Snake/pattern2b.png",
+      "caption": ""
+    },
+    {
+      "type": "image",
+      "name": "Background Pattern 3",
+      "width": "60",
+      "height": "",
+      "src": "resources/Images/Snake/pattern2c.png",
+      "caption": ""
+    },
+    {
+      "type": "text",
+      "name": "assets4",
+      "content": "**Other Credited Game Assets**\n\nWithout an artist team, the main source of game arts is still the Internet. Most of the game assets in this game were downloaded as open source files and used with or without modifications. They credited inside the game.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "final",
+      "text": "Putting Everything Together:"
+    },
+    {
+      "type": "text",
+      "name": "final",
+      "content": "The scope of the game made it unsuitable for a step by step tutorial. So far, all the major building blocks of this game has been discussed. To recap how the game was built:\n\n1. We created a Snake class that runs the game when an instance of the class is created.\n\n2. We created functions that handles the game logic.\n\n3. We created functions that reacts to user input by changing the game states.\n\n4. We created functions that draws stuff to the game screen.\n\n5. We collected game assets and built a static function to load these assets at launch.\n\nThe last step, is to link all the functions together, which gives us the complete Snake source code below:\n\n<scripts/snake.js>\n\n",
+      "links": {},
+      "indented": false
+    }
+  ]
+}

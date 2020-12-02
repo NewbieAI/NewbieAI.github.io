@@ -2,7 +2,7 @@
   "title": "About Me",
   "authors": [],
   "creationDate": "10/1/2020",
-  "lastModified": "10/25/2020, 10:28:47 PM",
+  "lastModified": "11/11/2020, 6:33:57 PM",
   "components": [
     {
       "type": "quote",
@@ -16,17 +16,24 @@
       "text": "The Journey"
     },
     {
+      "type": "text",
+      "name": "journey",
+      "content": "Welcome to my website!\n\nMy name is Ming and I moved to the United States at the age of 14. For a little over a decade, I've resided in the peaceful suburbs of Western Pennsylvania, and was blessed with a cosmopolitan life experience and an amazing education. From multi-storied apartment unit to single-family house with a spacious backyard, my family is a living testament to the American dream, where hard work sometimes leads to prosperity. Next year, I'll finally become eligible for US citizenship! Now that a development I very much look forward to!",
+      "links": {},
+      "indented": false
+    },
+    {
       "type": "image",
       "name": "",
-      "width": "",
-      "height": "",
+      "width": "300",
+      "height": "300",
       "src": "resources/Images/Site/photoshot1.png",
-      "caption": "A smiling picure of myself"
+      "caption": "Hello there!"
     },
     {
       "type": "text",
-      "name": "journey",
-      "content": "See the smiling picture above? That's me!\n\nMy name is Ming and I moved to the United States at the age of 14. For a little over a decade, I've resided in the peaceful suburbs of Western Pennsylvania, and was blessed with a cosmopolitan life experience and an amazing education. From multi-storied apartment unit to single-family house with a spacious backyard, my family is a living testament to the American dream, where hard work sometimes leads to prosperity. Next year, I'll finally become eligible for naturalized US citizenship! Now that a development I very much look forward to.\n\nEver since my childhood, I've had a strong affinity towards science and technology, and aspired to devote my skills to the advancement of technological innovation. Even today, my {interests} are primarily driven by the desire to help solving the biggest challenges in our society. In college, I studied electrical engineering and physics, where I absorbed all the knowledge I could lay my hands on and built a strong foundation in various technical subjects. For 3 years, I represented my alma mater, University of Pittsburgh, in the the William Putnam competition, the highest level collegiate mathematical contest in the United States, scoring in the upper echelon among contestants. Later on, I joined bioengineering lab, where I took a deeper dive into the world of programming, learned to work with advanced image processing and computer vision algorithms and published a first-author research paper in my undergraduate years.\n\nIf everything continued its course, I would likely spend my career designing semiconductor chips or telecommunication systems, which I am sure would have been a fulfilling profession. However, an unlikely event happened in 2016, shortly before my graduation, that led to a drastic change in what I decided to pursue.",
+      "name": "journey1",
+      "content": "Ever since my childhood, I've had a strong affinity towards science and technology, and aspired to devote my skills to the advancement of technological innovation. Even today, my {interests} are primarily driven by the desire to help solving the biggest challenges in our society. In college, I studied electrical engineering and physics, where I absorbed all the knowledge I could lay my hands on and built a strong foundation in various technical subjects. For 3 years, I represented my alma mater, University of Pittsburgh, in the the William Putnam competition, the highest level collegiate mathematical contest in the United States, scoring in the upper echelon among contestants. Later on, I joined bioengineering lab, where I took a deeper dive into the world of programming, learned to work with advanced image processing and computer vision algorithms and published a first-author research paper in my undergraduate years.\n\nIf everything continued its course, I would likely spend my career designing semiconductor chips or telecommunication systems, which I am sure would have been a fulfilling profession. However, an unlikely event happened in 2016, shortly before my graduation, that led to a drastic change in what I decided to pursue.",
       "links": {
         "interests": "internal::0, 1"
       },
@@ -57,7 +64,7 @@
     {
       "type": "text",
       "name": "ephiphany2",
-      "content": "Then in early 2016, a stunning research paper published by the London based startup DeepMind (now  a Google subsidiary) began to circulate in certain communities. It appeared that DeepMind's newest research project, {AlphaGo} had defeated the European champion 5:0 in their internal testing. A few months later, a updated version of AlphaGo defeated Lee Sedol, the holder of eighteen world championship titles, with a score of 4:1 in a public show-match. \nFor those of us who followed the event closely, it was quite a spectacle at the time. I could elaborate extensively on the significance of this event, but in the interest of brevity I will only provide the following summary:\nSolving the ancient board game Go was previously considered to be at least a decade away. The sheer size and complexity of the problem made any brute-force computation approach completely futile. It was long speculated that in order for a computer to beat humans at go, it must possess some intangible human-like qualities such as intuition, strategizing, or self-learning. AlphaGo demonstrated all of these qualities within the narrow domain of Go, and the core technique behind its creation was generalizable to many other problems. In short, this event demonstrated two key fact: 1) that AI research is progressing much faster than even the most optimistic timelines; and 2) human-level AI is much closer than what was previously assumed.\n\nAs an engineer who possessed the necessary background to take a step further and look behind the scenes, I suddenly found yourself staring at an unmistakable signal: the advent of stronger-than-human AI will likely take place during our lifetime. The field of AI research and development has already demonstrated {exponential growth}, and it will prove to be more impactful than the invention of computers or the Internet over the coming decades. I did not want to miss the opportunity to join the field before it is too late.\n\nPost graduation, I decided that it would be appropriate to pursue a career in software, with the eventual goal of becoming an expert in building AI systems.\n",
+      "content": "Then in early 2016, a stunning research paper published by the London based startup DeepMind (now  a Google subsidiary) began to circulate in certain communities. It appeared that DeepMind's newest research project, {AlphaGo} had defeated the European champion 5:0 in their internal testing. A few months later, a updated version of AlphaGo defeated Lee Sedol, the holder of eighteen world championship titles, with a score of 4:1 in a public show-match. \nFor those of us who followed the event closely, it was quite a spectacle at the time. I could elaborate extensively on the significance of this event, but in the interest of brevity I will only provide the following summary:\nSolving the ancient board game Go was previously considered to be at least a decade away. The sheer size and complexity of the problem made any brute-force computation approach completely futile. It was long speculated that in order for a computer to beat humans at go, it must possess some intangible human-like qualities such as intuition, strategizing, or self-learning. AlphaGo demonstrated all of these qualities within the narrow domain of Go, and the core technique behind its creation was generalizable to many other problems. In short, this event demonstrated two key facts: 1) that AI research is progressing much faster than even the most optimistic timelines; and 2) human-level AI is much closer than what was previously assumed.\n\nAs an engineer who possessed the necessary background to take a step further and look behind the scenes, I suddenly found yourself staring at an unmistakable signal: the advent of stronger-than-human AI will likely take place during our lifetime. The field of AI research and development has already demonstrated {exponential growth}, and over the coming decades it will prove to be more impactful than the invention of computers or the Internet. I did not want to miss the opportunity to join the field before it is too late.\n\nPost graduation, I decided that it would be appropriate to pursue a career in software, with the eventual goal of becoming an expert in building AI systems.\n",
       "links": {
         "AlphaGo": "https://www.scientificamerican.com/article/how-the-computer-beat-the-go-master/",
         "exponential growth": "https://openai.com/blog/ai-and-compute/"
@@ -92,7 +99,7 @@
     {
       "type": "text",
       "name": "closing",
-      "content": "(this section will be updated more frequently !!!)\n\nThank for reading thus far! I am currently looking for a position in software engineering, if you are aware of openings and would like to set up an interview, please {contact} me.",
+      "content": "Thank for reading thus far! I am currently looking for a position in software engineering, if you are aware of openings and would like to set up an interview, please {contact} me.",
       "links": {
         "contact": "internal::3"
       },

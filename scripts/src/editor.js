@@ -26,7 +26,7 @@
  * {
  *   type: text,
  *   name: str,
- *   content: "str",
+ *   content: str,
  *   links: {
  *     [link1]: [url1],
  *     [link2]: [url2],
@@ -601,13 +601,36 @@ class Article extends React.Component {
                 let codeSrc = p.match(codeMatcher)[1];
                 return <Code src = {codeSrc}/>
             }
-            let arr = p.split( linkSplitter );
+            let arr = p.split( splitter );
+            console.log(arr);
             return (
                 <p className = {element.indented ? "indented" : null}>
                 {arr.map(
                     s => {
                         if ( linkMatcher.test(s) ) {
+                            console.log("link detected");
                             return buildLink(s);
+                        }
+                        if ( boldMatcher.test(s) ) {
+                            return <b>{s.match(boldMatcher)[1]}</b>;
+                        }
+                        if ( italicMatcher.test(s) ) {
+                            return <i>{s.match(italicMatcher)[1]}</i>;
+                        }
+                        if ( delMatcher.test(s) ) {
+                            return <del>{s.match(delMatcher)[1]}</del>;
+                        }
+                        if ( insMatcher.test(s) ) {
+                            return <ins>{s.match(insMatcher)[1]}</ins>;
+                        }
+                        if ( supMatcher.test(s) ) {
+                            return <sup>{s.match(supMatcher)[1]}</sup>;
+                        }
+                        if ( subMatcher.test(s) ) {
+                            return <sub>{s.match(subMatcher)[1]}</sub>;
+                        }
+                        if ( inlineMatcher.test(s) ) {
+                            return <code>{s.match(inlineMatcher)[1]}</code>;
                         }
                         return s;
                     }
@@ -651,8 +674,15 @@ class Article extends React.Component {
         }
 
         let paragraphs = element.content.split(/\n+/);
-        const linkSplitter = /({[^{}]+})/g;
-        const linkMatcher = /^{[^{}]+}$/;
+        const splitter = /(\^[\d\s\w]+\^|\^\^[\d\s\w]+\^\^|\*[\d\s\w]+\*|\*\*[\d\s\w]+\*\*|~[\d\s\w]+~|~~[\d\s\w]+~~|<<[^<>]+>>|{[\d\s\w]+})/g;
+        const linkMatcher = /^{[\d\s\w]+}$/;
+        const boldMatcher = /^\*\*([\d\s\w]+)\*\*$/;
+        const italicMatcher = /^\*([\d\s\w]+)\*$/;
+        const delMatcher = /^~~([\d\s\w]+)~~$/;
+        const insMatcher = /^~([\d\s\w]+)~$/;
+        const supMatcher = /^\^([\d\w\s]+)\^$/;
+        const subMatcher = /^\^\^([\d\s\w]+)\^\^$/;
+        const inlineMatcher = /^<<([^<>]+)>>$/;
         const codeMatcher = /^<(.*)>$/;
         const internalLink = /^internal::(.*)$/;
         return (

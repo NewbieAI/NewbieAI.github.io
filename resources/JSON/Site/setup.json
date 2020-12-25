@@ -27,19 +27,19 @@
         {
             "name": "About Me",
             "articles": [
-                "resources/JSON/Site/aboutme.json"
+                "resources/JSON/Site/unfinished.json"
             ],
             "contents": [
                 {
-                    "name": "My Skills",
+                    "name": "Skills",
                     "articles": [
-                        "resources/JSON/Site/unfinished.json"
+                        "resources/JSON/Site/skills.json"
                     ],
                     "contents": [
                     ]
                 },
                 {
-                    "name": "My Interests",
+                    "name": "Interests",
                     "articles": [
                         "resources/JSON/Site/unfinished.json"
                     ],

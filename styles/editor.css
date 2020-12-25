@@ -35,6 +35,7 @@ body {
     padding: 0;
     background-color: lightgray;
     transform: translate(-50%, 0);
+    z-index: 99;
 }
 
 div.component-editor {
@@ -771,4 +772,31 @@ a:hover {
 
 a:active {
     color: darkorange;
+}
+
+.error-indicator {
+    position: relative;
+    display: block;
+    overflow: visible;
+    width: 160px;
+    height: 160px;
+    border-radius: 20%;
+    margin: 20px auto;
+}
+
+img.error-image {
+    width: 100%;
+    width: 100%;
+}
+
+span.error-text {
+    display: block;
+    position: absolute;
+    font: bold small-caps 20px cursive;
+    color: rgb(20, 55, 55);
+    width: 100%;
+    top: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
 }

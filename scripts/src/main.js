@@ -1123,11 +1123,13 @@ class Code extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.state.data != undefined) {
-            let cur = ReactDOM.findDOMNode(this);
-            //highlight the <pre><code></code></pre> block
-            hljs.highlightBlock( cur.firstChild );
+        if (this.state.data == undefined || 
+            this.state.data instanceof Error) {
+            return;
         }
+        let cur = ReactDOM.findDOMNode(this);
+        //highlight the <pre><code></code></pre> block
+        hljs.highlightBlock( cur.firstChild );
     }
 
     render() {
@@ -1135,7 +1137,7 @@ class Code extends React.Component {
             return null;
         }
         if (this.state.data instanceof Error) {
-            return null;
+            return <ErrorIndicator type = "Code" />;
         }
         return (
             <div className = {"code" + 

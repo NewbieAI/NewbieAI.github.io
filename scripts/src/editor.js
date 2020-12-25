@@ -530,10 +530,13 @@ class Code extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.state.data != undefined) {
-            let cur = ReactDOM.findDOMNode(this);
-            hljs.highlightBlock(cur);
+        if (this.state.data == undefined || 
+            this.state.data instanceof Error) {
+            return;
         }
+        let cur = ReactDOM.findDOMNode(this);
+        //highlight the <pre><code></code></pre> block
+        hljs.highlightBlock( cur.firstChild );
     }
 
     render() {
@@ -541,7 +544,7 @@ class Code extends React.Component {
             return null;
         }
         if (this.state.data instanceof Error) {
-            return null;
+            return <ErrorIndicator type = "Code" />;
         }
         return (
             <pre><code>
@@ -1864,6 +1867,20 @@ class TextareaInGrid extends React.Component {
             </div>
         );
     }
+}
+
+function ErrorIndicator(props) {
+    return (
+        <div className = "error-indicator">
+            <img 
+                className = "error-image" 
+                src = "resources/Images/Site/gif_error.gif" 
+                alt = "picture that indicates an error"/>
+            <span className = "error-text">
+            {props.type} Not Found
+            </span>
+        </div>
+    );
 }
 
 ReactDOM.render(

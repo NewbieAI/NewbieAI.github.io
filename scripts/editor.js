@@ -439,10 +439,12 @@ class Code extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.state.data != undefined) {
-      let cur = ReactDOM.findDOMNode(this);
-      hljs.highlightBlock(cur);
+    if (this.state.data == undefined || this.state.data instanceof Error) {
+      return;
     }
+
+    let cur = ReactDOM.findDOMNode(this);
+    hljs.highlightBlock(cur.firstChild);
   }
 
   render() {
@@ -451,7 +453,9 @@ class Code extends React.Component {
     }
 
     if (this.state.data instanceof Error) {
-      return null;
+      return React.createElement(ErrorIndicator, {
+        type: "Code"
+      });
     }
 
     return React.createElement("pre", null, React.createElement("code", null, this.state.data));
@@ -1629,6 +1633,18 @@ class TextareaInGrid extends React.Component {
     }));
   }
 
+}
+
+function ErrorIndicator(props) {
+  return React.createElement("div", {
+    className: "error-indicator"
+  }, React.createElement("img", {
+    className: "error-image",
+    src: "resources/Images/Site/gif_error.gif",
+    alt: "picture that indicates an error"
+  }), React.createElement("span", {
+    className: "error-text"
+  }, props.type, " Not Found"));
 }
 
 ReactDOM.render(React.createElement(Editor, null), document.getElementById("root"));

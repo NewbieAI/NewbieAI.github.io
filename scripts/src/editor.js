@@ -345,13 +345,13 @@ class ControlPanel extends React.Component {
                     type = "button"
                     id = "upload"
                     onClick = {this.props.uploadHandler}>
-                Upload
+                Open
                 </button>
                 <button 
                     type = "button" 
                     id = "download" 
                     onClick = {this.props.downloadHandler}>
-                Download
+                Save
                 </button>
                 <br/>
                 <ToolBar 

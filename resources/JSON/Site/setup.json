@@ -63,8 +63,7 @@
                         {
                             "name": "Building Cartpole",
                             "articles": [
-                                "resources/JSON/Site/unifinished.json",
-                                "bad_src"
+                                "resources/JSON/Site/projects/building_cartpole.json"
                             ],
                             "contents": [
                             ]
@@ -72,6 +71,7 @@
                         {
                             "name": "Building Minesweeper",
                             "articles": [
+                                "resources/JSON/Site/projects/building_minesweeper.json"
                             ],
                             "contents": [
                             ]

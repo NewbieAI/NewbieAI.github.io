@@ -1,0 +1,147 @@
+{
+  "title": "Building a Minesweeper Game",
+  "authors": [],
+  "creationDate": "12/2/2020",
+  "lastModified": "12/14/2020, 6:30:13 PM",
+  "components": [
+    {
+      "type": "subtitle",
+      "name": "intro",
+      "text": "Introduction"
+    },
+    {
+      "type": "text",
+      "name": "intro0",
+      "content": "In this article we will discuss how to build a robust implementation of Minesweeper, a classic game that was once came with all Windows operating systems by default. To try the game yourself, go back to the {Samples} page and click on the Minesweeper game icon.\n\nThe completed game will look like the picture below. A picture of the classic Minesweeper interface is also provided for comparison.\n\n",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Custom Minesweeper Screenshot",
+      "width": "600",
+      "height": "",
+      "src": "resources/Images/Minesweeper/game_view.png",
+      "caption": ""
+    },
+    {
+      "type": "image",
+      "name": "Class Minesweeper Screenshot",
+      "width": "450",
+      "height": "",
+      "src": "resources/Images/Minesweeper/classic_view.png",
+      "caption": ""
+    },
+    {
+      "type": "text",
+      "name": "intro1",
+      "content": "The game will support *all the classic Minesweeper game mechanics* and **more**:\n\n1. Left mouse click will explore a cell, ending the game if the cell contains a mine. If the explored cell is safe, it will reveal a number that is equal to the number of mines hidden among its 8-connected neighbors.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "",
+      "width": "150",
+      "height": "",
+      "src": "resources/Images/Minesweeper/mechanics1.png",
+      "caption": "Left clicking the cell in the middle revealed the number \"3\", which tells us that there are exactly 3 mines among the 8 cells marked in orange."
+    },
+    {
+      "type": "text",
+      "name": "intro2",
+      "content": "2. Right mouse click on a cell will display a red flag in that cell, marking it as mined. Right click on that cell again with change the flag to a question mark. Right click it one more time will clear the question mark.\n\n3. After flagging all the neighboring mines around an explored cell, the player can use left click and right click simultaneously on that cell to quickly explore all its neighbors (performing this action is usually much faster than exploring all individual neighbors using left clicks).\n\n",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "",
+      "width": "",
+      "height": "",
+      "src": "resources/Images/Minesweeper/mechanics2.png",
+      "caption": "Simultaneous left and right click on the cell circled in red (left image) performs a \"quick explore\". All four unexplored neighbors marked in orange are immediately explored afterwards (right image)."
+    },
+    {
+      "type": "text",
+      "name": "intro3",
+      "content": "4. When all the mined cells are flagged and all the safe cells are explored, the game ends in victory.\n\n5. The the number of mines remaining is always displayed on the red LED counter. A count-up timer is also displayed on the green LED counter. The goal is to win the game as quickly as possible.\n\n6. The difficulty setting can be altered in the settings menu. Changes to difficulty will only take effects after a new game starts.\n\n**7**(**new feature**). If hints are enabled (hints can be disabled from the settings menu), the player can click the upper-right emoji to obtain a hint at the cost of a 20-seconds timer penalty.\n\n**8**(**new feature**). If all the remaining neighbors around an explored cells are mined, the player can use simultaneous left and right lick on that cell to \"autoflag\" all its unexplored neighbors.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "",
+      "width": "",
+      "height": "",
+      "src": "resources/Images/Minesweeper/mechanics3.png",
+      "caption": "The cell circled in red (left image) has exactly 2 unexplored neighbors and exactly 2 neighboring mines. Upon a simultaneous left and right click on that cell, the game will deduce that an \"autoflag\" action is in order and flag both neighbors (right image)."
+    },
+    {
+      "type": "text",
+      "name": "intro4",
+      "content": "Since the custom Minesweeper game contains more details than what I can reasonably cover, we'll selectively focus on a two topics in this article. The first topic addresses the data structure and algorithms behind the fundamental game mechanics. The second topic addresses the interactive animations inside the game.\n\nIf you are interested in other topics such as how to work with game arts, please see the article on the {Snake} game.",
+      "links": {
+        "Snake": "internal::1, 0, 2"
+      },
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "algorithm",
+      "text": "Game States and Core Algorithms:"
+    },
+    {
+      "type": "text",
+      "name": "algorithm0",
+      "content": "**Data Structures**\n\nWhen implementing a game of Minesweeper, the very first problem we had to solve was to find a way to efficiently store the game states. Technically, each cell in the minesweeper only has five possible states: explored(*mine*), explored(*empty*), hidden(*flagged*), hidden(*question marked*), and hidden(*empty*). In practice, each explored cell also had to display a number from 1 to 8; the number 0 will be displayed as a blank explored cell.\n\nThe most natural way to represent such a grid is to use a 2D array of integers. The question is, what should the integers represent? What number should represent an unexplored cell, and what number should represent the question mark? What number should represent an explored cell that says \"6\" and what number should represent an exploded mine? We could use a hash table to define a one-to-one mapping between the integers and what they represent.\n\nIn the actual code, however, it was decided that it is best to define the mappings implicitly because the number of possible states for each cell is relatively small and there exists an intuitive way to assign meanings to integers inside the array.\n\nLet's take a look.\n\n<scripts/segments/minesweeper0.js>\n\nThe code above contains a section of the <<Minesweeper>> class constructor, in which some important game state variables are declared. It also contains the function <<reset()>>, which runs at the beginning of the game and is responsible for initializing the game states variables.\n\nThe game grid is stored in the variable <<this.state>>, which is declared as an empty array inside the constructor. The first <<for>> loop inside the function <<reset()>> will set <<this.state>> to an **M x N** array containing *all zeroes*, where **M** and **N** denote the row size and column size of the grid, respectively.\n\nThe reason we initialized the array to all zeroes is because we will use a non-negative integer to represent an unmined and unexplored cell inside the grid. The value of the integer will be equal to the number of mines among its neighbors. When we reset the game states at the start of the game, the grid is cleared and has no mines just yet, so the value of every cell is exactly 0. For unexplored cells that contain a mine, we will use the integer -1 to represent them. So far, we've assigned an integer value for all unexplored cells (-1 to 8), but we still need to represent explored cells. A natural way to assign values to explored cells is to continue using negative numbers. The next unused negative number, -2, will represent an explored cell that should display 8, and -3 will represent explored 7s. This pattern will continue to -11, which represents a cell that used to be -1 (an exploded mine).\n\nThis design has a natural advantage: every time a cell gets explored, the game state only needs updates the corresponding array element by subtracting 10 from it. We will also be able to tell if a cell is explored by comparing its integer value to -1. If an array element gets updated to -11, we will know that a mine has been triggered and the game will immediately end.\n\nIf you looked closely at the code, you'd notice that aside from <<this.state>>, which stores the grid, we also declared a few <<Set>>s such as <<this.flag>>, <<this.qMarks>>, and <<this.mines>>. The reason behind these additional data structure is that exploring a cell is irreversible, but marking a cell (right clicking) is reversible. While there are other ways to implement reversible changes to game states, I decided that it is simpler to not let right clicks affect the <<this.state>> variable at all. Instead, separate <<Set>>s were created to store the location of cells that are marked by flags or question marks. Marking or unmarking a cell is then just a matter of adding or removing its location from the corresponding sets.\n\nFinally, there are some miscellaneous variables that makes the game efficient and playable. The variable <<this.explored>> stores the total number of cells that are explored, we use it because we don't want to count every cell whose value is less than -1 while trying to determine whether victory condition has been reached. The variable <<this.timer>> stores the current timer value and gets incremented by 1 every second. There are many more such variables, most of which are omitted in the code above, we'll not discuss them in detail.",
+      "links": {
+        "Fisher-Yates shuffle": "https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle"
+      },
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "algorithm1",
+      "content": "**Core Algorithms**\n\nHaving settled on data structure of Minesweeper, the next step is building the core algorithms that make the game work.\n\nThe first algorithm we need is one that randomly inserts mines into the grid. The number of mines, denoted by **K**^^mines^^, is predefined based on the current difficulty level (see the static constants defined before the constructor). The algorithm used to insert the mines employs a partial implementation of the Fisher-Yates {shuffle}, and can be summarized by the following steps:\n\n1. Create an 1D vector of size **M x N**, and fill it with [**0**, **1**, **2**, ..., **M x N** - **1**]\n\n2. Perform the Fisher-Yates shuffle only for the first **K**^^mines^^ elements, at which point we have a uniform random sample of size **K**^^mines^^ from the 1D vector.\n\n3. Add the sampled indices to the Set variable <<this.mines>>.\n\n4. Map the sampled indices to locations inside the 2D array <<this.state>>. For each location, set the value of the array element to -1, and increment the value of all its non-negative neighbors by one.\n\nAt the end of these steps, a new Minesweeper game is now properly initialized. The player can now start exploring the grid in attempts to beat the game.\n\nThe following code snippet includes algorithms that support key game mechanisms:\n\n<scripts/segments/minesweeper1.js>\n\nThe first function <<runAround(i, j, func)>> is an important helper function. It iterates over all the neighbors of <<this.state[i][j]>>, taking into account array boundaries where appropriate. For each neighboring cell, it will run the callback function <<func>> that was provided as an argument.\n\nThe next function <<reveal(i, j)>> runs when the player left-clicks the cell at (i, j). It is responsible for exploring the cell at (i, j) and, if that cell has no neighboring mines, explore all its neighbors as well. We will use breadth first search to implement <<reveal(i, j)>>, using a queue to store all the neighbors waiting to be explored. At the end of the function, it will return a Boolean value indicating whether the current game is lost due to a mine detonation.\n\nThe last function is responsible for marking cells in response to right clicks. Because we are using a built-in Javascript data structure <<Set>>, this function is almost trivial. If an unmarked cell is right-clicked, its index will get added to the <<this.flags>> set. Likewise, if a cell's index is already stored in <<this.flags>>, its index will be removed from <<this.flags>> and added to <<this.qMarks>> instead. All the Javascript <<Set>> operations in this function will run in **O**(**1**) time.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "animation",
+      "text": "Graphics and Animations:"
+    },
+    {
+      "type": "text",
+      "name": "animation",
+      "content": "**Basic Drawing Functions**\n\nSome elements will be drawn to the game screen repeatedly. For convenience, we've created multiple subroutines to draw these elements. See the code segment below:\n\n<scripts/segments/minesweeper2.js>\n\nThe functions <<renderMine(i, j)>>, <<renderFlag(i, j)>>, <<renderDigit(i, j)>>, <<renderQMark(i, j)>>, and <<renderCheck(i, j)>> are exactly what their names suggest. Each function is responsible for drawing a specific item at the **i**th row and **j**th column inside the game grid.\n\nThe <<renderCell(i, j)>> function, on the other hand, is responsible for determining which item to draw at the designated cell based on game states. After completing its determination, <<renderCell(i, j)>> will call the functions mentioned above to update the content of the cell located at (**i**, **j**).\n\nThere are some additional drawing functions that are not part of the gameplay, but these functions are important components of building the complete game interface. Functions <<renderHelp()>> and <<renderSettings()>> will display the tutorial pages and the settings menu. Meanwhile functions <<renderEmoji()>>, <<renderTimer()>>, <<renderMineCounter()>>, <<renderSoundIcon()>>, <<renderMusicIcon()>> and <<renderMenu()>> will draw the menu section on the right of the game screen. Because these additional functions are rather lengthy and require many other helper functions, we'll not show the code until the end of this article.\n\n**Creating Animations**\n\nThis custom version of Minesweeper has 4 different animations:\n\n1. At the start of the game, cells are cleared in random order until a blank grid appears.\n\n2. Upon victory, a bar of light scans the entire grid and put green check marks on all flagged mines.\n\n3. Upon defeat, a fire ball explosion animation is played at every mine.\n\n4. When the \"Credit\" button is clicked, an end-of-a-movie style credit animation is displayed.\n\nThe code below contains the four functions that are responsible for starting those animations.\n\n<scripts/segments/minesweeper3.js>\n\nEach animation returns a <<Promise>> object because during the animations, all essential interactions with the game interface will be disabled. The <<Promise>> object will let the game restore interactivity after the animations are completed.\n\nInside the <<Promise>> objects, we used the Javascript's built-in function <<setInterval(callback, interval)>> to periodically redraw animation frames. The <<callback>> argument provides what to draw, and the <<interval>> animation provides how often to redraw frames.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "inputs",
+      "text": "Handling User Inputs:"
+    },
+    {
+      "type": "text",
+      "name": "inputs",
+      "content": "The last important part of building Minesweeper is to setup event handlers for the game. As usual, there are two types of inputs we need to handle.\n\n1. **Mouse Actions**: we need to detect detect left clicks, right clicks, mouse motions, and dual clicks(simultaneous left and right clicks).\n\n2. **keyboard Actions**: we built some very specific keyboard into the game, and we'll need a way to handle these keyboard presses..\n\nHere's code for event handling functions:\n\n<scripts/segments/minesweeper4.js>\n\nAmong these functions, <<clickHandler(e)>> is responsible all mouse clicks. Based on where the player clicked, which key is clicked, it will perform one of the following actions:\n\n1. If the player clicked a button in the menu, the function <<menuClick()>> will be called. Based on which button is pressed, the <<menuClick()>> function can start a new game, provide hint, display in-game tutorial, display settings menu, display credit scene, or close the game. \n\n2. If the player left-clicked inside the game grid, the function <<leftCellClick(i, j)>> will be called to explore the cell located at (**i**, **j**).\n\n3. Similarly, if the player right-clicked inside the game grid, the function <<rightCellClick(i, j)>> will be called to flag on the cell located at (**i**, **j**). If the cell already has a flag, the function will change the flag to a question mark; if already a question mark, the function will remove the question mark and leave the cell blank.\n\n4. If the user pressed left mouse key and right mouse key simultaneously, the function <<dualCellClick(i, j)>> will be called. This function will perform a \"quick explore\" action or an \"autoflag\" action depending on game settings.\n\n5. If the player clicked on the tutorial page, the function <<helpClick()>> will be called to navigate inside the tutorial or close the tutorial.\n\n6. If the player clicked on the settings menu, the function <<settingsClick()>> will be called to alter the game settings or close the settings menu.\n\nIf the player pressed a mouse button somewhere, and while holding the button, moved the cursor elsewhere before releasing, the game will detect such discrepancy and do nothing.\n\nFor keyboard events, we created a single function <<keyupHandler(e)>> that can handle all keyboard shortcuts:\n\n1. Pressing \"r\" will trigger the <<reset()>> function and start a new game.\n\n2. Pressing \"q\" will trigger the <<destroy()>> function and quit the game immediately.\n\n3. Pressing \"i\" will trigger the <<_hint()>> function and safely explore a cell (assuming hints are enabled in the settings menu).\n\n4. Pressing \"h\" will trigger the <<openHelp()>> function and open the in-game tutorial pages.\n\n5. Pressing \"c\" will trigger the <<openCredit()>> function and display the in-game credit scene.\n\n6. Pressing \"m\" or \"n\" will turn in-game sound effects or music on or off, respectively.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "final",
+      "text": "Finished Version:"
+    },
+    {
+      "type": "text",
+      "name": "final",
+      "content": "The code for the complete Minesweeper game can be found below. It has been tested thoroughly and proved to be stable.\n\n<scripts/minesweeper.js>",
+      "links": {},
+      "indented": false
+    }
+  ]
+}

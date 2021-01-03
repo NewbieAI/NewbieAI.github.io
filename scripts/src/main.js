@@ -541,9 +541,6 @@ class NavigationMenu extends React.Component {
     constructor(props) {
         super(props);
     }
-    
-    isLeafNode() {
-    }
 
     render() {
         return (
@@ -1250,22 +1247,16 @@ class LinkEmbedText extends React.Component {
     }
 }
 
-class HideToggler extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div 
-                className = {"hide-toggler" + 
-                    (this.props.isHidden ? "" : " show")
-                }
-                onClick = {this.props.hideToggler}>
-                <b>{this.props.isHidden ? "Show More" : "Hide"}</b>
-            </div>
-        )
-    }
+function HideToggler(props) {
+    return (
+        <div 
+            className = {"hide-toggler" + 
+                (props.isHidden ? "" : " show")
+            }
+            onClick = {props.hideToggler}>
+            <b>{props.isHidden ? "Show More" : "Hide"}</b>
+        </div>
+    )
 }
 
 function LoadIndicator(props) {

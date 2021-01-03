@@ -384,8 +384,6 @@ class NavigationMenu extends React.Component {
     super(props);
   }
 
-  isLeafNode() {}
-
   render() {
     return React.createElement("div", {
       className: "navigation-menu"
@@ -877,10 +875,12 @@ class Code extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.state.data != undefined) {
-      let cur = ReactDOM.findDOMNode(this);
-      hljs.highlightBlock(cur.firstChild);
+    if (this.state.data == undefined || this.state.data instanceof Error) {
+      return;
     }
+
+    let cur = ReactDOM.findDOMNode(this);
+    hljs.highlightBlock(cur.firstChild);
   }
 
   render() {
@@ -889,7 +889,9 @@ class Code extends React.Component {
     }
 
     if (this.state.data instanceof Error) {
-      return null;
+      return React.createElement(ErrorIndicator, {
+        type: "Code"
+      });
     }
 
     return React.createElement("div", {
@@ -1001,18 +1003,11 @@ class LinkEmbedText extends React.Component {
 
 }
 
-class HideToggler extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return React.createElement("div", {
-      className: "hide-toggler" + (this.props.isHidden ? "" : " show"),
-      onClick: this.props.hideToggler
-    }, React.createElement("b", null, this.props.isHidden ? "Show More" : "Hide"));
-  }
-
+function HideToggler(props) {
+  return React.createElement("div", {
+    className: "hide-toggler" + (props.isHidden ? "" : " show"),
+    onClick: props.hideToggler
+  }, React.createElement("b", null, props.isHidden ? "Show More" : "Hide"));
 }
 
 function LoadIndicator(props) {

@@ -1,9 +1,187 @@
 {
-  "title": "Building a Single Page React Site",
+  "title": "Building a React Website",
   "authors": [
     "Mingzhi Tian"
   ],
   "creationDate": "10/5/2020",
-  "lastModified": "10/5/2020, 8:37:07 PM",
-  "components": []
+  "lastModified": "12/31/2020, 6:45:34 PM",
+  "components": [
+    {
+      "type": "subtitle",
+      "name": "intro",
+      "text": "Introduction:"
+    },
+    {
+      "type": "text",
+      "name": "intro",
+      "content": "In this article, we explore how to build a informational website using the {React} Javascript framework. As I became more experienced in software development, I realized that I need a personal website for a variety of purposes. Such a website is not only an ideal place to maintain a digital presence without the downsides of using social media, but also a good platform for showcasing and my past projects and front-end development skills.\n\nOne immediate question was what kind of website do I want to create? There are multitudes of ways to created managed websites/blogs using 3rd party services. But as a programmer, it is much more interesting to build the website myself using modern web architecture and technologies. I wanted to move from vanilla Javascript to more productive and popular frameworks, and move from conventional hosted/virtual server to a serverless architecture.\n\nThe completed website should have a clean and intuitive interface, host various webpages that support enriched formats and media, support standalone executable Javascript code, and provide a one-way communication channel to the site creator. As time goes by, new features and content will be added to the website.",
+      "links": {
+        "React": "https://reactjs.org/docs/getting-started.html"
+      },
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "req",
+      "text": "Functional Requirements:"
+    },
+    {
+      "type": "text",
+      "name": "req",
+      "content": "Having decided on what the website should do, the next step is to define the specific features that we need to implement. The essential functionalities of the website include the following:\n\n1. The website needs to support rotating announcement banners. The announcement contents can be edited at will.\n\n2. The website needs to support \"runnable\" Javascript projects, which are self-contained scripts that act like executable applications.\n\n3. The website needs to support a Blog. There should be a efficient way to create blog articles, which can contain rich text formats, external and internal links, media files, quotation blocks, highlighted code blocks, etc. \n\n4. The website needs to provide a way for visitors to leave direct messages to the site creator.\n\n5. The website needs to support smooth internal navigation from one webpage to another. The entire website should resemble as a single-page React App. \n\n6. The website needs to handle errors graciously.\n\nCurrently there's no plan for a mobile version. The website will be designed for Chrome, so not all features are guaranteed on other browsers.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "design",
+      "text": "Website Design:"
+    },
+    {
+      "type": "text",
+      "name": "design0",
+      "content": "**Website Layout**\nIn order to build a clean interface, we'll use a simple but classic design. Every webpage will be divided into 3 sections: a Header section on the top, a Menu section on the bottom left, and a Content section on the bottom right.\n\n",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Basic Website Layout",
+      "width": "300",
+      "height": "",
+      "src": "resources/Images/Site/layout.png",
+      "caption": "Every webpage is partitioned into 3 separate sections using CSS. The inner content of each section can vary independently."
+    },
+    {
+      "type": "text",
+      "name": "design1",
+      "content": "The Header section will be responsible for displaying 3 things:\n\n1. A avatar of the site creator, which consists of a circular image and a label. Clicking the avatar should make the Header toggle between Announcements and Message Forms.\n\n2. Announcement banners, which are small blocks that contain announcement texts. The banners should be able to fluidly transition from one announcement to another.\n\n3. Message Form, which lets the site visitor enter text messages into a field. Upon form submission, the message should be delivered to the site creator.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Header Layout",
+      "width": "400",
+      "height": "",
+      "src": "resources/Images/Site/layout1.png",
+      "caption": "The rectangular block will contain rotating announcements when messaging is turned off. Clicking the avatar image will turn on messaging, which causes the rectangular block to display a static input form instead."
+    },
+    {
+      "type": "text",
+      "name": "design2",
+      "content": "The Menu section will be responsible for website navigation. It will contain a list of internal links that lets the user go from one webpage to another. It will also contain a Home Icon that provides quick access to the homepage. Optionally, a return button should also be provided that lets the user go up one level.\n\nThe Content section will be responsible for displaying 2 items. The first is the navigation path, which tells the user the relative path from the website root to the current webpage. The item second is a list of Articles, which contains the content of the current webpage.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Menu and Content Layout",
+      "width": "450",
+      "height": "",
+      "src": "resources/Images/Site/layout2.png",
+      "caption": "Depending on which webpage is being displayed, the Menu section will provide internal links to all the sibling webpages. The current webpage will be highlighted. The current path is displayed at the top of the Content section."
+    },
+    {
+      "type": "text",
+      "name": "design3",
+      "content": "**Frontend Design**\n\nNow that we have an idea of what the website should look like, it's think about how to implement the web interface and its underlying functions. We'll use the classic frontend trio, CSS, HTML, and Javascript, to build the entire website frontend.\n\nCSS will be responsible for website animations and element styling. We put all the main website styling inside the <</styles/index.css>> file. Since the file does not involve high-level design decisions, we'll simply show the entire <<index.css>> file at the end of this article.\n\nWe will an index HTML file used to load scripts, styles, icons, and provide an initial website DOM. Individual webpages will not be stored in static HTML files. Consequently, the <<index.html>> is rather short:\n\n<index.html>\n\nWe will use Javascript build and render the entire website DOM on demand. At the end of the HTML body, we will load the Javascript file <</scripts/main.js>>, which contains a hierarchy of React components. Each React component is responsible for rendering an individual section of the web interface. At the end of the <</scripts/main.js>>, we can start building the current webpage using these React components:\n\n<scripts/segments/main0.js>\n\nThe Javascript code will attempt to fetch a JSON file from the following server path <<resources/JSON/Site/setup.json>>, which specifies website configurations, such as the location of website resources and the structure of website navigation tree. With this file, the React website can initialize the states and properties of React components, and it will invoke the React function <<ReactDOM.render(component, element)>> to generate the inner HTML content of the root <<div>> element.\n\n**Web Editor** \nOur frontend design requires that all webpage contents be stored inside custom JSON files on the server. The React code on the website will be able to render these JSON page contents, but we still need a efficient way to create these webpages. That is, we should not have to manually edit the JSON files.\n\nThe solution is to build a separate React web editor, which lets the site creator manipulate webpages through a graphic interface. The design and implementation of a {custom website editor} is not simple, so we'll deal with it in a {separate article}. The result will look like the image below.",
+      "links": {
+        "separate article": "internal::1, 1, 1",
+        "custom website editor": "editor.html"
+      },
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Web Editor Interface",
+      "width": "600",
+      "height": "",
+      "src": "resources/Images/Site/editor0.png",
+      "caption": "This image is a screenshot of the custom web editor in action, taken while editing this article. The editor page share some CSS styling with the main website, so it can provide a real-time preview of the completed webpage during the editing process."
+    },
+    {
+      "type": "text",
+      "name": "design4",
+      "content": "**Web Content Storage**\n\nFrom the website root directory, we will store all the website files in the following structure.\n\n1. All Javascript code used in the website, with the exception of 3rd party dependencies, will be located in the <</scripts>> directory. In particular, React code (using {JSX} syntax, before {Babel} compilation) will be stored inside the <</scripts/src>> subdirectory.\n\n2. All resource files will be stored in the <</resources>> directory. The subdirectories <</resources/Images>>, <</resources/JSON>>, <</resources/Sound>>, and <<resources/Dependency>> will store image/gif files, JSON files, Sound files, and 3rd party Javascript code, respectively.\n\n3. All CSS files are stored in the <</styles>> directory. All static HTML files are stored in the website root directory.\n\nAt the moment, the amount of web content does not warrant a separate data server. When the website needs these files, it will use the Javascript <<fetch>> API to obtain them from the server. The code snippet below illustrates the usage of <<fetch>> API to load JSON files for individual website articles.\n\n<scripts/segments/main1.js>\n\nIn the future, the website may host more complicated Javascript applications, comment sections, or other services that require frequent database access. The current website design will be able to accommodate such changes by migrating locally stored resources to managed databases.\n\n**Backend Integration**\n\nCertain web features cannot be completed by client-side Javascript alone. The \"leave a message\" capability, for example, must run code on the website backend to process the POST requests that contain incoming messages. It's certainly viable to host server-side scripts for backend computation, but *we are interested in building a serverless backend*.\n\nInstead of maintaining dedicated dynamic servers, we can instead find a backend-as-a-service provider to host our backend API(s). We chose the {AWS Lambda} service as our serverless compute provider because it is easy-to-use and, for the limited traffic consumed by personal websites, it is practically free.\n\nThe direct messaging API is primarily handled by the short AWS lambda script below. We will omitted the steps of configuring API Gateway and SNS topics because those subjects were already thoroughly documented elsewhere.\n\n<scripts/segments/backend0.py>\n\nThe script will parse a HTTP request, extract the message text stored inside <<event[\"body\"]>>, and push the message to a managed notification service, which sends new messages to subscribers. Any future website features requiring backend compute will be implemented in a similar fashion, since AWS Lambda can access a powerful network of managed backend services.\n\nStill, websites are not truly \"serverless\", we still need a static server to host our frontend resources. But that won't be a problem: from the simple {Github website} repositories to the powerful {AWS S3} buckets, it's easy to maintain a webserver for static resources at little or no costs.",
+      "links": {
+        "JSX": "https://reactjs.org/docs/introducing-jsx.html",
+        "Babel": "https://babeljs.io/docs/en/",
+        "Github website": "https://pages.github.com/",
+        "AWS S3": "https://aws.amazon.com/s3/",
+        "AWS Lambda": "https://aws.amazon.com/lambda/"
+      },
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "build",
+      "text": "Building React Components:"
+    },
+    {
+      "type": "text",
+      "name": "build0a",
+      "content": "**Component Hierarchy**\n\nThe {recommended way} of building a react website is to first break the UI into a component hierarchy, and then build a static version of the website using that hierarchy. The following diagram illustrates the structure of the website UI:",
+      "links": {
+        "recommended way": "https://reactjs.org/docs/thinking-in-react.html"
+      },
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "React Components",
+      "width": "600",
+      "height": "",
+      "src": "resources/Images/Site/components.png",
+      "caption": "The graph shows the hierarchy of the React components inside the website DOM structure. Camel case tags are React components. Lowercase tags are HTML elements."
+    },
+    {
+      "type": "text",
+      "name": "build0b",
+      "content": "The <<MainPage>> component encapsulate the entire webpage DOM tree. It has three subcomponents: <<WelcomeHeader>> will render the Header Section, <<NavigationMenu>> will render the Menu Section, and <<ContentArea>> will render the Content section.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "build1a",
+      "content": "**Basic Reusable Components**\n\nIn addition to the Component hierarchy defined above, there are some reusable React Components that can be placed anywhere inside the website DOM. These are basic functional components, created to fulfill some common needs: \n\n1. The <<ErrorIndicator>> component is displayed when the website catches an Error during resource loading. It will show a confused bear GIF overlaid with a text message.\n\nIn the example below, the website attempts to display a non-existent script but catches a <<fetch>> while fetching the file. So the website generates an <<ErrorIndicator>> component to replace the script.\n\n<bad_source.code>\n\n2. The component <<LoadingIndicator>> is displayed when the website is loading large files. The component consists of a spinner animation (shown below), which serves as a useful visual indicator that the webpage content is not yet rendered.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Loading Animation",
+      "width": "50",
+      "height": "",
+      "src": "resources/Images/Site/gif_spinner.gif",
+      "caption": ""
+    },
+    {
+      "type": "text",
+      "name": "build1b",
+      "content": "3. The component <<HideToggler>> is be used to make other components collapsible, hiding unimportant details. Every component that has the \"Show More\" / \"Hide\" button uses the <<HideToggler>> to truncate the displayed length of web elements.\n\nThe implementation of the 3 functional components above can be found here:\n<scripts/segments/main2.js>\n\nThe <<Runnable>> component, whose code is shown below, is another basic reusable component. Since it is more complex that the 3 functional components described above, <<Runnable>> is instead implemented as a Class.\n\n<scripts/segments/main3.js>\n\nThe primary purpose of the <<Runnable>> component is to \"plug\" Javascript applications into website articles. The component creates a clickable icon in the web interface, which is accompanied by an application title, and an optional introductory text(which can include links). Upon click, the Runnable component will first execute a \"loader\" function, in the meantime it will display the text \"Loading...\" on top of the clickable icon. When the \"loader\" function successfully loads all the application resources, the <<Runnable>> component will then run its \"runner\" function, which simply starts the application.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "build2",
+      "content": "**WelcomeHeader Component**\n\nThe <<WelcomeHeader>> component has the following features:\n\n1. <<WelcomeHeader>> contains a <<MessageForm>> component, which lets visitors send text messages to the site creator from the website. The <<MessageForm>> is hidden from view unless the visitor turns it on.\n\n2. <<WelcomeHeader>> contains a circular Avatar of the website creator and a text label underneath the image. Clicking on the Avatar can turn <<MessageForm>> on or off, depending on the current state of the component.\n\n3. <<WelcomeHeader>> has a rotating background. The background image will be chosen from a selection of landscape photos. When an old background rotates out, it will swing left until it's out of view, while the new background will swing into view.\n\n4. When <<MessageForm>> is turned off, <<WelcomeHeader>> will display a banner that contains rotating announcements. When an old announcement rotates out, it will fade away until it's invisible, afterwards a new announcement will fade into view.\n\n5. Underneath the announcement banner, <<WelcomeHeader>> displays a selection bar . The selection bar contains a row of circular buttons, and each button corresponds to a specific announcement/background combo. Clicking any button will immediately switch to a pair of announcement/background combo.\n\nThe implementation of the <<WelcomeHeader>> component can be found below. \n\n<scripts/segments/main4.js>\n\nNote that the React code does not explicitly create animations, because website animations are controlled by CSS files. However, by assignment specific class names to individual elements, the code can implicitly tell the browser which animation (if any) is to be performed by those elements.\n\n**NavigationMenu Component**\n\nThe structure of the website is tree-like. The root of the tree is just the home page, and each node in the tree is simply a webpage. Every webpage can have 0 or more articles and 0 or more child pages.\n\nThe <<NavigationMenu>> component provides fast and a consistent way to navigate through the website:\n\n1. It highlights the current page that is being visited, and it also shows the list of child pages. If the current page is a leaf node, then sibling pages are shown instead.\n\n2. It shows a shortcut to the home page and another shortcut to the parent page (if there is one).\n\nHere's the code for the <<NavigationMenu>> component:\n\n<scripts/segments/main5.js>\n\nYou can see that the <<NavigationMenu>> is composed of a list of <<NavigationButton>> components. A <<NavigationButton>> component is just a button in the menu that links to a related webpage. \n\nWhen <<NavigationMenu>> component renders the Menu Section, it will find all the pages related to the current one, and for each related page it generate a <<NavigationButton>> component and place it in the menu.\n\n**ContentArea Component**\n\nThe content area will display the list of articles of the current webpage. Each article is rendered by an <<Article>> component. An <<Article>> component may contain any of the following elements:\n1. Text blocks that support rich formats, including **bold**, *italic*, <<inline code>>, ^^suberscript^^, ^superscript^, ~underline~, and ~~strikethrough~~.\n2. Images with Captions.\n3. Quotation blocks.\n4. Subtitles.\n5. Highlighted code blocks.\n6. Runnable Javascript applications.\n\nAdditionally, the path from the website homepage to the current webpage will be displayed at the top of the Content Section. Here is the React code for the  <<ContentArea>> and the <<Article>> components:\n<scripts/segments/main6.js>",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "integration",
+      "text": "Put Everything Together:"
+    },
+    {
+      "type": "text",
+      "name": "integration",
+      "content": "Let's recap the what we've built for the website frontend.\n\nFirst, there is the static index HTML file. Inside the html header, it loads the minified React production package, the 3rd party library HighlightJS, the source code for Javascript browser games, the website icon, and the website CSS styles. In the html body, it loads the website Javascript code that builds the website DOM and renders it inside an empty <<div>> element called \"root\".\n\n<index.html>\n\nNext, there is the CSS style file for the website, <<styles/index.css>>, which specifies the locations, the look and feel, and the animations of every element on the website. Earlier in this article we promised to show <<index.css>> in its entirety, so here it is:\n\n<styles/index.css>\n\nFinally, there is the complete React source code for the website, <</scripts/src/main.js>>. Note that this file contains the \"JSX\" syntax, which isn't recognized by the web browser. To use the source code, we used Babel to \"compile\" JSX syntax into ordinary Javascript code, stored in the path <</scripts/main.js>>.\n\nFor completeness, we'll show both versions below. Just a heads up, **the files maybe very long**! Unless you are interested in the specific details, reading the compiled Javascript file is not recommended.\n\nHere is the React source code:\n<scripts/src/main.js>\n\nHere is the compiled Javascript file:\n<scripts/main.js>\n\nAt this point, the programming portion for the website has been completed!!! The only remaining task is to create articles for the website, using the UI based web editor that we've built as part of the react website.",
+      "links": {},
+      "indented": false
+    }
+  ]
 }

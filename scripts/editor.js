@@ -267,11 +267,11 @@ class ControlPanel extends React.Component {
       type: "button",
       id: "upload",
       onClick: this.props.uploadHandler
-    }, "Upload"), React.createElement("button", {
+    }, "Open"), React.createElement("button", {
       type: "button",
       id: "download",
       onClick: this.props.downloadHandler
-    }, "Download"), React.createElement("br", null), React.createElement(ToolBar, {
+    }, "Save"), React.createElement("br", null), React.createElement(ToolBar, {
       moveupHandler: this.props.moveupHandler,
       movedownHandler: this.props.movedownHandler,
       deleteHandler: this.props.deleteHandler,

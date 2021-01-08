@@ -94,7 +94,11 @@ class Editor extends React.Component {
         lastModified: new Date().toLocaleString(),
         components: [...state.data.components, this.createElement(type)]
       }
-    }));
+    }), () => {
+      if (type == "equation") {
+        MathJax.typeset();
+      }
+    });
   }
 
   createElement(type) {
@@ -107,6 +111,13 @@ class Editor extends React.Component {
           height: "",
           src: "",
           caption: ""
+        };
+
+      case "equation":
+        return {
+          type: "equation",
+          name: "[unnamed]",
+          TeX: "$$\na^2 + b^2 = c^2\n$$"
         };
 
       case "text":
@@ -152,8 +163,8 @@ class Editor extends React.Component {
     });
   }
 
-  updateElement(update) {
-    this.setState(update);
+  updateElement(...update) {
+    this.setState(...update);
   }
 
   upload() {
@@ -400,6 +411,8 @@ class InsertionForm extends React.Component {
     }, "image"), React.createElement("option", {
       value: "text"
     }, "text"), React.createElement("option", {
+      value: "equation"
+    }, "equation"), React.createElement("option", {
       value: "quote"
     }, "quotation"), React.createElement("option", {
       value: "subtitle"
@@ -517,7 +530,6 @@ class Article extends React.Component {
       }
 
       let arr = p.split(splitter);
-      console.log(arr);
       return React.createElement("p", {
         className: element.indented ? "indented" : null
       }, arr.map(s => {
@@ -638,6 +650,16 @@ class Article extends React.Component {
     })), caption));
   }
 
+  renderEquationElement(element) {
+    if (this.props.isMinimized) {
+      return null;
+    }
+
+    return React.createElement("p", {
+      className: "equation"
+    }, element.TeX);
+  }
+
   renderQuoteElement(element) {
     return React.createElement("div", {
       className: "quote"
@@ -661,6 +683,9 @@ class Article extends React.Component {
 
       case "image":
         return this.renderImageElement(element);
+
+      case "equation":
+        return this.renderEquationElement(element);
 
       case "quote":
         return this.renderQuoteElement(element);
@@ -729,6 +754,13 @@ class EditingPanel extends React.Component {
 
       case "image":
         return React.createElement(ImageEditor, {
+          updateHandler: this.props.updateHandler,
+          data: this.props.data,
+          isMinimized: this.state.isMinimized
+        });
+
+      case "equation":
+        return React.createElement(EquationEditor, {
           updateHandler: this.props.updateHandler,
           data: this.props.data,
           isMinimized: this.state.isMinimized
@@ -1446,6 +1478,78 @@ class TextEditor extends React.Component {
       value: this.props.data.links[this.state.selected],
       onChange: this.editSource
     }));
+  }
+
+}
+
+class EquationEditor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.updateName = this.updateName.bind(this);
+    this.updateTex = this.updateTex.bind(this);
+  }
+
+  updateName(e) {
+    const equationName = e.target.value;
+    this.props.updateHandler(state => ({
+      data: { ...state.data,
+        components: state.data.components.map((component, index) => {
+          if (index == state.selected) {
+            return { ...this.props.data,
+              name: equationName
+            };
+          }
+
+          return component;
+        }),
+        lastModified: new Date().toLocaleString()
+      }
+    }));
+  }
+
+  updateTex(e) {
+    const texBody = e.target.value;
+    this.props.updateHandler(state => ({
+      data: { ...state.data,
+        components: state.data.components.map((component, index) => {
+          if (index == state.selected) {
+            return { ...this.props.data,
+              TeX: texBody
+            };
+          }
+
+          return component;
+        }),
+        lastModified: new Date().toLocaleString()
+      }
+    }), MathJax.typeset);
+  }
+
+  render() {
+    return React.createElement("div", {
+      id: "equation-editor",
+      className: "component-editor"
+    }, React.createElement(LabelInGrid, {
+      for: "equation-name",
+      value: "Name:"
+    }), React.createElement(TextfieldInGrid, {
+      ID: "equation-name",
+      value: this.props.data.name,
+      onChange: this.updateName
+    }), React.createElement(LabelInGrid, {
+      for: "tex-body",
+      value: "TeX Body:"
+    }), React.createElement(TextareaInGrid, {
+      ID: "tex-body",
+      value: this.props.data.TeX,
+      onChange: this.updateTex
+    }), React.createElement("div", {
+      id: "tex-tutorial-cell"
+    }, React.createElement("a", {
+      id: "tex-tutorial-link",
+      href: "https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference",
+      target: "_blank"
+    }, "TeX Tutorial")));
   }
 
 }

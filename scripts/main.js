@@ -517,6 +517,7 @@ class Article extends React.Component {
       this.setState({
         data: jsonData
       });
+      MathJax.typeset();
     }).catch(err => this.setState({
       data: err
     }));
@@ -665,6 +666,16 @@ class Article extends React.Component {
     }, paragraphs.map(buildParagraph));
   }
 
+  renderEquationElement(element) {
+    if (this.props.isMinimized) {
+      return null;
+    }
+
+    return React.createElement("p", {
+      className: "equation"
+    }, element.TeX);
+  }
+
   renderImageElement(element) {
     let caption;
 
@@ -725,6 +736,9 @@ class Article extends React.Component {
     switch (element.type) {
       case "text":
         return this.renderTextElement(element);
+
+      case "equation":
+        return this.renderEquationElement(element);
 
       case "image":
         return this.renderImageElement(element);

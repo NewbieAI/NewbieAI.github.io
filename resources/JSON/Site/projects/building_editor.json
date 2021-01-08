@@ -1,0 +1,190 @@
+{
+  "title": "Building a Website Editor",
+  "authors": [
+    "Mingzhi Tian"
+  ],
+  "creationDate": "12/5/2020",
+  "lastModified": "1/5/2021, 9:00:58 PM",
+  "components": [
+    {
+      "type": "subtitle",
+      "name": "intro",
+      "text": "Introduction:"
+    },
+    {
+      "type": "text",
+      "name": "intro0",
+      "content": "\nIn this article, we'll talk about how to build a real-time UI based website editor. We'll discuss in detail what the Editor can do, how it was built and how to use it. In addition to the Editor source code, screenshots and a short demo will also be provided.\n\n**Why build this editor** \nThe motivation behind building this website editor was to create a flexible way to rapidly add content to my personal website.\n\nWithout some form of automated content creation, every time I want to put multimedia files on a webpage, embed links inside a text block, or add Javascript applications to a webpage, I would have to go back and manually edit the website source files in markup languages. Doing so would unacceptably slow and inefficient.\n\nA natural solution was to create a custom Web Editor, one that provides a user interface from which one I edit webpages with ease. With such an editor, there's no longer any need for writing separate scripts to generate static HTML files or rendering individual webpages on the server side.\n\nInstead, I can simply create new articles from the Editor UI, and save the articles to JSON files when I am done. If I need to make modifications to existing articles, the Editor can trivially open JSON articles and let me edit them again.\n\n**What the Editor can do**\n\nThe following list of features are currently supported by the Web Editor. Over time, new features may be added as needed.\n\n1. The user can create articles in any number of languages using this editor:\nEnglish, Español, العربية, русский, 中文.\n\n2. The user can enter texts with enhanced formats:\n**bold**, *italic*, ~underline~, ~~strikethrough~~, ^^underscript^^, ^superscript^, <<inline code>>, and {embedded links}.\n\n3. The user can add section titles by using the \"subtitle\" component. The text \"**Introduction**:\" at the top of this article is a subtitle. However, font size and styles are not currently supported.\n\n4. The user can add a fancy quotation to the website if so desired. Here is an example:",
+      "links": {
+        "embedded links": "https://google.com/search?q=embedded%20links"
+      },
+      "indented": false
+    },
+    {
+      "type": "quote",
+      "name": "intro",
+      "text": "It is better to light a candle than to curse the darkness.",
+      "src": "Eleanor Roosevelt"
+    },
+    {
+      "type": "text",
+      "name": "intro1",
+      "content": "5. The user can add photos to the website. The photos will always be automatically centered. If needed, the size of the photos can be specified and an image caption can also be provided. Here are two images added using the Editor:",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Image Example 1",
+      "width": "350",
+      "height": "240",
+      "src": "resources/Images/Site/elephant.jpg",
+      "caption": "Image size was set to 350x240. Note that the bottom of the image was automatically aligned with the smaller image on the left."
+    },
+    {
+      "type": "image",
+      "name": "Image Example 2",
+      "width": "150",
+      "height": "100",
+      "src": "resources/Images/Site/rabbit.jpg",
+      "caption": "The size of this image was set to 150x100"
+    },
+    {
+      "type": "text",
+      "name": "intro2",
+      "content": "6. The user can add named \"Placeholder\" components to a webpage. Which tells the JSON file that something with a specified name will be inserted here on the actual website.\n\n7. The user can remove an article component component or change the relative ordering of article components with a simple mouse click.\n\n8. The user can save the current article by downloading the article as a JSON file. The user can also open an existing JSON file in the Editor.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "design",
+      "text": "Editor Design:"
+    },
+    {
+      "type": "text",
+      "name": "design0",
+      "content": "Similar to the {main website}, the Web Editor was implemented as a React Page. It runs entirely on the client-side, and uses a combination of CSS, html, and Javascript to provide its desired features.\n\n**Editor Layout**\n\nThe Editor needs to have a clean and easy-to-use user interface. Our design splits the UI into 3 separate areas, each with distinct set of responsibilities: \n\n1. A Control Menu area that manages the creation, deletion, and ordering of article components. It will also contain buttons let the user save the current article or open existing articles.\n2. An Article section that displays the current article. This section shares the same CSS styling with the main website, so it will always render the article exactly the same way the main website would.\n3. An Editing Panel section that contains the tools to edit selected components. This area can be closed or minimized from view if the user is not actively editing the article.\n\n",
+      "links": {
+        "main website": "index.html"
+      },
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Editor Layout",
+      "width": "500",
+      "height": "",
+      "src": "resources/Images/projects/editor_layout.png",
+      "caption": "The basic layout of the Web Editor. The Editing Panel, shown in yellow, will only be visible when the user is actively editing an element."
+    },
+    {
+      "type": "text",
+      "name": "design1",
+      "content": "**Component Hierarchy**\n\nTo create the desired website interface, we will create the hierarchy of React components to render the Editor page.\n\nAt the very top of the hierarchy, we have the <<Editor>> component, which is responsible for rendering the entire Editor interface. When the website first loads, ReactDOM will render the <<Editor>> component into HTML markup and insert it into the root <<div>> element.\n\nEach of the 3 UI areas, Control Panel, Article, and Editing Panel, will be rendered by its own corresponding React component: <<ControlPanel>>, <<Article>>, and <<EditingPanel>>. The following chart illustrate the component structure in detail:",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Editor Component Hierarchy",
+      "width": "600",
+      "height": "",
+      "src": "resources/Images/projects/editor_hierarchy.png",
+      "caption": "Reacts components are shown in CamelCase. HTML elements are shown in lowercase."
+    },
+    {
+      "type": "subtitle",
+      "name": "build",
+      "text": "Building React Components:"
+    },
+    {
+      "type": "text",
+      "name": "build0",
+      "content": "\n**The Editor Component**\n\nWhen the Web Editor is editing an article, all the article data lives in the state of the <<Editor>> component. The <<Editor>> component will pass its state as properties to its subcomponents where needed. This way, we create a \"single source of truth\" that keeps our stored of article data consistent during and after changes.\n\nIf the Web Editor needs to save an article to a JSON file, it will already have a Javascript object  that encapsulates all the article data inside the <<Editor>> component's state. The Editor can simply convert that object to a JSON string and store the string in a file. Similarly, when the Editor needs to open an article, it parses a JSON file into an Javascript object, and then uses that object to initialize the state of the <<Editor>> component.\n\nHere's the implementation of the <<Editor>> component:\n<scripts/segments/editor0.js>\n\nInside its <<render()>> function, the <<Editor>> creates 3 subcomponents, the <<ControlPanel>> Component, the <<Article>> Component, and the <<EditingPanel>> Component. Each component has its own responsibilities and we'll discuss them later.\n\nAdditionally, the <<Editor>> component also has 11 class methods that are responsible for all the editing operations. For example, the <<selectElement(selectionID)>> function will change the current element to the one represented by <<selectionID>>. The <<deleteElement()>> function prompt for confirmation before removing an element from the article. The <<startEditing()>> function will open the Editing Panel and allow the user make changes to the current element.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "build1a",
+      "content": "**ControlPanel**\n\nThe <<ControlPanel>> component receives the <<Editor>> class methods as properties and triggers these methods based on user inputs. It is responsible for \"high level\" editing actions such as inserting a new component into the article, deleting an element permanently, or switch the ordering of two adjacent elements.\n\nThe complete <<ControlPanel>> area looks like this:",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Control Panel",
+      "width": "200",
+      "height": "",
+      "src": "resources/Images/projects/editor_control_panel.png",
+      "caption": "An image of the Control Panel interface. The selected element is highlighted in blue. At the bottom of the Control Panel a form is provided, where the user can choose an element and add it at the bottom of the article."
+    },
+    {
+      "type": "text",
+      "name": "build1b",
+      "content": "At the top of <<ControlPanel>> interface, a *save* button and an *open* button are provided, clicking them will save the current article to a file or load an existing JSON article into the Editor.\n\nNext, the four black and white buttons are responsible for \"moving the selected element up\", \"moving the selected element down\", \"remove the selected element\", and \"edit the selected element.\" These buttons will be disabled if no element is selected.\n\nBelow those 4 editing buttons, there's a vertical list of elements. The user can select any of the element by simply clicking on it. Three elements, the article Title, the article Author, and the article Date, are included by default. Other elements needs to be inserted by clicking the insertion icon.\n\nHere is the complete implementation of the <<ControlPanel>> Component:\n\n<scripts/segments/editor1.js>",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "build2",
+      "content": "**Article**\n\nThe <<Article>> component is very versatile. It support a subset of the Markdown standard and lets the user create a variety of HTML elements by entering texts only. What you are reading right now is being rendered by an <<Article>> component.\n\nThe <<Article>> component will parse article texts and automatically apply any special format, build links, and create <<Code>> blocks. It will also display any images, quotation blocks, or subtitles in the article. If the user applied any changes to an element in the <<Article>>, that element will be updated in real time to reflect those changes.\n\nCurrently, videos and iframes are not yet supported, but not because of any technical difficulty. These features are expected to be added in the future.\n\nElements that are not yet supported can be added temporary as Placeholder elements and wait for future implementation.\n\n<scripts/segments/editor2.js>",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "build3a",
+      "content": "**EditingPanel**\n\nUnlike the <<ControlPanel>> that lets users perform \"high-level\" manipulations, the <<EditingPanel>> is responsible for providing a user interface that supports the editing of individual article elements.\n\nHere is the React code for the <<EditingPanel>> component:\n\n<scripts/segments/editor3.js>\n\nIf the user is not actively editing anything, the <<EditingPanel>> will be complete hidden from view.\n\nOtherwise, <<EditingPanel>> component will conditionally render one of the following React component based what is currently being edited: <<TitleEditor>>, <<AuthorEditor>>, <<DateEditor>>, <<TextEditor>>, <<ImageEditor>>, <<SubtitleEditor>>, <<QuoteEditor>>, <<PlaceholderEditor>>. This is because each type of element needs its own editing interface due to differences in the underlying data. Here are some examples:",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Title Editor",
+      "width": "600",
+      "height": "",
+      "src": "resources/Images/projects/title_editor.png",
+      "caption": "The interface of the EditingPanel component while editing the article title. Since the title contains a single string, the user only needs to change what's inside the text field to complete the editing process."
+    },
+    {
+      "type": "image",
+      "name": "Author Editor",
+      "width": "600",
+      "height": "",
+      "src": "resources/Images/projects/author_editor.png",
+      "caption": "The interface of the EditingPanel component while editing the article author. There can be more than 1 author to the article, so the interface must provides a way to edit a list of strings."
+    },
+    {
+      "type": "image",
+      "name": "Text Editor",
+      "width": "600",
+      "height": "",
+      "src": "resources/Images/projects/text_editor.png",
+      "caption": "The interface of the EditingPanel component while editing a text block. The text area on the right supports certain markdown syntax. In order to avoid letting URL strings clutter up the text area, links must be configured separately using inputs on the left. If \"Auto-Indent\" is turned on, paragraphs will be indented automatically."
+    },
+    {
+      "type": "text",
+      "name": "build3b",
+      "content": "Aside from their differences, all editing interfaces can be minimized by clicking the \"-----minimize panel-----\" bar at the top of the Editing Panel. Once the user is done with editing an element, clicking the \"Finish Editing\" button will save the changes and close the Editing Panel.\n\nThe implementation of every type of Editing interface is shown below. Be advised that the code is quite long.\n\n<scripts/segments/editor4.js>",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "final",
+      "text": "Finished Product and Demo:"
+    },
+    {
+      "type": "text",
+      "name": "final",
+      "content": "We will show the complete Web Editor source code at the end. But first, here is a short demo of how the Editor works:\n\n1. Click {here} to open the web editor in a new tab.\n\n2. In the menu on the left, click the item \"**TITLE**: *Main Title*\", then click the edit icon (the rightmost icon below the \"Save\" button).\n\n3. The Editing Panel should appear at the bottom of the Editor. Inside the Editing Panel, change the text \"[**untitled article**]\" to \"**Hello World**\", or anything you like. \n\n4. The article title should have changed to what you've just typed in. Click \"**Finish Editing**\" to close the Editing Panel.\n\n5. You can similarly edit the article Author List or the article Date. Just click the corresponding element in the left Control Menu and then click the edit icon.\n\n6. Next, go to the drop down menu below the \"Add Component:\" label and select \"text\" from the menu. Click the plus sign add icon. You should see that a \"[new text]\" block has been added to article and a \"text: [*unnamed*]\" item has been added to the Control Menu.\n\n7. To start editing the text block, click the newly created item \"text: [*unamed*]\" in the left menu. Then click the edit icon once the item is selected.\n\n8. You should now see the text editing interface. Change the text body inside the text area from \"[**new text**]\" to \"**I have some** {**news**}!!\". \n\n9. You should notice that the word \"news\" has become a clickable link. Clicking it now does nothing just yet, because we need to configure it first. Inside the text field under the green \"Create New Link\" button, enter the word \"news\", and then click the \"Create New Link\" button.\n\n10. In the drop down menu labeled \"Selected Link\", change the selected item from \"None\" to \"news\". The text field under the \"Edit Source\" label should now be editable.\n\n11. Change the text inside the text field from \"internal::\" to \"http://news.google.com\". Now the \"news\" link in the article body should become live. Click it to see what happens!!\n\n12. Click the \"Save\" button in the Control Menu. When the Editor prompts for a file name, enter \"demo.json\" then click \"OK\".\n\n13. Now you can close the editor. Then click {here} to open a new Web Editor. Click the \"Open\" button, then find and open the \"demo.json\" file. You should now see the short \"Hello World\" article that you've just created.\n\nThis completes the short demo. We've visited the basic functions of the Web Editor. While the editor is not as powerful in web editing as Microsoft Word is for document editing, it meets all the essential needs for adding content to my website.\n\nHere is the complete CSS file for the Web Editor.\n</styles/editor.css>\n\nAnd here is the complete React source code for the Web Editor.\n<scripts/src/editor.js>",
+      "links": {
+        "here": "editor.html"
+      },
+      "indented": false
+    }
+  ]
+}

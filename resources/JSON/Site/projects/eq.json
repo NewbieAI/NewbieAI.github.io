@@ -1,0 +1,13 @@
+{
+  "title": "[untitled article]",
+  "authors": [],
+  "creationDate": "1/8/2021",
+  "lastModified": "1/8/2021, 4:08:44 PM",
+  "components": [
+    {
+      "type": "equation",
+      "name": "[unnamed]",
+      "TeX": "$$\na^2 + b^2 = c^2\n$$"
+    }
+  ]
+}

@@ -175,7 +175,12 @@ class Editor extends React.Component {
                         this.createElement(type),
                     ],
                 },
-            })
+            }),
+            () => {
+                if (type == "equation") {
+                    MathJax.typeset();
+                }
+            }
         );
     }
 
@@ -189,6 +194,12 @@ class Editor extends React.Component {
                     height: "",
                     src: "",
                     caption: "",
+                };
+            case "equation":
+                return {
+                    type: "equation",
+                    name: "[unnamed]",
+                    TeX: "$$\na^2 + b^2 = c^2\n$$",
                 };
             case "text":
                 return {
@@ -230,8 +241,8 @@ class Editor extends React.Component {
         });
     }
 
-    updateElement(update) {
-        this.setState(update);
+    updateElement(...update) {
+        this.setState(...update);
     }
 
     upload() {
@@ -491,6 +502,7 @@ class InsertionForm extends React.Component {
                     <optgroup label = "Available Components">
                         <option value = "image">image</option>
                         <option value = "text">text</option>
+                        <option value = "equation">equation</option>
                         <option value = "quote">quotation</option>
                         <option value = "subtitle">subtitle</option>
                     </optgroup>
@@ -605,7 +617,6 @@ class Article extends React.Component {
                 return <Code src = {codeSrc}/>
             }
             let arr = p.split( splitter );
-            console.log(arr);
             return (
                 <p className = {element.indented ? "indented" : null}>
                 {arr.map(
@@ -730,6 +741,17 @@ class Article extends React.Component {
         );
     }
 
+    renderEquationElement(element) {
+        if (this.props.isMinimized) {
+            return null;
+        }
+        return (
+            <p className = "equation">
+            {element.TeX}
+            </p>
+        );
+    }
+
     renderQuoteElement(element) {
         return (
             <div className = "quote">
@@ -757,6 +779,8 @@ class Article extends React.Component {
                 return this.renderTextElement(element);
             case "image":
                 return this.renderImageElement(element);
+            case "equation":
+                return this.renderEquationElement(element);
             case "quote":
                 return this.renderQuoteElement(element);
             case "subtitle":
@@ -830,6 +854,13 @@ class EditingPanel extends React.Component {
             case "image":
                 return (
                     <ImageEditor 
+                        updateHandler = {this.props.updateHandler}
+                        data = {this.props.data}
+                        isMinimized = {this.state.isMinimized} />
+                );
+            case "equation":
+                return (
+                    <EquationEditor
                         updateHandler = {this.props.updateHandler}
                         data = {this.props.data}
                         isMinimized = {this.state.isMinimized} />
@@ -1667,6 +1698,85 @@ class TextEditor extends React.Component {
                     }
                     value = {this.props.data.links[this.state.selected]}
                     onChange = {this.editSource} />
+            </div>
+        );
+    }
+}
+
+class EquationEditor extends React.Component {
+    constructor(props) {
+        super(props);
+        this.updateName = this.updateName.bind(this);
+        this.updateTex = this.updateTex.bind(this);
+    }
+
+    updateName(e) {
+        const equationName = e.target.value;
+        this.props.updateHandler(
+            state => ({
+                data: {
+                    ...state.data,
+                    components: state.data.components.map(
+                        (component, index) => {
+                            if (index == state.selected) {
+                                return {
+                                    ...this.props.data,
+                                    name: equationName,
+                                }
+                            }
+                            return component;
+                        }
+                    ),
+                    lastModified: new Date().toLocaleString(),
+                }
+            })
+        );
+    }
+
+    updateTex(e) {
+        const texBody = e.target.value;
+        this.props.updateHandler(
+            state => ({
+                data: {
+                    ...state.data,
+                    components: state.data.components.map(
+                        (component, index) => {
+                            if (index == state.selected) {
+                                return {
+                                    ...this.props.data,
+                                    TeX: texBody,
+                                }
+                            }
+                            return component;
+                        }
+                    ),
+                    lastModified: new Date().toLocaleString(),
+                }
+            }),
+            MathJax.typeset,
+        );
+    }
+
+    render() {
+        return (
+            <div id = "equation-editor" className = "component-editor">
+                <LabelInGrid 
+                    for = "equation-name"
+                    value = "Name:" />
+                <TextfieldInGrid 
+                    ID = "equation-name" 
+                    value = {this.props.data.name}
+                    onChange = {this.updateName} />
+                <LabelInGrid 
+                    for = "tex-body"
+                    value = "TeX Body:" />
+                <TextareaInGrid 
+                    ID = "tex-body" 
+                    value = {this.props.data.TeX}
+                    onChange = {this.updateTex} />
+                <div id =  "tex-tutorial-cell">
+                    <a id = "tex-tutorial-link" href = "https://math.meta.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference" target = "_blank">TeX Tutorial</a>
+                </div>
             </div>
         );
     }

@@ -2,7 +2,7 @@
   "title": "Projects",
   "authors": [],
   "creationDate": "10/18/2020",
-  "lastModified": "11/2/2020, 11:18:33 PM",
+  "lastModified": "1/10/2021, 1:35:29 PM",
   "components": [
     {
       "type": "text",
@@ -19,12 +19,23 @@
     {
       "type": "text",
       "name": "list",
-      "content": "[project list text]\n\n1. {Javascript Browser Games}:\n          {Cartpole}\n          {Minesweeper}\n          {Snake}\n\n2. {Creating a React Website}\n          {React Source Code}\n          {Website CSS File}\n          {Creating a Custom Website Editor}\n                    {Editor React Source Code}\n                    {Editor CSS File}\n          {Creating Serverless API with AWS}\n\n3. {Creating a Windows Multiplayer Client}\n          {C++/OpenGL Source Code Folder}\n          {Hosted Application Server Files}\n\n4. {Creating a Library for Deep Neural Network}\n          {Python Source Code}\n",
+      "content": "1. {Javascript Browser Games}:\n          {Cartpole}\n          {Minesweeper}\n          {Snake}\n\n2. {Creating a React Website}\n          {React Source Code}\n          {Website CSS File}\n          {Creating a Custom Website Editor}\n                    {Editor React Source Code}\n                    {Editor CSS File}\n\n3. {Creating a Windows Multiplayer Client}\n          C++/OpenGL {Source Code Folder}\n          {Hosted Application Server Files}\n\n4. {Creating a Library for Deep Neural Network}\n          {Python Source Code}\n",
       "links": {
-        "Javascript Browser Games": "internal::1",
-        "Cartpole": "internal::1, 0",
-        "Minesweeper": "internal::1, 1",
-        "Snake": "internal::1, 2"
+        "Javascript Browser Games": "internal::1, 0",
+        "Cartpole": "internal::1, 0, 0",
+        "Minesweeper": "internal::1, 0, 1",
+        "Snake": "internal::1, 0, 2",
+        "Creating a React Website": "internal::1, 1",
+        "React Source Code": "https://github.com/NewbieAI/NewbieAI.github.io/blob/master/scripts/src/main.js",
+        "Website CSS File": "https://github.com/NewbieAI/NewbieAI.github.io/blob/master/styles/index.css",
+        "Creating a Custom Website Editor": "internal::1, 1, 0",
+        "Editor React Source Code": "https://github.com/NewbieAI/NewbieAI.github.io/blob/master/scripts/src/editor.js",
+        "Editor CSS File": "https://github.com/NewbieAI/NewbieAI.github.io/blob/master/styles/editor.css",
+        "Creating a Windows Multiplayer Client": "internal::1, 2",
+        "Source Code Folder": "https://github.com/NewbieAI/GoVariant",
+        "Hosted Application Server Files": "https://github.com/NewbieAI/GoVariant/tree/master/server_files",
+        "Creating a Library for Deep Neural Network": "internal::1, 3",
+        "Python Source Code": "https://github.com/NewbieAI/Deep-Neural-Net-Practice/blob/master/XOR_function/NeuralNet.py"
       },
       "indented": false
     }

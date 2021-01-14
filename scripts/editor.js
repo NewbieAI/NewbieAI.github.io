@@ -43,7 +43,7 @@ class Editor extends React.Component {
         },
         selected: state.selected + 1
       };
-    });
+    }, MathJax.typeset);
   }
 
   moveupElement() {
@@ -62,7 +62,7 @@ class Editor extends React.Component {
         },
         selected: state.selected - 1
       };
-    });
+    }, MathJax.typeset);
   }
 
   deleteElement() {
@@ -191,6 +191,10 @@ class Editor extends React.Component {
         selected: null,
         isEditing: false
       });
+
+      if (typeof MathJax != "undefined") {
+        MathJax.typeset();
+      }
     };
 
     reader.readAsText(file);
@@ -1526,6 +1530,10 @@ class EquationEditor extends React.Component {
   }
 
   render() {
+    if (this.props.isMinimized) {
+      return null;
+    }
+
     return React.createElement("div", {
       id: "equation-editor",
       className: "component-editor"

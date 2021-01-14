@@ -387,7 +387,7 @@ button#close-button.is-open:active {
 }
 
 #equation-editor {
-    grid-template-rows: 30px 30px 40px;
+    grid-template-rows: 40px 40px 80px;
     grid-template-columns: 40% auto;
 }
 #equation-editor > #equation-name-label-cell {
@@ -419,7 +419,7 @@ button#close-button.is-open:active {
     grid-column-end: span 1;
     grid-row-start: 3;
     grid-row-end: span 1;
-    padding: 20px;
+    padding: 35px;
 }
 
 #image-editor {

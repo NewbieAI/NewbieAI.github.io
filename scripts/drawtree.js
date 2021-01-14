@@ -4,21 +4,23 @@ let canvas = document.createElement("canvas");
 canvas.setAttribute("width", 400);
 canvas.setAttribute("height", 500);
 document.body.append(canvas);
-let theta = 0;
-let animation = setInterval(redraw, 50);
+let theta_0 = Math.PI / 12;
+let delta = Math.PI / 18;
+let t = 0;
+let theta = theta_0;
+redraw();
 
 document.addEventListener(
     "keydown",
     (e) => {
         if (e.key == "ArrowLeft") {
-            theta += 0.01;
+            t -= 1;
         }
         if (e.key == "ArrowRight") {
-            theta -= 0.01;
+            t += 1;
         }
-        if (e.key == "x") {
-            clearInterval(animation);
-        }
+        theta = theta_0 - delta * Math.sin(2 * Math.PI * t / 48);
+        redraw();
     },
 );
 
@@ -26,22 +28,30 @@ function redraw() {
     let ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, 400, 500);
 
-    /*
+    ctx.fillStyle = "skyblue";
+    ctx.fillRect(0, 0, 400, 500);
     ctx.fillStyle = "green";
     ctx.beginPath();
-    ctx.moveTo(200, 300);
+    
+    let x = 200, y = 300;
+    ctx.moveTo(x, y);
     ctx.bezierCurveTo(
-        x1, y1,
-        x2, y1,
-        200 - 300 * Math.sin(theta), 300 + 300 * Math.cos(theta),
+        x - 130 * Math.cos(-theta),
+        y - 130 * Math.sin(-theta),
+        x - 130 * Math.cos(-theta) + 200 * Math.sin(-theta),
+        y - 130 * Math.sin(-theta) - 200 * Math.cos(-theta),
+        x + 300 * Math.sin(-theta),
+        y - 300 * Math.cos(-theta),
     );
     ctx.bezierCurveTo(
-        x1, y1,
-        x2, y2,
-        200, 300,
+        x + 110 * Math.cos(-theta) + 200 * Math.sin(-theta),
+        y + 110 * Math.sin(-theta) - 200 * Math.cos(-theta),
+        x + 110 * Math.cos(-theta),
+        y + 110 * Math.sin(-theta),
+        x,
+        y,
     );
     ctx.fill();
-    */
 
     
     ctx.fillStyle = "brown";
@@ -66,5 +76,9 @@ function redraw() {
         500, 
     );
     ctx.fill();
+
+    ctx.font = "20px serif";
+    ctx.fillStyle = "black";
+    ctx.fillText(`t = ${t}`, 50, 450);
 
 }

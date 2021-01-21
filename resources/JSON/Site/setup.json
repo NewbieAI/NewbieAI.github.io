@@ -103,9 +103,9 @@
                     ]
                 },
                 {
-                    "name": "Building an Windows Multiplayer Game Client",
+                    "name": "Building a Windows Multiplayer Game Client",
                     "articles": [
-                                "resources/JSON/Site/projects/building_game_client.json"
+                                "resources/JSON/Site/projects/building_multiplayer_game.json"
                     ],
                     "contents": [
                     ]

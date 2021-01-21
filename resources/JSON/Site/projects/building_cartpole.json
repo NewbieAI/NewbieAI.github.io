@@ -1,0 +1,156 @@
+{
+  "title": "Building a Cartpole Game",
+  "authors": [
+    "Mingzhi Tian"
+  ],
+  "creationDate": "11/20/2021",
+  "lastModified": "1/13/2021, 8:07:34 PM",
+  "components": [
+    {
+      "type": "subtitle",
+      "name": "intro",
+      "text": "Introduction:"
+    },
+    {
+      "type": "text",
+      "name": "intro0",
+      "content": "This article, we'll discuss how to implement a Cartpole web game in Javascript. You can try the finished game by going to {this} page and click the Cartpole game icon.\n\nThe Cartpole game is based on the {cartpole system}, a classic inverted pendulum system in Control Theory. The inverted pendulum is inherently unstable, and therefore relies on external forces to keep the system near its center equilibrium point. Unlike in academic studies where automated algorithms keep the system stable, in the Cartpole game, the task of balancing the system falls on the player.\n\nIn our implementation of the game, the player can use arrow keys to apply horizontal forces to the cart. If the pole tips over or if the cart crashes into the boundaries of the game screen, the game is over. The goal is to therefore lasts as long as possible and obtain the highest score. To prevent the game from going on indefinitely, the game will incrementally become more difficult.\n\nThere are many ways to make the late game challenging: One way is to increase the gravity parameter to make the pole fall faster, another is to slow decrease the force that the player can apply to the system. Our version relies on a weather system to control the game difficulty, creating horizontal winds that becomes stronger over time.",
+      "links": {
+        "here": "internal::1, 0",
+        "cartpole system": "https://en.wikipedia.org/wiki/Inverted_pendulum#Stationary_pivot_point"
+      },
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Cartpole Game Screenshot",
+      "width": "600",
+      "height": "",
+      "src": "resources/Images/projects/cartpole_screen.png",
+      "caption": "The weather system animates the tree, the clouds, and any precipitation. It also modifies physics parameters to adjust the game difficulty over time. A weather forecast is displayed at the top of the screen to let the player stay prepared."
+    },
+    {
+      "type": "text",
+      "name": "intro1",
+      "content": "Due to the relatively simple game display, all graphics assets were customly created. The end product was a simple yet fun web game that fairly runs smoothly. Music and sound effects were added at the end of development stage. We chose fucik's classic *Entry of the Gladiator* as our in-game music. Efforts were made to create an easy-to-maneuver interface and a good player experience.\n\nNow, let's dive into how the game was built!!!!",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "start",
+      "text": "Getting Started:"
+    },
+    {
+      "type": "text",
+      "name": "start",
+      "content": "Like the other two browser games that we've already created, the Cartpole game was be implemented inside a single <<Cartpole>> class. The game starts running when a <<Cartpole>> object is instantiated. The <<Cartpole>> consists of many pieces, we'll start with the following code skeleton:\n\n<<scripts/segments/cartpole0.js>>\n\nAlthough the source code for <<cartpole.js>> is relatively short compared to the other two games, it's still too tedious to walk through all the member functions. So instead we will focus on the most unique aspects of the Cartpole game:\n\n1. An accurate physics simulation is required to render the state of the system in real-time. That means we need to find the equations of motion before we can write the code.\n\n2. To implement a weather system that looks realistic, we need to create good animations that clearly reflects what's happening.\n\nAs for the rest of member functions, they will generally do what their names suggest. The functions <<startGame()>> and <<endGame()>> are called to start a new game or end the current one. Meanwhile <<help()>> and <<credit()>> are called to display the in-game tutorial or the game credit scene. We will show their implementations at the end of this article.\n\nFor now, let's take a look at the unique parts of the Cartpole game.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "physics",
+      "text": "Building the Physics Simulation:"
+    },
+    {
+      "type": "text",
+      "name": "physics0",
+      "content": "To build the physics simulation, we need the {equations of motion} of our cartpole system.  Given the current state of the system, the equations of motion will let us calculate the state at the next moment. In this specific instance, we are looking to find the acceleration of the cart, x''(t), and the angular acceleration of the pole, θ''(t).\n\nWe'll start the derivation from a force diagram and establish some equations using the basic laws of motion. The following diagram depicts the cartpole system:",
+      "links": {
+        "equations of motion": "https://en.wikipedia.org/wiki/Equations_of_motion"
+      },
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "The Cartpole System",
+      "width": "450",
+      "height": "",
+      "src": "resources/Images/projects/cartpole_diagram.png",
+      "caption": "Force diagram of the Cartpole system. We will pretend all the mass of the pole is located at a single point on the tip. The force F is applied by the player via pressing arrow keys."
+    },
+    {
+      "type": "equation",
+      "name": "laws_of_motion",
+      "TeX": "$$\n\\begin{align}\n\\text{Forces on the Cart:}\\quad\n&F + T\\sin\\theta \\;=\\; M\\ddot x_c\\\\\n\\text{Forces on the Pole:}\\quad\n&m_p\\ddot x_p \\;=\\; W + T\\sin\\theta\\\\\n&m_p\\ddot y_p \\;=\\; m_pg - T\\cos\\theta\\\\\n\\text{Relating the positions:}\\quad\n&x_p \\;=\\; x_c + L\\sin\\theta\\\\\n&y_p \\;=\\; L\\cos\\theta\\\\\n\\end{align}\n$$"
+    },
+    {
+      "type": "text",
+      "name": "physics1",
+      "content": "Here, *x*^^p^^ is the x-position of the pole, *x*_^^c^^ the x-position of the cart. *T* is the tension in the pole, and *W* is the wind force acting on the pole. After some algebraic manipulations and substitutions, we can eliminate some variables and produce the following equations of motion:",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "equation",
+      "name": "equations_of_motion",
+      "TeX": "$$\n\\left[\\begin{matrix}\n(m_p + m_c) & m_pL\\cos\\theta \\\\\nm_p\\cos\\theta & m_pL \\\\\n\\end{matrix}\\right]\n\\left[\\begin{matrix}\n\\ddot x_c \\\\\n\\ddot \\theta \\\\\n\\end{matrix}\\right] \n=\n\\left[\\begin{matrix}\nF + W + m_pL\\dot\\theta^2\\sin\\theta \\\\\nW\\cos\\theta + m_pg\\sin\\theta\n\\end{matrix}\\right] \n$$"
+    },
+    {
+      "type": "text",
+      "name": "physics2",
+      "content": "Since we are doing a computer simulation, the following code will implement a discretized version of the equations:\n\n<<scripts/segments/cartpole1.js>>\n\nAt the start of the game, the cart position will be initialized to the center of the screen and the value of θ will be initialized to 0. Afterwards, the function <<evolveSystem()>> runs automatically between every frames in the game and computes the new position of the cartpole system. Then the game with faithfully render the system to the game screen.\n\nWith that, we've now completed the core mechanics of the Cartpole game.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "animation",
+      "text": "Creating Game Animtions:"
+    },
+    {
+      "type": "text",
+      "name": "animation0",
+      "content": "In this section, we'll talk about how to animate the most salient objects on the game screen. While the in-game text overlay, the Main Menu, the Help and Credit scenes also need dedicated drawing functions, they are not interesting enough to be treated specially. Again, the complete <<Cartpole>> implementation is included at the very end of this article.\n\n**Animate the Cartpole System**\n\nSince the physics simulation can already accurately compute the state of the cartpole system using user inputs and the previous state, we just need to draw the system at the specified location. \n\nThe exact horizontal position of the cart is stored in the class property <<this.x>> and the angle of the pole is stored as <<this.theta>>. The cartpole system consists of a red cart body, 2 black wheels, and a white pole mounted at the very tope. The following function <<renderSystem()>> will draw the cartpole by rendering each part in sequence:\n\n<<scripts/segments/cartpole2.js>>",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "animation1",
+      "content": "**Animate the Weather System**\n\nThe weather system affects the game background, the clouds, and the precipitation objects (if any). There are 3 possible weathers in the game:\n\n1. *Sunny*  -  Background is colored as skyblue, clouds are colored as snow-white, and there is no precipitation.\n\n2. *Rainy*  -  Background is colored as light gray, clouds are colored as dark gray, and rain drops will fall from the sky.\n\n3. *Snowy*  -  Background is colored as white, clouds are colored as gray, and snowflakes will fall from the sky.\n\nThe background only needs to be rendered once when a new weather appears. We've created 3 member functions <<_paintSunny()>>, <<_paintRainy()>>, and <<_paintSnowy()>> that draws the background of sunny, rainy, and snowy weathers, respectively. Then another function <<renderBackground()>> will decide which background to draw based on the weather. Here's the code:\n\n<<scripts/segments/cartpole3.js>>\n\nSimilarly, we've created the function <<_renderCloud(x, y)>> to draw a cloud at a specific location on the screen, the function <<_renderRaindrop(x, y)>> to draw a rain dashes on a location, and the function <<_renderSnowflake(x, y)>> to draw a snowflake. Together, these functions will be called inside <<renderWeather()>> to animate the overall weather system.\n\nHere's the code:\n<<scripts/segments/cartpole4.js>>",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "animation2",
+      "content": "**Animate the Tree**\n\nThere's one last curious game object we need to animate: the lone tree on the game screen. The motivation for animating the tree comes from the need to \"show\" winds. Since the wind is invisible, we can only display its effects on other things.\n\nWhen it's raining or snowing, you can tell the strength of the wind by the slanted path of precipitation objects. However, when the weather is sunny, we need something else that moves in the wind. The solution is to let the clouds move and let the tree shake. We've already created a way to render clouds, making them move is simply a matter of updating their locations over time.\n\nTo animate the tree, we've created a <<_renderTree(theta)>> function that draws the tree given the parameter <<theta>>. The value of <<theta>> represents how \"bent\" the tree is. Shaking the tree can be achieved by changing the <<theta>> parameter periodically.\n\nHere's the implementation of <<_renderTree(theta)>>:\n\n<<scripts/segments/cartpole5.js>>\n\nWith this function, we've now completed all the important in-game animations animations. The effects of the tree animation can be seen below.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "",
+      "width": "250",
+      "height": "",
+      "src": "resources/Images/projects/tree.gif",
+      "caption": "A 2D tree animation. In the actual game, the direction and magnitude of the tree's motion will be based on wind strength."
+    },
+    {
+      "type": "subtitle",
+      "name": "events",
+      "text": "Handling User Inputs:"
+    },
+    {
+      "type": "text",
+      "name": "events",
+      "content": "For the Cartpole game to work as intended, we also need to collect user inputs and update the game states accordingly. The subject of handling user inputs in a web game was already covered in {other} articles on this website. Here, we will just show the Javascript implementation for input event handlers:\n\n<scripts/segments/cartpole_.js>",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "final",
+      "text": "To Conclude:"
+    },
+    {
+      "type": "text",
+      "name": "final",
+      "content": "And that is everything we wanted to cover. The Cartpole game was a lot of fun to make. It was an instructive exercise in modern Javascript, and seeing the coalesce into fruition was quite satisfactory.\n\nHere is the complete source code:.\n\n<<scripts/cartpole.js>>\n\nThere are still many things that could be added to the game, but interesting features such as global Leaderboards will require backend API support, which could cost money to maintain. Therefore, additional work on this game is not planned right now.",
+      "links": {},
+      "indented": false
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "title": "Building a Neural Network Framework",
+  "authors": [
+    "Mingzhi Tian"
+  ],
+  "creationDate": "11/5/2021",
+  "lastModified": "1/10/2021, 1:30:05 AM",
+  "components": [
+    {
+      "type": "subtitle",
+      "name": "intro",
+      "text": "Introduction:"
+    },
+    {
+      "type": "text",
+      "name": "intro",
+      "content": "In this article, we'll talk about how to build a Deep Neural Network model in Python. We will focus on building {supervised models} using feed-forward, fully connected neural networks. The models will be capable of {regression} as well as {classification}. Emphasis will be put on building the neural network architecture, not on training any specific models.\n\nThis project was first created when I was learning the theories of Deep Learning. Even the very basic deep neural nets are built upon a complex set of mathematical principles. It was difficult to assess whether I fully understood the subject unless I put what I've learned to practice. So I decided to implement my own Neural Network framework that captures the essence of Deep Learning: multiplayer networks, non-linear activation units, gradient descent via back-propagation, batch training, etc. For those who are interested in doing something similar, the phenomenal {textbook} by Goodman is highly recommended.\n\nThe resulting project was a Python library that can create deep feed-forward neural networks of arbitrary depth and width (subject to compute and memory constraint). The newly created neural networks can choose from a pre-built list of output units, activation functions, and loss functions. The neural networks will also support random weight initialization, batch training with variable step size and iteration count. At the end of this article, we'll show how to use the framework to build a simple multilayer model that can learn nonlinear functions.",
+      "links": {
+        "supervised models": "https://en.wikipedia.org/wiki/Supervised_learning",
+        "regression": "https://en.wikipedia.org/wiki/Regression_analysis",
+        "classification": "https://en.wikipedia.org/wiki/Statistical_classification",
+        "textbook": "https://www.deeplearningbook.org/"
+      },
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "design",
+      "text": "Design:"
+    },
+    {
+      "type": "text",
+      "name": "design0",
+      "content": "This project was meant to be a exercise in creating the basic deep feed-forward network. It will be built in Python, the language of choice for modern Machine Learning research. We will make use of the NumPy library for efficient Matrix manipulations, but all the algorithms pertaining to Neural Networks will be built from the scratch.\n\nWe are not trying to build anything nearly as powerful as <<TensorFlow>> or any other production ML library. We will support only one type of model: a deep feed-forward neural network. It takes an input feature vector **x**, send the input signal forward through multiple layers of perceptron units, and output a prediction value **y**, which is either a single floating point value **y**^^f^^ for regression, or a probability distribution vector **y**^^p^^ for classification.\n\nThe Python framework should be able to create our neural network models by simply accepting the input dimension, the output dimension, the size of hidden layers, and the type of output unit.\n\nFor example, given the following list of parameters:\n        <<input_dimension = 5>>\n        <<output_dimension = 1>>\n        <<hiden_layers = [5, 4, 4, 3]>>\n        <<output_unit = \"Linear\">>\n\nWe want our Python code to automatically generate the following computational graph and be ready for training data right away.\n",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Figure 1",
+      "width": "500",
+      "height": "",
+      "src": "resources/Images/projects/neural_net.png",
+      "caption": "The computational graph of a fully connected neural net with 4 hidden layers. During training, gradient of the loss function back-propagates through the graph to update weights and biases. During deployment, the input data are fed forward to generate a prediction."
+    },
+    {
+      "type": "text",
+      "name": "design1",
+      "content": "A natural way to structure our framework is to have a single <<DeepNeuralNet>> class that stores all the parameters of our model. Then, a <<Layer>> class will store the weights and biases of each layer, and autonomously handle the feed-forward calculation and back-propagation in that layer.\n\nThe <<DeepNeuralNet>> class should provide a <<train(...)>> function that lets the model learn from training data, and a <<predict(...)>> function that can be used in deployment. The class also should provide <<save(...)>> function and a <<load(...)>> function to store and retrieve trained models.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "build",
+      "text": "Python Implementation:"
+    },
+    {
+      "type": "text",
+      "name": "build0",
+      "content": "Before diving into the code, the first step in implementation a neural network framework is to complete the mathematical derivations and produce the set of equations under which our feed-forward models operate. Since these equations could be complex, we will not go over the minute details, especially since this subject has been thoroughly discussed elsewhere.\nInstead, as we introduce different parts of the model, we will simply present condensed formula as they emerge and provide short descriptions of what they do. We will also show the corresponding Python code that implements these formula.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "build1a",
+      "content": "**Activation Functions**\n\nThe basic unit in a neural network is a node (see the big purple dots in Figure 1). Each node takes a linear combination(a weighted sum) of its inputs, then applies a non-linear activation function to the linear combination to produce an output.\nTo build basic nodes in a neural network, we will first define the non-linear activation functions, of which there can be more than one due to the needs of specific models. Here is the set of activation functions that our framework will support:",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "equation",
+      "name": "activations",
+      "TeX": "$$\n\\begin{align}\n\\text{Linear:} \\quad a_0(z) & \\;=\\; z \\\\\n\\text{ReLU:}\\quad a_1(z) & \\;=\\; \\begin{cases}\nz & z \\ge 0 \\\\\n0 & \\text {otherwise}\n\\end{cases} \\\\\n\\text{Softplus:}\\quad a_3(z) & \\;=\\; \\ln(1 + e^z)\\\\\n\\text{Sigmoid:}\\quad a_4(z) & \\;=\\; \\frac{1}{1 + e^{-z}}\\\\\n\\text{Hyperbolic tangent:}\\quad a_5(z) & \\;=\\; \\tanh{z}\\\\\n\\end{align}\n$$"
+    },
+    {
+      "type": "text",
+      "name": "build1b",
+      "content": "We also the need derivatives of these activation functions readily available. The reason is that when we train our models, we will need to calculate the gradient of the loss function with respect to all the weights and biases in order to update our parameters.\n\nThe derivatives of the activations functions are necessary for calculating the gradient due to the {chain rule}. So here they are:",
+      "links": {
+        "chain rule": "https://en.wikipedia.org/wiki/Chain_rule"
+      },
+      "indented": false
+    },
+    {
+      "type": "equation",
+      "name": "activations_derivatives",
+      "TeX": "$$\n\\begin{align}\na_0'(z) & \\;=\\; 1 \\\\\na_1'(z) & \\;=\\; \\begin{cases}\n1 & z \\ge 0 \\\\\n0 & \\text {otherwise}\n\\end{cases} \\\\\na_2'(z) & \\;=\\; \\frac{1}{1 + e^{-x}}\\\\\na_3'(z) & \\;=\\; \\frac{e^x}{(1 + e^{x})^2}\\\\\na_4'(z) & \\;=\\; 1 - \\tanh^2{z}\\\\\n\\end{align}\n$$"
+    },
+    {
+      "type": "text",
+      "name": "build1c",
+      "content": "One caveat: In the actual models, we will not apply activation functions in one node at a time, and each node will not process only one input at a time. Real neural networks typically process large batches of data using efficiently matrix operations.\n\nWe will seek to do the same. So the Python code below implements vectorized versions of activation functions and derivatives, using the <<@np.vectorize>> decorator.\n\n<scripts/segments/neuralnet0.py>",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "build2a",
+      "content": "**Layer Class**\n\nWith these activation functions, we can now implement the <<Layer>> class. The <<Layer>> class supports 3 important operations.\nFirst, it needs to perform forward calculations, using the outputs from the previous layer as input, and then produce its own output for the next layer. Second, it needs to update its weights and biases based on the gradient from the next layer. Finally, it needs to propagate the gradient back to the previous layer.\n\nHere are the equations that we need to implement in our <<Layer>> class to support the 3 operations:",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "equation",
+      "name": "layer",
+      "TeX": "$$\n\\begin{align}\n\\text{Forward calculation:} \\quad &\\mathbf{Z}^{(n+1)} \\;=\\; a(\\mathbf{WZ}^{(n)} + \\mathbf{b}^{(n)})\\\\\n\\text{Parameter update:} \\quad &\\mathbf{W}^{(n)}_{updated} \\;=\\; \\mathbf{W}^{(n)} - \\alpha \\cdot\\left(\\nabla_{\\mathbf{Z}^{(n)}}{\\mathrm{L}} \\;\\circ\\; a(\\mathbf{Z}^{(n)})\\right){\\mathbf{Z}^{(n-1)}}^\\mathsf{T} \\\\\n&\\mathbf{b}^{(n)}_{updated} \\;=\\; \\mathbf{b}^{(n)} - \n\\alpha \\cdot\\left(\\nabla_{\\mathbf{Z}^{(n)}}{\\mathrm{L}} \\;\\circ\\; a(\\mathbf{Z}^{(n)})\\right) {\\mathbf{1}}^\\mathsf{T} \\\\\n\\text{Back propagation:} \\quad &\\nabla_{\\mathbf{Z}^{n-1}}{\\mathrm{L}} \\;=\\; {\\mathbf{W}^{(n)}}^\\mathsf{T} \\left(\\nabla_{\\mathbf{Z}^{(n)}}{\\mathrm{L}} \\;\\circ\\; a(\\mathbf{Z}^{(n)})\\right)\\\\\n\\end{align}\n$$"
+    },
+    {
+      "type": "text",
+      "name": "build2b",
+      "content": "The first equation describes how to compute the output of the th layer (*n* + *1*)**Z** from the output of the *n*th layer. This equation is implemented inside the Python class function <<evaluate(self, X)>>.\n\nThe next two questions describe how to update the weights and biases using the inputs from the previous layer and the gradient with respect to the output of the current layer. These two equations re implemented inside the class function <<update(self, gradient, learning_rate)>>.\n\nFinally, the last equation calculates the gradient with respect to the output of the previous layer. This equation is implemented by the class function <<backprop(self, gradient)>>\n\nHere's the code for the <<Layer>> class.\n<scripts/segments/neuralnet2.py>\n\nNormally, the <<Layer>> would randomly initialize its parameters to small non-zero values inside the class constructor, but sometimes we need to use or continue training saved models. The <<Layer>> class has another utility function <<import_parameters(...)>> for loading existing data. ",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "build3a",
+      "content": "**Loss Functions**\n\nNext, we need to define two important loss functions that are commonly used in Deep Learning. *A loss function measures how well the model fits the data*, and some functions are particularly suitable as loss functions.\n\nFirst, we have the **mean squared error** loss, also known as the L2 loss, which has traditionally being used in regression analysis. Next, we have the **cross entropy** loss, which is excellent for measuring errors in classification.\n\nThe equations for these two loss functions are defined below. \"**Y** hat\" denotes the predicted value of the model, while undecorated \"**Y**\" denotes the target value in the training data.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "equation",
+      "name": "loss_functions",
+      "TeX": "$$\n\\begin{align}\n\\text{Mean Square Error:} \\quad \\mathrm{L}_{2}(\\hat{\\mathbf{Y}}, \\mathbf{Y}) & \\;=\\; \\frac{1}{2n}\\sum_{i=1}^m\\sum_{j=1}^n \\left( \\hat{\\mathbf{Y}}_{ij} - \\mathbf{Y}_{ij} \\right)^2\\\\\n\\text{Cross Entropy Error:} \\quad \\mathrm{L}_{entropy}(\\hat{\\mathbf{Y}}, \\mathbf{Y}) & \\;=\\; - \\frac{1}{2n} \\sum_{j=1}^{n} \\sum_{i=1}^{m} \\mathbf{Y}_{ij}\\log\\hat{\\mathbf{Y}}_{ij}\\\\\n\\end{align}\n$$"
+    },
+    {
+      "type": "text",
+      "name": "build3b",
+      "content": "However, we will seldom use these loss functions directly. The only exception is when we are trying to look for evidence of convergence across many iterations of training. What we are interested in is minimizing the value of the loss function, which requires the gradient of the loss function.\n\nThe gradient of the 2 loss functions are provided as follows:",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "equation",
+      "name": "loss_function_derivatives",
+      "TeX": "$$\n\\begin{align}\n\\nabla_{\\hat{\\mathbf Y}}\\mathrm L_2 &\\;=\\; \\frac{1}{n} \\left(\\hat{\\mathbf{Y}}_{ij} - \\mathbf{Y}_{ij}\\right)\\\\\n\\nabla_{\\hat{\\mathbf Y}}\\mathrm L_{entropy} &\\;=\\; \\hat{\\mathbf{Y}}_{ij} - \\mathbf{Y}_{ij} \\\\\n\\end{align}\n$$"
+    },
+    {
+      "type": "text",
+      "name": "build3c",
+      "content": "Here is the NumPy implementation of the loss functions and their gradients:\n\n<scripts/segments/neuralnet1.py>",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "build4",
+      "content": "**DeepNeuralNet Class**\n\nNow we have all the tools we need to build the <<DeepNeuralNet>> class. It will automatically create deep feed forward models given the specified structure. Here is the implementation:\n\n<scripts/segments/neuralnet3.py>",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "result",
+      "text": "Result:"
+    },
+    {
+      "type": "text",
+      "name": "result0",
+      "content": "That completes our Neural Network framework. We now have a way to create deep feed-forward models of arbitrary depth and width, and have our models learn complex nonlinear functions by providing the appropriate training data.\n\nHere is all the Python code in a single file.\n\n<scripts/segments/neural_net.py>\n\n**Using the Neural Network**\n\nNumPy must be installed in the Python environment for the framework to work properly. Use the following command line to install NumPy:\n\n    <<pip3 install numpy>>\n\nTo create a neural network, we first need to import our framework, and then instantiate a <<DeepNeuralNet>> object. For example, if we want to create the neural network shown in Figure 1, we can do the following:\n\n<scripts/segments/neuralnet4.py>\n\nOur model is now ready to learn a large class of non-linear functions inside the function space:",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "equation",
+      "name": "function_space",
+      "TeX": "$$\n\\Theta: \\Re^5 \\to \\Re\n$$"
+    },
+    {
+      "type": "text",
+      "name": "result1",
+      "content": "To train the function, assuming we have the training data **X** and **y**^T^, both are members of the class <<np.ndarray>>. Each column of **X** is an input signal and each element of **y**^T^ is a scalar output. We can run the following code snippet to train our network:\n\n<<scripts/segments/neuralnet5.py>>\n\nThe <<train(...)>> function will return a vector that stores the values of the loss function during training; we can plot it to see if the model converges. Some fine tuning may be required before the model successfully learns the desired distribution.\n\nWhen the model is fully trained, we can deploy by providing new inputs to the function <<model.predict(new_inputs)>>. Additionally, we can save the trained model with the function call <<model.save(\"current_model_ID\")>>, or if we want to load another model, we can make the function call <<model.load(\"other_model_ID\")>>.\n\n**Final Notes**\n\nOur framework supports the creation of arbitrarily sized deep feed-forward neural networks. Its design can be also extended to support more complicated convolutional neural networks or recurrent neural networks. But I will admit that the simple framework falls short when it comes to solving real-world ML problems. More advanced Machine Learning libraries construct computational graphs using \"operations\" instead of \"layers\", and are capable of supporting amazingly powerful and complex models.\n\nNevertheless, the original purpose of this project was to walk through the essential aspects of Deep Learning algorithms, and use theoretical principles to build neural networks that can actually work. To that end, I consider my project successful. My future projects in Machine Learning will most likely take on real-world problems (starting from solved ones) and utilize existing ML libraries.",
+      "links": {},
+      "indented": false
+    }
+  ]
+}

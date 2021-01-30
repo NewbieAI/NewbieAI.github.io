@@ -610,14 +610,14 @@ class Article extends React.Component {
     }
 
     let paragraphs = element.content.split(/\n+/);
-    const splitter = /(\^[\d\s\w]+\^|\^\^[\d\s\w]+\^\^|\*[\d\s\w]+\*|\*\*[\d\s\w]+\*\*|~[\d\s\w]+~|~~[\d\s\w]+~~|<<[^<>]+>>|{[\d\s\w]+})/g;
-    const linkMatcher = /^{[\d\s\w]+}$/;
-    const boldMatcher = /^\*\*([\d\s\w]+)\*\*$/;
-    const italicMatcher = /^\*([\d\s\w]+)\*$/;
-    const delMatcher = /^~~([\d\s\w]+)~~$/;
-    const insMatcher = /^~([\d\s\w]+)~$/;
-    const supMatcher = /^\^([\d\w\s]+)\^$/;
-    const subMatcher = /^\^\^([\d\s\w]+)\^\^$/;
+    const splitter = /(\^[^^]+\^|\^\^[^^]+\^\^|\*[^*]+\*|\*\*[^*]+\*\*|~[^~]+~|~~[^~]+~~|<<[^<>]+>>|{[^{}]+})/g;
+    const linkMatcher = /^{[^{}]+}$/;
+    const boldMatcher = /^\*\*([^*]+)\*\*$/;
+    const italicMatcher = /^\*([^*]+)\*$/;
+    const delMatcher = /^~~([^~]+)~~$/;
+    const insMatcher = /^~([^~]+)~$/;
+    const supMatcher = /^\^([^^]+)\^$/;
+    const subMatcher = /^\^\^([^^]+)\^\^$/;
     const inlineMatcher = /^<<([^<>]+)>>$/;
     const codeMatcher = /^<(.*)>$/;
     const internalLink = /^internal::(.*)$/;

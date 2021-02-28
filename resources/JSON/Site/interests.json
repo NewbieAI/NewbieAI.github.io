@@ -1,7 +1,31 @@
 {
   "title": "My Interests",
   "authors": [],
-  "creationDate": "10/18/2020",
-  "lastModified": "10/18/2020, 3:19:17 PM",
-  "components": []
+  "creationDate": "1/18/2021",
+  "lastModified": "2/27/2021, 1:49:27 PM",
+  "components": [
+    {
+      "type": "text",
+      "name": "intro",
+      "content": "It's always nice to have things that we really want to do, they give us a sense of direction and purpose. Here's a list of things that I am interested in doing.\n\nEach item on the list is included for any of the following reasons: *1)* it enables personal growth in terms of skills and experience; *2)* it's an aspirational goal that will make a positive impact on society; *3)* it's an interesting application of the skills that I have learnt; *4)* I spontaneously feel an urge to do it every once in a while.\n ",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "list",
+      "text": "The List:"
+    },
+    {
+      "type": "text",
+      "name": "list",
+      "content": "**1. Join a Software Development Team - **In the near future I'd like to work on a large-scale software project, the scope of which is beyond the ability of a solo developer. It would be really nice to work in a collaborative environment and built robust/challenging features for production software. Meanwhile I also want to obtain a more in-depth understanding or a couple of things, including the workflow involving large code bases, how to best take advantage of modern DevOps systems, high level system design, and any programming best practices that I may have overlooked.\n\n**2. Build a Specialized BBQ Smoker -** Remember the character {Gale Boetticher} from the show *Breaking Bad*? More specifically, remember the complicated device that he built to make the perfect coffee? I would like to do something similar, but for barbeque. From an engineering point of view, given the shape and weight of a particular cut of meat, it is entirely possible to smoke it perfectly *every single time* using a device that can control the heat source and cook time very precisely. Building such a device may not be the most urgent application of science, but I like good barbeque. I also like the sound of \"Ming the legendary Pitmaster\"! The estimated budget for this project is around $50,000, and many engineering hours will be required, so it will certainly be a major commitment.\n\n**3. Lead the Development of a Major Software Project -** Once I become experienced enough and confident in my ability to lead the development of large software systems, I will look for an opportunity to assemble a team to build a compelling software product. Orchestrating the team effort to design and build real world applications is a powerful skill, a testament to the ability of a software engineer. So I am very keen to have that experience, which will come handy for more significant undertakings in the future. To get to that point will take serious effort, and in preparation for this goal I've learnt a broad range of technical skills from every part of the web tech stack. With enough practice and more experience with large software projects, I believe this goal is achievable in a couple of years.\n\n**4. Start an AI Animation Studio -** I have been thinking about starting a small Animation Studio some day, taking advantage of AI {generative models} that have become quite good lately. This type of technology has the potential to produce super high quality 2D animations and save countless man-hours compared to traditional CGI studios. The AI system will need to do a few things to make this idea viable: it needs to master a wide selection of art styles, it needs to be able to seamlessly fill the gap between animation frames, and most importantly it needs to create key animation frames based on human inputs (descriptions of complex scene). There are still some technical challenges that need to be worked out, so there's some risks that this concept could fail. But overall the idea should be feasible in principle.\n\n**5. Build an Amateur Aircraft -** Given the chance, I just might buy one of those small {recreational homebuilt aircraft kits}, which can be surprisingly cheap (less than $10,000). In my free time, I can assemble the aircraft in a garage, which typically takes a few thousand hours of labor. There is active community support for this exact hobby and plenty of resources that guide amateur builders through every step of the process. If I do everything right, it's not too hard to get it certified for FAA air-worthiness and to obtain a license. Afterwards I will be able to take people on a glide across the country for fun. It's the ultimate man-cave toy, pretty cool huh?\n\n**6. Open Source Education Initiative -** The cost of higher education has skyrocketed in the past decades, while the need for retraining has been growing due to the shifting nature of the economy. Even with all the information freely available on the Internet, it still takes a very resourceful person to learn relevant professional skills from scratch. So I believe there is a case to be made for a public project specifically designed to offer public domain, organized educational material, and realistic learning tracks, so that anyone, from anywhere, can learn anything for free! Such a project could operate as wikipedia style non-profit site. Or better yet, it could be an initiative led by the public sector, which can commission industry/academic experts to bring the system online. The cost of designing and operating this system will be insignificant compared to the long term value it adds to society. I've thought a lot about this project since college, and when I have the ability to mobilize the right resources, I will be willing to champion this initiative.\n\n**7. Lab-grown Meat -** The current practice of factory farming is both abhorrent and unsustainable. So I am very enthusiastic about this new mode of meat production, which has the potential to bring about another agricultural revolution. If the current generation of startups successfully bring a compelling product to market, I will be an early customer. But if the technology in this area somehow stalls for years and if I have enough money at some point, I will try to get more involved by investing in promising startup companies. My hope is that thirty years from now, humanity will use an energy-efficient process that can mass-produce delicious and nutritious meat without harvesting animals.",
+      "links": {
+        "recreational homebuilt aircraft kits": "https://eaa.org/eaa/aircraft-building/kits-and-plans",
+        "generative models": "https://openai.com/blog/dall-e/",
+        "Gale Boetticher": "https://breakingbad.fandom.com/wiki/Gale_Boetticher"
+      },
+      "indented": false
+    }
+  ]
 }

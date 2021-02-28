@@ -1,0 +1,228 @@
+{
+  "title": "A Cautionary Tale on the Dangers of Deploying AI in Social Media",
+  "authors": [
+    "Mingzhi Tian"
+  ],
+  "creationDate": "10/8/2020",
+  "lastModified": "2/21/2021, 2:10:38 AM",
+  "components": [
+    {
+      "type": "quote",
+      "name": "open_quote",
+      "text": "Forget artificial intelligence - in the brave new world of big data, it's artificial idiocy we should be looking out for.",
+      "src": "Tom Chatfield"
+    },
+    {
+      "type": "subtitle",
+      "name": "intro",
+      "text": "Introduction:"
+    },
+    {
+      "type": "text",
+      "name": "intro0",
+      "content": "In August 2018, several major tech companies banned {Alex Jones}, the infamous radio show host known for his avid advocacy of conspiracy theories. At the time, many had hoped that more heavy-handed content moderation by the major platforms could stifle the spread of conspiracy theories online. Yet in the span of merely two years, things would take a far more drastic turn.\n\nThe population became still more prone to misinformation. Steadily, fringe ideas once buried in the corners of the Internet found its way into the mainstream. Approximately {1 in 6} surveyed US adults now believe in the {QAnon} conspiracy theory, among other fanciful claims unsupported by evidence. The radicalization that took place in cyberspace would eventually culminate into a crisis in the real world:\n\nOn January 6th, a mob of fervent partisans, fueled by incendiary rhetoric and conspiracy theories, {stormed the US Capitol} during the certification process of the 2020 Election. This shocking event swiftly led to all major Social Media platforms banning a former President of the United States.",
+      "links": {
+        "Alex Jones": "https://en.wikipedia.org/wiki/Alex_Jones",
+        "1 in 6": "https://www.ipsos.com/en-us/news-polls/npr-misinformation-123020",
+        "QAnon": "https://en.wikipedia.org/wiki/QAnon",
+        "stormed the US Capitol": "https://apnews.com/article/78104aea082995bbd7412a6e6cd13818"
+      },
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Figure 1",
+      "width": "500",
+      "height": "",
+      "src": "resources/Images/Blogs/capitol_riot.webp",
+      "caption": "Capitol Police clashing with rioters who have breached the US Capitol building. [Source: Mostafa Bassim/Anadolu Agency/Getty Images]"
+    },
+    {
+      "type": "text",
+      "name": "intro1",
+      "content": "It is no exaggeration to say that America is at its most divided point in over 150 years. There is some very concrete evidence for this. The following animated GIF illustrates the development of political polarization in the US Congress over time, using data from {this} interesting study.\n\nThe red and blue dots represents Republicans and Democrats in the United States Congress. Two dots are connected if the two congressmen's votes frequently agreed. Over the years, the once semi-bipartisan legislative body has split into two segregated clusters. By the 2000s, the polarization process was complete.",
+      "links": {
+        "this": "https://www.mamartino.com/projects/rise_of_partisanship/"
+      },
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Figure 2",
+      "width": "300",
+      "height": "",
+      "src": "resources/Images/Blogs/partisanship.gif",
+      "caption": "The emergence of extreme partisanship in the United States Congress. In recent years, the frequency of bipartisan votes has declined to unhealthy levels.\n[Visualization images created by Mauro Martino]"
+    },
+    {
+      "type": "text",
+      "name": "intro2",
+      "content": "Today, partisan acrimony exists not just in the government, but also extends deep into the general population, sometimes driving apart friends and family. *This is a big problem*. A bitterly divided country will consume all its energy and momentum in infighting, damaging its ability to carry out a constructive policy agenda or deal with any major crisis. With the recent change of administration, amid public calls for healing and unity, some optimists may be tempted to declare that the worst political demagoguery of our era is over, and that a quick return to normalcy can be expected. While I certainly hope that is the case, in this blog post we will explain why such optimism could be premature.\n\n~At the core of the problem, the large scale deployment of AI algorithms by large tech companies has created a decentralized ecosystem of radicalization. For over a decade, this ecosystem perpetuated a mechanism whereby impressionable people become systematically indoctrinated by dangerous beliefs on the Internet. Steadily, this mechanism has built a large enough audience that eagerly consumes all forms of misinformation.~ If you find the language used in this paragraph a little confusing, perhaps you'd be more familiar with the term *The Internet Rabbit Hole*. In this blog post, we will go through the story of how the Internet Rabbit Hole came into existence, and how this phenomenon drove America's appetite for conspiracy theories to an all-time high.\n\nMany engineers probably already know the story that I am about to tell. Some of them may have already sounded the alarms. So far, journalists have not gave this issue due attention, and instead fixated on controversial public figures and treated them as the source of socio-political toxicity. The reality is, curbing the influence of certain individuals, while a step in the right direction, will be insufficient in the long term. Unless fundamental disruptions happen to this machinery of radicalization, it will only be a matter of time before the same ecosystem produces another batch of individuals that bring about another surge of extremism.\n\nIt is important that the public understands this problem. Policy makers, in particular, should be keenly aware of how mass radicalization occurs and actively look for remedies. In this blog post, we will take a more focused look into exactly how dangerous it is to let powerful AI technology interfere with our everyday lives.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "resurgence",
+      "text": "The Resurgence of Deep Learning:"
+    },
+    {
+      "type": "text",
+      "name": "resurgence0",
+      "content": "To understand the phenomenon today, we need to go back approximately 10 years. At the time, Moore's Law had continued unimpeded for decades and the Age of Internet was in full swing. The introduction of new graphic processing units brought about cheap large-scale parallel compute hardware. Meanwhile, with the invention of the iPhone, the mobile revolution was well underway. Under these trends, a massive amount of data and computing power became available *for the first time in history*.\n\nA revolution in AI technology ensued: a decades-old field of technology, now known as {Deep Learning}, began to demonstrate extraordinary performance given these new resources. Once the computational hardware could support sufficiently large deep models and allow these models to be trained in a reasonable timeframe, deep learning quickly out-competed existing AI techniques, crushing one benchmark after another.",
+      "links": {
+        "Deep Learning": "https://en.wikipedia.org/wiki/Deep_learning"
+      },
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Figure 3",
+      "width": "500",
+      "height": "",
+      "src": "resources/Images/Blogs/compute_cost.png",
+      "caption": "The cost of compute hardware dropped dramatically over years. Since the 2000s, the advancements in GPUs further accelerated the availability of parallel compute. [The Progress of Computing, p38 Nordhaus 2001]"
+    },
+    {
+      "type": "image",
+      "name": "Figure 4",
+      "width": "500",
+      "height": "",
+      "src": "resources/Images/Blogs/performance.png",
+      "caption": "In the 2012 ImageNet computer vision algorithm competition, the deep learning model brought by Krizhevsky et al. won by large margins, easily defeating previous state-of-the-art techniques. In the following decade, almost all the important breakthroughs in AI would use some variant of deep neural network."
+    },
+    {
+      "type": "text",
+      "name": "resurgence1",
+      "content": "Across many areas of research interest: {image recognition}, {speech recognition}/{synthesis}, {natural language processing}, {video games}, etc., deep learning produced results that AI researchers could only dream of twenty years ago. These were immensely difficult research problems, many of which were previously thought to require human-level cognition. When deep learning models attained human-level performance or better in so many domains, it was very clear that this technology would have lasting implications for society.\n\nToday, deep learning algorithms can achieve superhuman performance in almost any narrow task. Note that narrow does not mean simple or easy; in fact the tasks are often highly complex. But as long as the problem has clearly defined inputs and outputs, and there's enough training data, it is usually possible to build a deep learning model to automate it. Autonomous driving, for example, fits our definition of \"narrowness\" and is on the verge of being solved. Other difficult problems that traditionally required human expertise, such as {medical image diagnosis}, {exo-planet identification}, {protein structure prediction}, are also well-suited for deep learning algorithms, which did indeed yield impressive results in the past few years.\n\nIt is therefore unsurprising that once its incredible promise was discovered, deep learning technology became widely adopted across the tech industry and beyond, transforming the tech landscape and disrupting the economy. Many white-collar clerical works has already been automated in the past decade and {many more} workplace activities face automation in the near future. As with all powerful new technologies, deep learning carries significant risks when not treated carefully. These risks are not always obvious and may take years to materialize, but ignoring them could have disastrous consequences.\n\nLeading AI researchers have already warned that deep learning technology can be used to develop {automated weapon systems}; hardly any explanation is needed for why doing this may end very badly. Others are worried that malicious use cases like {DeepFakes} could become so common as to cause a major crisis. Those who are still more vigilant fear that continued innovation in deep learning could one day lead to super-intelligent AI systems that pose existential threat to humanity. These are valid concerns that need to be addressed, but they are not the main focus of this article.\n\nWhat we will focus on is the problematic commercialization of deep learning technology that already took place. Again, this has to do with the massive amount of data that only recently became available. *When a technology this powerful is paired with virtually unlimited data on human behavior, the resulting commercial systems will almost certainly become superhuman at what they are trained to do.* When social media companies deployed these AI algorithms on their platforms, the resulting systems became superhuman at exploiting certain weaknesses in the human psyche, finding the path of least resistance following which unsuspecting users can be brainwashed by extremist ideas.\n\nIt is not difficult to imagine that, when we allow these powerful AI systems to run unchecked on social media platforms for nearly a decade, operating outside the awareness of the public and without any regulatory oversight, they can eventually corrode the fabric of society and inject extremism into the mainstream. This is the story of what I call *The Grand Experiment*, where a group of very smart people, using new AI technology in untested ways, unwittingly unleashed upon society a monster that is now very hard to contain.",
+      "links": {
+        "image recognition": "https://www.fritz.ai/image-recognition/",
+        "speech recognition": "https://en.wikipedia.org/wiki/Speech_recognition#End-to-end_automatic_speech_recognition",
+        "synthesis": "https://arxiv.org/abs/1702.07825",
+        "natural language processing": "https://research.google/research-areas/natural-language-processing/",
+        "video games": "https://en.wikipedia.org/wiki/Machine_learning_in_video_games",
+        "medical image diagnosis": "https://www.altexsoft.com/blog/deep-learning-medical-diagnosis/",
+        "exo-planet identification": "https://www.nasa.gov/press-release/artificial-intelligence-nasa-data-used-to-discover-eighth-planet-circling-distant-star",
+        "protein structure prediction": "https://www.nature.com/articles/d41586-020-03348-4",
+        "many more": "https://www.mckinsey.com/featured-insights/future-of-work/ai-automation-and-the-future-of-work-ten-things-to-solve-for#",
+        "DeepFakes": "https://en.wikipedia.org/wiki/Deepfake",
+        "automated weapon systems": "https://www.youtube.com/watch?v=O-2tpwW0kmU"
+      },
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "experiment",
+      "text": "The Grand Experiment:"
+    },
+    {
+      "type": "quote",
+      "name": "exp",
+      "text": "It is important for us to recognize that, when a social media platform consistently attracts the attention from millions of users, it will have the power to weave something into the fabric of society.",
+      "src": ""
+    },
+    {
+      "type": "text",
+      "name": "experiment0",
+      "content": "It's rather difficult to pinpoint when *The Grand Experiment* began. We are not going to investigate which tech executives first pushed to build large-scale AI algorithms, which engineers worked on those early systems, or when the early systems first became operational. Although if we really tried, we can probably find some information on those events, which are relatively recent and {not entirely undocumented}. Since what had transpired in the past decade was the inevitable product of technological innovation, we are more interested in the big picture here: how all of this happened, and where it would lead us.\n\nWhen the tech companies began deploying deep learning models in their platforms, their decisions were perfectly reasonable. Many online services could very obviously benefit from using this technology, so there was a compelling business interest to integrate new AI algorithms into their services, improving customer satisfaction/engagement and {driving up revenues}. Even before deep learning came along, companies were already using an earlier generation of Machine Learning AI algorithms. So it's not surprising that tech giants quickly acted on new breakthroughs in AI and applied deep learning to a wide array of use cases.\n\nThe list of early deep learning systems included items such as spam filter for E-mail services, movie recommendation system for streaming services, product recommendation for online shopping services, improved search engine results, content recommendation in video sharing platforms, targeted advertisement, and of course, personalized newsfeed.\n\nWithout the benefit of hindsight, these use cases seemed rather innocuous, and many of them *did* turn out to be benign applications of AI technology. Good spam filters were desirable features and never created real problems, smart and accurate search engine results were always welcomed, and who doesn't like to {discover} his/her new favorite shows on Netflix. Nevertheless, some ideas that looked good on paper turned out horribly in practice (the most extreme cases had to but shutdown {immediately}).\n\nWe now know that by 2016, our online video-watching experience was already shaped {by sophisticated Deep Learning algorithms}. The model described in the linked paper most likely had already been deployed for some time and wasn't the first iteration they built. We also know that as early as 2013, one of the biggest social media companies made major moves to {enhance its competitiveness in deep learning technology}, and soon almost everything on its social media app would be driven by AI algorithms. Suffice to say, these new AI algorithms worked wonderfully at boosting the companies' performance metrics in every category, and interests in this technology only grew from there on.",
+      "links": {
+        "not entirely undocumented": "https://www.wired.com/2017/02/inside-facebooks-ai-machine/",
+        "immediately": "https://www.theverge.com/2016/3/24/11297050/tay-microsoft-chatbot-racist",
+        "by sophisticated Deep Learning algorithms": "https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/45530.pdf",
+        "enhance its competitiveness in deep learning technology": "https://www.wired.com/2013/12/facebook-yann-lecun/",
+        "driving up revenues": "https://www.wired.com/story/big-tech-can-use-ai-to-extract-many-more-ad-dollars-from-our-clicks/",
+        "discover": "https://en.wikipedia.org/wiki/Netflix_Prize"
+      },
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Figure 5",
+      "width": "400",
+      "height": "",
+      "src": "resources/Images/Blogs/acm_turing_award.jpg",
+      "caption": "The 2010s were the most transformative years in the field of AI research. In 2018, the 3 leading AI researchers who pioneered deep learning technology would go on to receive the Turing Award, the Nobel Prize equivalence in Computer Science. [image source: Association for Computing Machinery]"
+    },
+    {
+      "type": "text",
+      "name": "experiment1",
+      "content": "So does all of this mean? You may ask. Essentially, those very smart engineers told their immensely powerful machines: Here is *all* the data we have on human behavior, now go figure out how to make people click more links on our website. Feel free to exploit *any* connections or patterns that you discover and you may use any strategy that works, even strategies that we are completely unaware of.\n\nTwo important points need to be made here:\n\n**1.** At the time Deep Learning started to gain traction, it was still an experimental technology and interests in it come primarily from the academia. *No one really knew* how these deep learning models would behave when trained on the data from millions of users and deployed at commercial scale, because this technology had *never* been used in that way before.\n\n**2.** It is important for us to recognize that, when a social media platform consistently attracts the attention from millions of users, it has the power to weave something into the fabric of society. And if that platform delegates the responsibility of managing its users' attention to powerful {Black Box systems} that are deep learning models, it allows these superhuman AI algorithms to exercise unwarranted influence over our society.\n\nWhen we put one and two together, we can see that since the early 2010s, major tech companies were conducting a massive technical experiment, betting that a new technology would unearth a goldmine of untapped revenue. Given the popularity of their platforms and the unscrupulous behavior of those early deep learning systems, this technical experiments in turn became a social experiment of unprecedented scale!\n\nAnd there we have it, the *The Grand Experiment* of our time. While it may be easy to see that this experiment *could* end badly after my framing the situation, it's not at all obvious *how* things could become so problematic. After all, those deep learning systems were rather dumb and inflexible outside what they are specifically trained to do, engineers who developed those systems were probably more concerned with getting their system to work at all than any potential social dilemma. We expected those AI algorithms to make laughable mistakes from time to time, but we didn't expect that when AI made mistakes with eerily good skills, they would act like ruthless masterminds, instigating anger and sowing divisiveness in ways that the world had never seen.\n\nWe will not be pointing fingers at anybody for pioneering new technology. If any entity was at fault in regard to the misuse of Deep Learning technology, the responsibility had to do with inaction *after* serious problems were discovered. We will take a close look at how *The Grand Experiment* cultivated an ecosystem of radicalization, and hopefully find ways to mitigate this problem going forward.",
+      "links": {
+        "Black Box systems": "https://en.wikipedia.org/wiki/Black_box"
+      },
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "results",
+      "text": "Unforeseen Consequences:"
+    },
+    {
+      "type": "text",
+      "name": "results0",
+      "content": "When Senator Ted Cruz (R-TX) repeatedly used the phrase \"mainstream media\" in the {2016 Republican presidential primary}, I immediately recognized it as a *dog whistle intended specifically for conspiracy theory fans*. Most people today are likely unaware that before the term \"mainstream media\" was adopted by {certain politicians} and {conservative cable news hosts} to attack the unfriendly press, it was only used by fringe voices on the Internet that were seeking to differentiate themselves from traditional media and appear as legitimate channels of information.\n\nIt was rather concerning to see Alex Jones' influence on national television, during important events for a major political party no less! While this tiny peculiarity might seem minor today, it was a clearly a sign that bad fruits were bearing from the toxic online ecosystem. It indicated that by 2016, the radicalized conspiracy-minded audience had already become big enough that high profile politicians felt the need to explicitly appeal to them. There was a unmistakable risk that a significant portion of the voter base could become radicalized that the nature of our public discourse would be changed forever.\n\nFew people today remember that long before major content platforms took decisive actions to {demonetize}/ban the worst offending conspiracy channels and eventually enact more {forceful moderation} measures, their algorithms were actually *pushing* conspiracy theory contents very aggressively to the public. A whole slew of rather odd extremist ideas gained popularity from that period, things like the {Flat Earther} movement and the {Anti-Vaccination} movement began surging out of nowhere, which is really strange considering people had more access to scientific knowledge than ever before. But it's not so strange when we know what's going on.",
+      "links": {
+        "2016 Republican presidential primary": "https://youtu.be/ou0Qmcdfn04?t=4172",
+        "certain politicians": "https://ballotpedia.org/Presidential_candidates,_2024#Republican_politicians",
+        "conservative cable news hosts": "https://www.foxnews.com/shows",
+        "Flat Earther": "https://www.cnn.com/2019/11/16/us/flat-earth-conference-conspiracy-theories-scli-intl/index.html",
+        "Anti-Vaccination": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6122668/",
+        "demonetize": "https://www.polygon.com/2018/5/10/17268102/youtube-demonetization-pewdiepie-logan-paul-casey-neistat-philip-defranco",
+        "forceful moderation": "https://www.theverge.com/2019/1/25/18197301/youtube-algorithm-conspiracy-theories-misinformation"
+      },
+      "indented": false
+    },
+    {
+      "type": "image",
+      "name": "Figure 6",
+      "width": "500",
+      "height": "",
+      "src": "resources/Images/Blogs/charlottesville.webp",
+      "caption": "Online activities would translate into real life casualties. The \"Unite the Right\" protest in Charlottesville resulted in violence that shocked the nation. [image source: Samuel Corum/Getty Images]"
+    },
+    {
+      "type": "image",
+      "name": "Figure 7",
+      "width": "500",
+      "height": "",
+      "src": "resources/Images/Blogs/anti_vaxxer.jpg",
+      "caption": "Protesters challenging new laws that made it difficult to the skip vaccination. In recent years, the anti-vaccination movement has caused public health crisis such as measles outbreaks. [image source: Ted S Warren/Shutterstock]"
+    },
+    {
+      "type": "text",
+      "name": "results1",
+      "content": "Here's how things went downhill.\n\nThe first thing that went \"wrong\" was the technical part of *The Grand Experiment*. It turned out that AI algorithms doing *exactly* what they were asked was enough to create a problem. When we ask a human to do tasks like painting a room, we don't have to specify that he can't rob the store for paints or that he can't tear down walls to get the job done faster. A machine, on the other hand, does not understand any such implicit assumptions: if we wanted a deep learning AI algorithm to NOT do something, we would have to specify what not to do very precisely in its reward function. Building a the reward function without any harmful side-effects could be a very hard engineering challenge, one that major companies weren't too keen to deal with in those early days of AI commercialization.\n\nAs tech companies trained their AI algorithms to improve user engagement on social media platforms, the algorithms quickly learned to abuse every pattern in human behavior and they *did not* hold back. The AI systems pushed their reward function to the extremes, fulfilling the original goal devised by the engineers and *much more*. An \"engaged\" user may sound pretty good. An \"absorbed\" or \"immersed\" user sounds still better. Going one step further, the user may become \"obsessed\" or even \"addicted\"; now there could be some issues. Yet superhuman algorithms did not stop here. Given the opportunity, they would absolutely attempt to make the user \"inflamed\", \"radicalized\", or even \"brainwashed\" in pursuit of the slightest increase in how much time people spend on their platforms.\n\nWhat happened was, the algorithms discovered that there were certain clusters of data in which an enormous amount of user attention can be sank into. Once people get into these data clusters, its very hard for them to get out. Upon close inspection, a human would recognize that these clusters are often cults, crazy conspiracy theories, and dangerous ideology groups. But the machines simply didn't care! To them, a reliably mechanism to trap attention was the perfect tool to maximize the reward function, so they went into hyperdrive to exploit these clusters, identifying vulnerable users and providing a path of least resistance for them to self-radicalize.\n\nThe system works like a massive funnel: at the brim (homepage/trending content) you have interesting topics that a reasonable person would watch, and on the slopes of the funnel you put more and more contrarian content that gradually goads people into taking the \"red pill\". The craziest stuff is put at the bottom of the funnel to collect people who fall all the way through. It's an impressive structure if we briefly overlook how dangerous it is: the algorithm is able to pick certain types of loosely connected content from a vast sea of data, and use these contents to orchestrate an elaborate scheme that is highly effective at manipulating the human mind. We have another name for this funnel-like system, *The Internet Rabbit Hole*. It only took some of the smartest people on this planet, decades of research, incredible computing infrastructure, and insane amount of data to create this machinery of radicalization. For those who are still unconvinced, {here} is a textbook case for how this mechanism works in practice.\n\nRunning these AI algorithms for many years fermented wider societal problems. Content creators, in their chase for more viewership, were among the first folks to notice what's going on. The sheer size of these platforms created a perverse monetary incentive to produce the type of content that the algorithms favor. Consequently, a generation of modern conspiracy theorists were born; their voices were put on megaphone by social media platforms, and extremist ideas spread like wildfire. From small time self-motivated moon landing hoaxer to infamous public figures, a entire ecosystem formed online. The threats posed by this toxic ecosystem towards our civil society can go *far beyond* the political violence that we already saw.\n\nThe real danger is that if we don't treat this problem seriously, extremists ideas can radicalize *a critical number of people* such that traditional democratic institutions become no longer tenable. That critical threshold may be a supermajority of a political party or maybe an outright plurality of the entire country. We have been inching closer towards the breaking point in the last few years, and leaders in the tech sector appear highly concerned. The thing is, social media platforms may lose the ability to rein in the monster that they unwittingly created. Once an extremist community reaches a certain size, it will develop organically and continue to exist/recruit even after getting kicked off the original platform, becoming much harder to contain. Crazy opinions that festered online were repeatedly proven that they can spill into real life, sometimes getting to the point where they dominate {local politics}.\n\nSince the public is largely unaware of how things got this way, they are not properly reacting to the surge of extremism. The common narrative is that those who hold extremist views are inherently less intelligent, less humane, or otherwise mentally aberrant. The reality is that those radicalized folks are often victims of the toxic ecosystem, and dismissing them as \"idiots\" only gives ourselves an excuse to react lazily. Treating flat-earthers and anti-vaxxers as silly folks unworthy of our attention will not stop events like {this}. Treating QAnan aunts as hateful/deranged people will not stop them from attending the Capitol riot. It's easy to say \"these are irredeemably lost people beyond our help\", but those people are here to stay and unless we can undo the their radicalization, more problems are bound to happen. Attempts to appease these folks politically have already created so much legislative impasse. Unless we actively try to unwind these extremist communities and eliminate their influence on public discourse, it will only be a matter of time before the next aspiring autocrat rise to power, who may be more sinister, more capable, and more dangerous than any precedent.",
+      "links": {
+        "here": "https://www.youtube.com/watch?v=sfLa64_zLrU",
+        "local politics": "https://en.wikipedia.org/wiki/Georgia%27s_14th_congressional_district",
+        "this": "https://www.thedailybeast.com/wisconsin-vaccine-saboteur-steven-brandenburg-is-a-flat-earther-fbi-document-reveals"
+      },
+      "indented": false
+    },
+    {
+      "type": "quote",
+      "name": "res",
+      "text": "It’s hard to find a flat Earther who doesn’t believe most other conspiracies under the sun; a flat-Earth conference is invariably also a gathering of anti-vaxxers, 9/11 truthers and Illuminati subscribers, to name a few.",
+      "src": "Rob Picheta, CNN Reporter, 2019"
+    },
+    {
+      "type": "text",
+      "name": "results2",
+      "content": "The good news is, companies did take note of the problem and substantial actions were taken to combat this issue. Measures such as appending fact-checking links and banning the most blatant conspiracy theory content will likely slow the spread of extremism, but they will not be sufficient for removing the root cause. After all, the AI algorithms are still in running the show behind the scenes. Current deep learning systems may be prevented from pushing the most crazy theories, but they are still recommending controversial content that elicit raw emotional responses and drive political polarization. Nevertheless, we did move towards the right direction.\n\nSeveral years ago, I conducted a little personal experiment out of curiosity. I picked 20 popular videos from a certain video sharing platform randomly. From each video, I simply clicked the first link on the recommended \"watch next\" list, and then I would click the first link on the next recommended list; this process would continue until I felt like stopping. Within twenty clicks or less, 17 out of those 20 original videos led me to crazy conspiracy theory content. But a more recent trial run of the same little experiment gave very different results, which almost came as a surprise to me but also brought relief. Feel free to try it yourself. When the big social media players start taking their responsibilities seriously, it gives me hope that the worst social catastrophe can be averted.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "conclusion",
+      "text": "Conclusion and Afterthoughts"
+    },
+    {
+      "type": "text",
+      "name": "conclusion",
+      "content": "And that was our main story. While it might not be an uplifting one, if we can learn our lesson from it, then perhaps the cost would not have been spent in vain. As technology continue to progress, similar risks *will* emerge in the future and right now we have the opportunity to lay the groundwork for dealing with these risks effectively in the future.\n\n**The first takeaway** is that *there should always be an adult in the room to watch the situation.* Leaving the tech sector completely to its own devices is like letting children play with pebbles except that some pebbles are high explosives in disguise.\n\nIn this particular story, the government is notably absent from the picture from the very beginning. This absence was somewhat excusable. We are dealing with a very modern threat, born of a contemporary technological innovation, that blindsided even those who had control over these AI algorithms. Nobody was really prepared to handle this problem, and certainly not the bulky bureaucratic agencies that generally move at a slower pace. But the rise of extremism in recent years are clear warning signs that form of regulatory oversight is necessary to protect the fabric of society. Due to the nature of these threats, this time it won't be enough to form a new regulatory body, give them an office, have them writing annual reports that nobody reads and then call it a day. There needs to be real experts stationed at ground zero, acting on behave of the public sector to make sure powerful technologies are not used in ways that harm public interests.\n\n**The second takeaway** is that untested technology should always be deployed in incremental stages. When we approve a new drug, there's a convoluted process of approval, phases of clinical trials to determine if the new drug is safe to use. But what we read, watch, or interacts with online are sometimes just important as the food we eat, the water we drink, or the medicine we take.\n\nIt was extremely careless to let AI systems prepare our information diet without first checking to see whether the systems demonstrate unwanted behaviors, and we should never repeat the massive social experiment of the past decade again. Next time someone develops shiny new AI system that \"outperforms anything we've seen before\", regulatory guidelines should be there to slow things down. Early deployment should be isolated to small regions. If after an observation period, independent analysis shows that the system is safe to use, then we can talk about rolling it out more users.\n\n**The third takeaway** is that we should think more carefully about how to treat people we know in real life who might be victims of the toxic online ecosystem. Parents should make sure that their impressionable children are not goaded into consuming dangerous content, give them a prep talk so they understand how superhuman AI algorithms are trying to manipulate what they think / how they feel. When they express radical ideas that are perhaps not their own, kindly ask them how they came up with those ideas and see if they reference dubious sources in their reasoning.\n\nIf family members or friends are at risks of radicalization, the worst thing we can do is to mock them, argue with them, or to cut ties completely. There is a common theme to all those conspiracy theories out there: these theories portray a alluring narrative that a nefarious power is trying to control us for sinister purposes, and that we can find a higher purpose by join this glorious struggle for freedom/truth/survival. These ideas prey on those who feel unloved, hopeless, insecure, and plant a warped version of reality in their mind, making them impossible to reason with. It is impossible to undo this type of radicalization by making the victims feel unwanted, threatened, or personally attacked. Although not everybody can be helped, we can through patience and tact, save some folks from extremist views if those views haven't yet become part of their personal identity. In the current socio-political climate, we really need every bit of help we can get to restore civil discourse in our society.\n \n \n*And that concludes my first blog post. Thanks for reading everyone! If you have a comment or have questions, please go to the Contact page on this website. I will be posting new articles whenever I think there's something interesting to write about.*",
+      "links": {},
+      "indented": false
+    }
+  ]
+}

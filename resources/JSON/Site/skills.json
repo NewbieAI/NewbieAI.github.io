@@ -2,12 +2,12 @@
   "title": "Technical Skills",
   "authors": [],
   "creationDate": "10/25/2020",
-  "lastModified": "10/28/2020, 10:02:00 PM",
+  "lastModified": "2/28/2021, 2:41:48 PM",
   "components": [
     {
       "type": "text",
       "name": "intro",
-      "content": "[Intro]",
+      "content": "The list below include strictly technical skills from the entire web stack, as well as many other relevant engineering skills. It's not meant to be an exhaustive list.\n ",
       "links": {},
       "indented": false
     },
@@ -18,10 +18,24 @@
     },
     {
       "type": "text",
-      "name": "front_end",
-      "content": "[CSS]\n    [page layout and element styling]\n    [CSS animation]\n[html]\n    [svg]\n    [canvas graphics API]\n[Javascript:]\n    [ES6+]\n    [JQuery]\n    [node.js]\n    [React]\n    [Asynchronous API Calls]\n    [JSON]",
+      "name": "front_end0",
+      "content": "*Javascript*\n\n~ES6~ - Fluent in the modern Javascript language. Up to date with new language features. Experienced in building frontend user interface. Experienced in integrating 3rd party libraries and APIs using Javascript.\n\n~React~ - Experienced in building Web applications using the popular React Javascript framework. Experienced in using React with JSX syntax. Capable of designing and implementing powerful single-page React Apps.\n\n~Asynchronous Programming~ - Experienced in using asynchronous features of Javascript, including asynchronous keywords, Promises objects, and fetch API, to build dynamic websites that are reliable and responsive.\n\n~JSON~ - Experienced in manipulating Javascript objects and JSON files. Can efficiently generate, retrieve, store, and transmit data within the web stack using JSON.\n\n~JQuery~ - Experienced in navigating and modifying the website DOM using the JQuery library.\n ",
       "links": {},
-      "indented": true
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "front_end1",
+      "content": "*CSS*\n\n~Webpage Styling~ - Capable of designing and building clean, aesthetic, and functional website interface through CSS features. \n\n~Animation~ - Experienced in building fast and powerful website animations using CSS animation.\n ",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "front_end2",
+      "content": "*HTML5*\n\n~Webpage Design~ - Experienced in creating static HTML websites, and experienced in integrating other front-end technologies and back-end APIs into HTML webpages. Capable of dynamically generating HTML pages from server side scripts.\n\n~Multimedia~ - Experienced with photo, video, and sound elements in a webpage. Capable of add and manipulating multimedia elements using Javascript code or static HTML markups.\n\n~Canvas API~ - Experienced in drawing graphics on webpages through the HTML canvas element. Capable of implementing game animations, photo processing/video processing features in a website etc.\n ",
+      "links": {},
+      "indented": false
     },
     {
       "type": "subtitle",
@@ -30,10 +44,24 @@
     },
     {
       "type": "text",
-      "name": "back_end",
-      "content": "[Python 3]\n[PHP]\n[SQL Database]\n[RESTful API Design]\n[AWS]\n    [serverless architecture]\n    [Lambda]\n    [Dynamo Database]",
+      "name": "back_end0",
+      "content": "*Server Side Scripting*\n~Python 3~ - Proficient in programming in the newest version of Python. Have an in-depth knowledge of Python language features and many popular Python libraries. Experienced in deploying Python in Serverless Back-End.\n\n~PHP~  -  Fluent in the server-side programming language; familiar with the extensive built-in language features including database access, concurrency, hashing, etc. Capable of building both Application Servers and Web Servers.\n\n~Node.js~  -  Familiar with the Node.js environment. Capable of building and maintaining serverless back-end APIs using Node.js.\n ",
       "links": {},
-      "indented": true
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "back_end1",
+      "content": "*Database*\n~SQL Database~ - Familiar with the fundamental operations of relational databases such as MySQL. Can design well-structured database schema. Capable of writing efficient SQL queries and scripts. Understand how to produce server-side code that ensures all database operations are secure.\n\n~NoSQL Database~ - Capable of designing efficient, scalable NoSQL database schema based on application data access patterns. Experienced with building applications that rely on managed NoSQL databases.\n ",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "back_end2",
+      "content": "*AWS*\n~Serverless Architecture~ - Capable of building powerful web applications by incorporating a serverless back-end. Familiar with services such as S3, Lambda, RDS, DynamoDB, API Gateway, SNS, etc., and understand how these services interplay. Experienced in the SDKs that can be used to access core AWS features.\n ",
+      "links": {},
+      "indented": false
     },
     {
       "type": "subtitle",
@@ -42,10 +70,36 @@
     },
     {
       "type": "text",
-      "name": "cs",
-      "content": "[C/C++]\n[Python]\n[Java]\n[Data Structure and Algorithms]",
+      "name": "CS0",
+      "content": "*General Purpose Programming Languages*\n~C/C++~ - Proficient in one of the most powerful and popular general purpose programming language, as well as it's data oriented predecessor. Familiar with core features of C/C++, well-versed with tools in the standard library. Experienced with both low-level memory / data manipulation and high-level templates and abstractions. Experienced with libraries such as OpenGL (graphics), OpenCV (advanced image processing), winsock (socket networking).\n\n~Python~  -  Experienced in using python for wide range of tasks, including creating command line tools, GUI applications, test servers, engineering analysis and modeling, data processing, etc. Have a thorough knowledge of Python's built-in functions, packages, data containers, and other advanced Python libraries.\n\n~Java~ - Capable of designing and building complex Java applications following object-oriented principles. Experienced in Java unit testing and debugging.\n ",
       "links": {},
-      "indented": true
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "CS1",
+      "content": "*Data Structure and Algorithms*\n~Data Structures~ - Experienced with all the common data structures, including array-based data structures such as stacks, queues, heaps, hashmaps, and graph-based data structures such as binary trees, prefix-tries, linked lists, disjoint sets. Understand how to implement any said data structure using native data containers in every programming language I know.\n\n~Algorithms~ - Experienced in writing high performance code that optimizes for time and space complexity. Have a mastery of assorted textbook optimization techniques. Capable of devising efficient solutions to most tasks. Can replicate mathematically complex algorithms from research papers.\n ",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "CS2",
+      "content": "*Operation System and Tools*\n\n~Unix/Linux~ - Familiar with the command line interface. Can comfortably navigate Unix-like file systems and effectively utilize command line tools. Familiar with bash scripting and task scheduling.\n\n~Windows OS~ - Experienced in developing software in the Windows environment. Familiar with Microsoft Office suite.\n\n~Docker~ - Understands how to develop, test, and deploy software in Docker containers.\n\n~Git~ - Experienced in using Git for software version control and backup. Understands how to use work collaboratively on a remote Git repository.\n\n~Vim~ - Proficient with text-motion code editor. Highly efficiently at code editing and comfortable with the use of Vim macros.\n\n\n ",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "subtitle",
+      "name": "electrical_engineering",
+      "text": "Electrical Engineering:"
+    },
+    {
+      "type": "text",
+      "name": "electrical_engineering",
+      "content": "*Signal Processing*\nExperienced in digital signal processing, real-time signal detection/filtering. Familiar with advanced image processing and audio signal processing techniques.\n\n*Control Systems*\nFamiliar with linear control systems. Capable of implementing PID controllers to stabilize various electro-mechanical systems.\n\n*Embedded Programming*\nCapable of programming for embedded systems. Knows how to program for reliable hardware applications. Familiar with programming for microcontrollers.\n\n\n*FPGA and Circuit prototyping*\nExperienced with FPGAs. Capable of designing, prototyping, and testing circuit hardware.\n ",
+      "links": {},
+      "indented": false
     },
     {
       "type": "subtitle",
@@ -55,21 +109,42 @@
     {
       "type": "text",
       "name": "machine_learning",
-      "content": "[Data Preprocessing]\n    [Numpy]\n    [Pandas]\n[Neural Network Implementation]\n    [Supervised Learning]\n    [Gradient Descent & Back-Propagaion]\n    [Classification Models]\n    [Regression Models]\n[TensorFlow]\n[Strong Mathematical Foundation]\n    [Linear Algebra]\n    [Multivariate Calculus] \n    [Probability and Statistics]",
+      "content": "*Data Processing*\nFamiliar with the Python Pandas library and the NumPy library and use them for data preprocessing. Understand how to transform and cleanup tabulated raw data to create dataset suitable for training. Understand how to manipulate high dimensional numerical data into the desired input format for ML models.\n\n*Neural Network Implementation*\nCapable of building neural network models using NumPy and implementing automatic back-propagation/gradient descent. Capable of building advanced neural network models using the TensorFlow library.\n\n*Machine Learning Theories*\nHave a strong working knowledge of theories behind modern Machine Learning. Have a solid mathematical foundation in Linear Algebra, Multivariable Calculus, Probability and Statistics. Understand the structure and mathematical derivation of common Deep Neutral Networks models.\n ",
       "links": {},
-      "indented": true
+      "indented": false
     },
     {
       "type": "subtitle",
       "name": "other",
-      "text": "Other:"
+      "text": "Other Skills:"
     },
     {
       "type": "text",
-      "name": "other",
-      "content": "[Strong technical writing and communication]\n[Signal Processing]\n    [Image Processing]\n    [Audio Processing]\n[Control\n[Graphics]\n[Physics System Simulation]\n[Networking & Socket Programming]",
+      "name": "other0",
+      "content": "*Communication*\nStrong verbal and written communications skills. Highly proficient in technical writing. Capable of providing detailed and easy-to-read documentations for various projects.",
       "links": {},
-      "indented": true
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "other1",
+      "content": "*Graphics*\nFamiliar with graphics libraries such as OpenGL and WebGL. Capable of building custom graphic interfaces and creating custom animations. Experienced in rendering and working with graphics assets.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "other2",
+      "content": "*Physics System Simulation*\nExpert in 3D geometry. Capable of simulating physics systems, such as multi-body mechanical systems or fluid dynamics systems.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "[unnamed]",
+      "content": "",
+      "links": {},
+      "indented": false
     }
   ]
 }

@@ -2,7 +2,7 @@
     "header": { 
         "avatarImg": "resources/Images/Site/avatar.png", 
         "avatarGifs": [
-            "resources/Images/Site/gif_motion.webp"
+            "resources/Images/Site/gif_motion.gif"
         ],
         "backgrounds": [ 
             "resources/Images/Site/background1.jpg", 
@@ -123,13 +123,13 @@
         {
             "name": "Blog",
             "articles": [
-                "resources/JSON/Site/Blog/intro.json"
+                "resources/JSON/Site/blog/intro.json"
             ],
             "contents": [
                 {
                     "name": "A Cautionary Tale on the Dangers of Deploying AI in Social Media",
                     "articles": [
-                        "resources/JSON/Site/projects/cautionary_tale.json"
+                        "resources/JSON/Site/blog/cautionary_tale.json"
                     ],
                     "contents": [
                     ]

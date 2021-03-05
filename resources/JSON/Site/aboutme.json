@@ -2,7 +2,7 @@
   "title": "About Me",
   "authors": [],
   "creationDate": "10/1/2020",
-  "lastModified": "3/1/2021, 4:22:13 PM",
+  "lastModified": "3/5/2021, 12:35:08 PM",
   "components": [
     {
       "type": "quote",
@@ -39,7 +39,7 @@
     {
       "type": "text",
       "name": "part2",
-      "content": "For quite a while, I wasn't sure what exactly I wanted to do what I've learned. But the stunning development of AI technology in recent years convinced me that the following decades will be dominated by emergent AI systems, and I do not want to miss the opportunity to jump into the rapidly growing field. So I decided to transition from my original technical background to a more software-focused domain.\n\nOver the past few years, I was able to systematically build up an wide range of {programming skills}. Thanks in part to the abundance of knowledge available on the Internet, I've gained the ability to write efficient algorithms at the CS graduate school level, and acquired a high degree of proficiency in some of the most powerful/popular programming languages. Completing a number of {projects} helped me master many aspects of web technology and become familiar with the workflow of building software from conception to release. I now feel very comfortable to say that I've reached a point where I can effectively fulfill most software developer roles.\n ",
+      "content": "For quite a while, I wasn't sure exactly what to do with what I've learned. But the stunning development of AI technology in recent years convinced me that the following decades will be dominated by emergent AI systems, and I do not want to miss the opportunity to jump into the rapidly growing field. So I decided to transition from my original technical background to a more software-focused domain.\n\nOver the past few years, I was able to systematically build up an wide range of {programming skills}. Thanks in part to the abundance of knowledge available on the Internet, I've gained the ability to write efficient algorithms at the CS graduate school level, and acquired a high degree of proficiency in some of the most powerful/popular programming languages. Completing a number of {projects} helped me master many aspects of web technology and become familiar with the workflow of building software from conception to release. I now feel very comfortable to say that I've reached a point where I can effectively fulfill most software developer roles.\n ",
       "links": {
         "programming skills": "internal::0,0",
         "projects": "internal::1"

@@ -2,7 +2,7 @@
   "title": "Blog",
   "authors": [],
   "creationDate": "10/3/2020",
-  "lastModified": "10/15/2020, 4:36:33 PM",
+  "lastModified": "3/4/2021, 9:57:24 PM",
   "components": [
     {
       "type": "quote",
@@ -13,7 +13,7 @@
     {
       "type": "text",
       "name": "foreword",
-      "content": "Welcome to my blog!!!\nThroughout my journey in writing software, I have personally benefited from many instructive or educative blog posts, made by other programmers who took the time to find the right way to do certain things, and so kindly shared what they've learnt. A comprehensive and well-written post on a technical subject can easily save me hours of chasing elusive bugs or grinding through pages of documentations.\nAs I become increasingly proficient and experienced in the world of programming, I would like to follow their examples and share my own perspectives and knowledge. The purpose of this blog is, therefore, to provide information that I believe can help others approach technical subjects with which I am familiar.\nNot all articles will be tutorial-style expositions on some piece of technology. In fact, the majority of my blog post will focus on issues that not just engineers, but any average person should understand. If you are wondering, what does a little-known software dev have to say about anything? To that I will respond: please read on and you might be pleasantly surprised!\n\n\n\n\n",
+      "content": "Welcome to my blog!!!\nThroughout my journey in writing software, I have personally benefited from many instructive or educative blog posts, made by other programmers who took the time to find the right way to do certain things, and so kindly shared what they've learnt. A comprehensive and well-written post on a technical subject can easily save me hours of chasing elusive bugs or grinding through pages of documentations.\nAs I become increasingly proficient and experienced in the world of programming, I would like to follow their examples and share my own perspectives and knowledge. The purpose of this blog is, therefore, to provide information that I believe can help others approach technical subjects with which I am familiar.\nNot all articles will be tutorial-style expositions on some piece of technology. In fact, the majority of my blog post will focus on issues that not just engineers, but the average person should understand. If you are wondering, what does a little-known software developer have to say about anything? Then please read on, you might be pleasantly surprised!\n\n\n\n\n",
       "links": {
         "link": ""
       },

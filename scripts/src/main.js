@@ -72,7 +72,7 @@ class MainPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentPath: [],
+            currentPath: [...this.props.path],
         };
         this.navigator = this.navigateTo.bind(this);
     }
@@ -1335,6 +1335,17 @@ const fillers = {
     },
 };
 
+function parseQuery() {
+    const querySyntax = /^\?article=(.*)$/;
+    if ( querySyntax.test(window.location.search) ) {
+        alert("yo");
+        let path = window.location.search.match(querySyntax)[1];
+        console.log(path);
+        return path.split(",").map(n => +n);
+    }
+    return [];
+}
+
 fetch("resources/JSON/Site/setup.json").
     then(
         response => {
@@ -1348,6 +1359,7 @@ fetch("resources/JSON/Site/setup.json").
         jsonData => {
             ReactDOM.render(
                 <MainPage 
+                    path = {parseQuery()}
                     data = {jsonData} 
                     globalFillers = {fillers} />,
                 document.getElementById("root"),

@@ -25,8 +25,14 @@ class MainPage extends React.Component {
   getPathNames(path) {
     let pathNames = ["Home"];
     let cur = this.props.data;
+    console.log(path);
 
     for (let index of path) {
+      if (!Array.isArray(cur?.contents) || isNaN(index) || cur.contents.length <= index) {
+        pathNames.push("Bad Page");
+        return pathNames;
+      }
+
       cur = cur.contents[index];
       pathNames.push(cur.name);
     }
@@ -38,6 +44,10 @@ class MainPage extends React.Component {
     let cur = this.props.data;
 
     for (let index of path) {
+      if (!Array.isArray(cur?.contents) || isNaN(index) || cur.contents.length <= index) {
+        return [];
+      }
+
       cur = cur.contents[index];
     }
 
@@ -49,6 +59,10 @@ class MainPage extends React.Component {
     let contents = cur.contents;
 
     for (let index of path) {
+      if (!Array.isArray(cur?.contents) || isNaN(index) || cur.contents.length <= index) {
+        return [];
+      }
+
       cur = cur.contents[index];
 
       if (cur.contents.length > 0) {
@@ -66,6 +80,10 @@ class MainPage extends React.Component {
     let nodeName = cur.name;
 
     for (let index of path) {
+      if (!Array.isArray(cur?.contents) || isNaN(index) || cur.contents.length <= index) {
+        return "__HOME__";
+      }
+
       cur = cur.contents[index];
 
       if (cur.contents.length == 0) {
@@ -82,6 +100,10 @@ class MainPage extends React.Component {
     let cur = this.props.data;
 
     for (let index of path) {
+      if (!Array.isArray(cur?.contents) || isNaN(index) || cur.contents.length <= index) {
+        return true;
+      }
+
       cur = cur.contents[index];
     }
 
@@ -1085,7 +1107,6 @@ function parseQuery() {
   const querySyntax = /^\?article=(.*)$/;
 
   if (querySyntax.test(window.location.search)) {
-    alert("yo");
     let path = window.location.search.match(querySyntax)[1];
     console.log(path);
     return path.split(",").map(n => +n);

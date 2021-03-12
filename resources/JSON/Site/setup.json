@@ -128,6 +128,7 @@
             "contents": [
                 {
                     "name": "A Cautionary Tale on the Dangers of Deploying AI in Social Media",
+                    "isPrivate": "true",
                     "articles": [
                         "resources/JSON/Site/blog/cautionary_tale.json"
                     ],

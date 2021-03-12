@@ -687,6 +687,30 @@ span.caption-text {
     width: 1px;
 }
 
+#private-page {
+    width: 70%;
+    margin: auto;
+    margin-top: 30px;
+    background: linear-gradient(30deg, skyblue, moccasin);
+    border-radius: 30px;
+}
+
+#private-title {
+    margin-top: 15px;
+}
+
+#password-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: lemonchiffon;
+}
+#password-button:hover{
+    color: orange;
+}
+#password-button:active{
+    color: white;
+}
+
 a {
     color: royalblue;
     text-decoration: none;

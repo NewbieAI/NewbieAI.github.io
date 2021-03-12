@@ -2,7 +2,7 @@
   "title": "Welcome",
   "authors": [],
   "creationDate": "10/11/2020",
-  "lastModified": "11/11/2020, 6:18:59 PM",
+  "lastModified": "3/12/2021, 12:02:54 AM",
   "components": [
     {
       "type": "quote",
@@ -33,12 +33,49 @@
     },
     {
       "type": "text",
-      "name": "new_content",
-      "content": "1. My first {blog post}, \"A Cautionary Tale on the Dangers of Deploying AI in Social Media\", has been added.\n2. My custom {article} {editor}, which I used to create much of my website content, has been updated to support highlighted code blocks. For example the html file for this page can be seen below:\n<>\n3. My website and its corresponding editor, have been updated to support a subsection of the {Markdown} standards. \nFor example: **bold**, *italic*, ~~strikethrough~~, ~underline~, [word]^superscript^, and [word]^^subscript^^ can all be added to my website articles via the article editor. These new features will allow me put emphasis, add citations, or issue corrections on my website.",
+      "name": "new0",
+      "content": "**March 2021 Update:** Website now supports a new feature called \"private pages\". Private pages must be accessed through secret links or require password credentials to be displayed properly. This is a new test feature intended for any sensitive information that I might include in the future.\n\nTo test this feature, my personal blog post(s) will be made private temporarily.",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "new1",
+      "content": "**Jan 2021 Update:** My first {blog post}, \"A Cautionary Tale on the Dangers of Deploying AI in Social Media\", ~~was added.~~ ~is temporarily unavailable.~",
+      "links": {},
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "new2",
+      "content": "**Dec 2020 Update:** My website now integrates the {MathJax} library, which renders well-formatted mathematical equations on a webpage. Support for this feature was also added to the web editor, so that equations now can be added from the UI using the new <<Equation>> component. Equation editing is accomplished through the {TeX} syntax. Here's an example:\n",
+      "links": {
+        "TeX": "https://en.wikipedia.org/wiki/TeX",
+        "MathJax": "https://www.mathjax.org/"
+      },
+      "indented": false
+    },
+    {
+      "type": "equation",
+      "name": "equation_demo",
+      "TeX": "$$\n\\begin{equation}\n\\mathrm{\\Psi}(\\vec{r},\\; t) \\;=\\; \\int_{-\\infty}^{ \\;\\infty} \\mathrm{\\Psi}(\\vec{r},\\; \\omega) e ^{-i\\omega t} \\mathrm d \\omega\n\\end{equation}\n$$"
+    },
+    {
+      "type": "text",
+      "name": "new3",
+      "content": "**Oct 2020 Update #2:** My custom {article} {editor}, which I used to create much of my website content, has been updated to support highlighted code blocks. For example the html file for this page can be seen below:\n<>",
+      "links": {
+        "article": "internal::1, 1, 0",
+        "editor": "editor.html"
+      },
+      "indented": false
+    },
+    {
+      "type": "text",
+      "name": "new4",
+      "content": "**Oct 2020 Update #1:** My website and its corresponding editor, have been updated to support a subsection of the {Markdown} standards. \nFor example: **bold**, *italic*, ~~strikethrough~~, ~underline~, [word]^superscript^, and [word]^^subscript^^ can all be added to my website articles via the article editor. These new features will allow me put emphasis, add citations, or issue corrections on my website.",
       "links": {
         "blog post": "internal::2, 0",
-        "article": "internal::1, 1, 0",
-        "editor": "editor.html",
         "Markdown": "https://en.wikipedia.org/wiki/Markdown"
       },
       "indented": false

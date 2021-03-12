@@ -73,13 +73,16 @@ class MainPage extends React.Component {
         super(props);
         this.state = {
             currentPath: [...this.props.path],
+            isPrivate: false,
         };
         this.navigator = this.navigateTo.bind(this);
+        this.setPublic = this.setPagePublic.bind(this);
     }
 
     navigateTo(newPath) {
         this.setState({
             currentPath: newPath,
+            isPrivate: this.isPagePrivate(newPath),
         });
         window.scrollTo(
             {top: 300, left: 0, behavior: "smooth"},
@@ -89,7 +92,6 @@ class MainPage extends React.Component {
     getPathNames(path) {
         let pathNames = ["Home"];
         let cur = this.props.data;
-        console.log(path);
         for (let index of path) {
             if (!Array.isArray(cur?.contents) || 
                 isNaN(index) ||
@@ -167,6 +169,24 @@ class MainPage extends React.Component {
         return cur.contents.length == 0;
     }
 
+    isPagePrivate(path) {
+        let cur = this.props.data;
+        for (let index of path) {
+            if (!Array.isArray(cur?.contents) || 
+                isNaN(index) ||
+                cur.contents.length <= index ) {
+                return false;
+            }
+            cur = cur.contents[index];
+        }
+        console.log(cur?.isPrivate);
+        return cur?.isPrivate;
+    }
+
+    setPagePublic() {
+        this.setState({isPrivate: false});
+    }
+
     render() {
         return (
             <div id = "personal-site">
@@ -186,12 +206,17 @@ class MainPage extends React.Component {
                 <ContentArea 
                     navigator = {this.navigator}
                     path = {this.state.currentPath}
+                    nodeName = {
+                        this.getNodeName(this.state.currentPath)
+                    }
                     pathNames = {
                         this.getPathNames(this.state.currentPath)
                     }
                     articleList = {
                         this.getArticleList(this.state.currentPath)
                     } 
+                    isPrivate = {this.state.isPrivate}
+                    setPublic = {this.setPublic}
                     fillers = {this.props.globalFillers} />
             </div>
         );
@@ -733,6 +758,14 @@ class ContentArea extends React.Component {
         )
     }
 
+    getArticleName() {
+        const fileMatcher = /[^/]+$/;
+        if (this.props.articleList.length > 0) {
+            return this.props.articleList[0].match(fileMatcher)[0];
+        }
+        return "not-an-article";
+    }
+
     render() {
         return (
             <div className = "content-area">
@@ -741,9 +774,14 @@ class ContentArea extends React.Component {
             <img 
                 className = "empty-article"
                 src = "resources/Images/Site/empty.jpg"
-                alt = "image that represents an empty article" />
+                alt = "image that represents an empty article" />}
+            {this.props.isPrivate &&
+                <PrivatePage 
+                    setPublic = {this.props.setPublic}
+                    fileName = {this.getArticleName()}/>
             }
-            {this.props.articleList.map(
+            {!this.props.isPrivate &&
+            this.props.articleList.map(
                 article => (
                     <Article 
                         key = {article}
@@ -1288,6 +1326,98 @@ class LinkEmbedText extends React.Component {
     }
 }
 
+class PrivatePage extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            password: "",
+            message: "",
+        }
+        this.editPassword = this.editPassword.bind(this);
+        this.confirmPassword = this.confirmPassword.bind(this);
+    }
+
+    editPassword(e) {
+        this.setState({password: e.target.value});
+    }
+
+    confirmPassword() {
+        this.setState({message:"verifying password"});
+        let payload = {
+            requested_item: this.props.fileName + "#article_password",
+            password: this.state.password,
+        };
+        console.log(payload);
+        fetch(
+            "https://3xi9x564h3.execute-api.us-east-2.amazonaws.com/check_password",
+            {
+                method: "POST",
+                body: JSON.stringify(payload),
+            },
+        ).then(
+            response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error("Server Error");
+                }
+            }
+        ).then(
+            text => {
+                if (text == "authorized") {
+                    this.setState({message: "Authorized"});
+                    this.props.setPublic();
+                } else {
+                    this.setState({message: "Incorrect Password"});
+                }
+            }
+        ).catch(
+            e => {
+                this.setState({message: "Network Error"});
+            }
+        );
+
+    }
+
+    getMessageClass() {
+        switch (this.state.message) {
+            case "Incorrect Password":
+                return "failure";
+            case "Network Error":
+                return "failure";
+            case "Authorized":
+                return "success";
+            default:
+                return "pending";
+        }
+    }
+
+    render() {
+        return (
+            <div id = "private-page">
+            <h2 id = "private-title">This Page is set to Private</h2>
+            <input 
+                id = "password-field"
+                type = "password"
+                placeholder = "Enter Password Here"
+                onChange = {this.editPassword} />
+            <br/>
+            <button
+                id = "password-button"
+                onClick = {this.confirmPassword}>
+            Continue to Page
+            </button>
+            <br/>
+            <h4>
+            <span className = {this.getMessageClass()}>
+            {this.state.message}
+            </span>
+            </h4>
+            </div>
+        );
+    }
+}
+
 function HideToggler(props) {
     return (
         <div 
@@ -1366,7 +1496,6 @@ function parseQuery() {
     const querySyntax = /^\?article=(.*)$/;
     if ( querySyntax.test(window.location.search) ) {
         let path = window.location.search.match(querySyntax)[1];
-        console.log(path);
         return path.split(",").map(n => +n);
     }
     return [];

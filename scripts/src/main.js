@@ -304,7 +304,7 @@ class WelcomeHeader extends React.Component {
         e.preventDefault();
         this.setState({messageStatus: "pending"});
         fetch(
-            "https://9tsemll1m6.execute-api.us-east-2.amazonaws.com/",
+            "https://9tsemll1m6.execute-api.us-east-2.amazonaws.com/default/sns_message_push",
             {
                 method: "POST",
                 body: this.state.message,

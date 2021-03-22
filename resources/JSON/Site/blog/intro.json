@@ -2,7 +2,7 @@
   "title": "Blog",
   "authors": [],
   "creationDate": "10/3/2020",
-  "lastModified": "3/4/2021, 9:57:24 PM",
+  "lastModified": "3/22/2021, 1:51:08 PM",
   "components": [
     {
       "type": "quote",
@@ -22,21 +22,19 @@
     {
       "type": "subtitle",
       "name": "index",
-      "text": "List of Articles"
+      "text": "List of Articles:"
     },
     {
       "type": "text",
       "name": "index",
-      "content": "1. {A Cautionary Tale on the Dangers of Deploying AI Systems in Social Media}\n2. A Thought Exercise: Exploring a Plausible Sequence of Events that Could Lead to the First Strong AI Agent (in progress)",
-      "links": {
-        "A Cautionary Tale on the Dangers of Deploying AI Systems in Social Media": "internal::2, 0"
-      },
+      "content": "1. [Article Was Set to Private]\n2. [Article Was Set to Private] (in progress)",
+      "links": {},
       "indented": true
     },
     {
       "type": "subtitle",
       "name": "notice",
-      "text": "IMPORTANT NOTICE:"
+      "text": "COPYRIGHT NOTICE:"
     },
     {
       "type": "text",

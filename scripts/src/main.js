@@ -76,6 +76,7 @@ class MainPage extends React.Component {
             isPrivate: false,
         };
         this.navigator = this.navigateTo.bind(this);
+        this.isPagePrivate = this.isPagePrivate.bind(this);
         this.setPublic = this.setPagePublic.bind(this);
     }
 
@@ -202,7 +203,8 @@ class MainPage extends React.Component {
                     }
                     isLeafNode = {
                         this.isLeafNode(this.state.currentPath)
-                    } />
+                    } 
+                    isPagePrivate = {this.isPagePrivate} />
                 <ContentArea 
                     navigator = {this.navigator}
                     path = {this.state.currentPath}
@@ -620,30 +622,36 @@ class NavigationMenu extends React.Component {
                         clickHandler = {this.props.navigator} />
                 }
                 {this.props.contentList.map(
-                    (content, index) => (
-                        <NavigationButton
-                            value = {content}
-                            type = "subbutton"
-                            path = {
-                                this.props.isLeafNode?
-                                [
-                                    ...this.props.path.slice(
-                                        0, this.props.path.length - 1
-                                    ), 
-                                    index,
-                                ]
-                                :
-                                [...this.props.path, index]
-                            }
-                            isSelected = {
-                                this.props.isLeafNode
-                                &&
-                                index == this.props.path[
-                                    this.props.path.length - 1
-                                ]
-                            }
-                            clickHandler = {this.props.navigator} />
-                    )
+                    (content, index) => {
+                        const buttonPath = (
+                            this.props.isLeafNode?
+                            [
+                                ...this.props.path.slice(
+                                    0, this.props.path.length - 1
+                                ), 
+                                index,
+                            ]
+                            :
+                            [...this.props.path, index]
+                        )
+                        return (
+                            <NavigationButton 
+                                value = {
+                                    this.props.isPagePrivate(buttonPath) ?
+                                    "Private Article" : content
+                                }
+                                type = "subbutton"
+                                path = {buttonPath} 
+                                isSelected = {
+                                    this.props.isLeafNode
+                                    &&
+                                    index == this.props.path[
+                                        this.props.path.length - 1
+                                    ]
+                                }
+                                clickHandler = {this.props.navigator} />
+                        )
+                    }
                 )}
                 {this.props.nodeName != "__HOME__" &&
                     <NavigationButton 
@@ -743,7 +751,9 @@ class ContentArea extends React.Component {
                                 );
                             }
                         }>
-                    {name}
+                    {this.props.isPrivate && 
+                        index + 1 == this.props.pathNames.length
+                        ? "Private Article" : name}
                     </span>
                 );
                 if (index + 1 < this.props.pathNames.length) {

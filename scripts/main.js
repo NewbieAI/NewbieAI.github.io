@@ -10,6 +10,7 @@ class MainPage extends React.Component {
       isPrivate: false
     };
     this.navigator = this.navigateTo.bind(this);
+    this.isPagePrivate = this.isPagePrivate.bind(this);
     this.setPublic = this.setPagePublic.bind(this);
   }
 
@@ -141,7 +142,8 @@ class MainPage extends React.Component {
       path: this.state.currentPath,
       nodeName: this.getNodeName(this.state.currentPath),
       contentList: this.getContentList(this.state.currentPath),
-      isLeafNode: this.isLeafNode(this.state.currentPath)
+      isLeafNode: this.isLeafNode(this.state.currentPath),
+      isPagePrivate: this.isPagePrivate
     }), React.createElement(ContentArea, {
       navigator: this.navigator,
       path: this.state.currentPath,
@@ -448,13 +450,16 @@ class NavigationMenu extends React.Component {
       path: this.props.isLeafNode ? this.props.path.slice(0, this.props.path.length - 1) : this.props.path.slice(),
       isSelected: !this.props.isLeafNode,
       clickHandler: this.props.navigator
-    }), this.props.contentList.map((content, index) => React.createElement(NavigationButton, {
-      value: content,
-      type: "subbutton",
-      path: this.props.isLeafNode ? [...this.props.path.slice(0, this.props.path.length - 1), index] : [...this.props.path, index],
-      isSelected: this.props.isLeafNode && index == this.props.path[this.props.path.length - 1],
-      clickHandler: this.props.navigator
-    })), this.props.nodeName != "__HOME__" && React.createElement(NavigationButton, {
+    }), this.props.contentList.map((content, index) => {
+      const buttonPath = this.props.isLeafNode ? [...this.props.path.slice(0, this.props.path.length - 1), index] : [...this.props.path, index];
+      return React.createElement(NavigationButton, {
+        value: this.props.isPagePrivate(buttonPath) ? "Private Article" : content,
+        type: "subbutton",
+        path: buttonPath,
+        isSelected: this.props.isLeafNode && index == this.props.path[this.props.path.length - 1],
+        clickHandler: this.props.navigator
+      });
+    }), this.props.nodeName != "__HOME__" && React.createElement(NavigationButton, {
       id: "back-button",
       type: "icon",
       value: "Back Button",
@@ -517,7 +522,7 @@ class ContentArea extends React.Component {
         onClick: () => {
           this.props.navigator(this.props.path.slice(0, index));
         }
-      }, name));
+      }, this.props.isPrivate && index + 1 == this.props.pathNames.length ? "Private Article" : name));
 
       if (index + 1 < this.props.pathNames.length) {
         navigationPath.push("   \u2192   ");

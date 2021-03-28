@@ -138,7 +138,9 @@ class Minesweeper {
         // canvas element
 
         this.gameStatus = Minesweeper.IDLE;
+        this.gameStarted = false;
         this.cellClickEnabled = false;
+        this.cellClickEnabled_tmp = false;
         this.menuClickEnabled = true;
 
         this.leftMouseDown = false;
@@ -156,6 +158,7 @@ class Minesweeper {
         this.soundOn = true;
         this.musicOn = true;
         this.helpOpen = false;
+        this.creditOpen = false;
         this.settingsOpen = false;
         this.difficulty = Minesweeper.MEDIUM;
         this.allowHint = true;
@@ -204,6 +207,7 @@ class Minesweeper {
         document.body.append(Minesweeper.music3);
 
         this.state = [];
+        this.spaces = [];
         this.mines = new Set();
         this.flags = new Set();
         this.qMarks = new Set();
@@ -220,7 +224,7 @@ class Minesweeper {
         this.screen.textAlign = "center";
         this.screen.fillBaseline = "top";
         this.screen.fillText(
-            "MINESWEEPER v1.0",
+            "MINESWEEPER v1.1",
             800, 200,
         );
         this.renderMenu();
@@ -248,6 +252,7 @@ class Minesweeper {
 
     reset() {
         this.gameStatus = Minesweeper.GAME;
+        this.gameStarted = false;
         this.flags.clear();
         this.qMarks.clear();
         this.mines.clear();
@@ -269,16 +274,16 @@ class Minesweeper {
         }
 
         // insert mines into the grid
-        let spaces = [];
+        this.spaces.length = 0;
         let totalSize = Minesweeper.COL * Minesweeper.ROW;
         for (let k = 0; k < totalSize; k++) {
-            spaces[k] = k;
+            this.spaces[k] = k;
         }
 
         let index, tmp, x, y;
         for (let m = 0; m < this.difficulty; m++) {
             index = m + (Math.random() * (totalSize - m) | 0);
-            tmp = spaces[index];
+            tmp = this.spaces[index];
             this.mines.add(tmp);
             x = 0 | tmp / Minesweeper.COL;
             y = tmp % Minesweeper.COL;
@@ -292,8 +297,8 @@ class Minesweeper {
                 }
             );
 
-            spaces[index] = spaces[m];
-            spaces[m] = tmp;
+            this.spaces[index] = this.spaces[m];
+            this.spaces[m] = tmp;
         }
 
         this.renderMineCounter();
@@ -303,13 +308,6 @@ class Minesweeper {
             () => {
                 this.cellClickEnabled = true;
                 clearInterval(this.timerInterval);
-                this.timerInterval = setInterval(
-                    () => {
-                        this.timer++;
-                        this.renderTimer();
-                    },
-                    1000,
-                );
             }
         );
     }
@@ -536,22 +534,23 @@ class Minesweeper {
                 let x = 800, ystart = 800;
                 this.screen.textAlign = "center";
                 this.screen.textBaseline = "top";
-                let imgData = this.screen.getImageData(
+                this.cacheImg = this.screen.getImageData(
                     0, 0, 1600, 800,
                 );
-                let animation = setInterval(
+                this.creditOpen = true;
+                this.animationInterval = setInterval(
                     () => {
                         this.screen.fillStyle = "rgb(0, 0, 0)";
                         if (frame < 20) {
                             this.screen.fillRect(0, 0, 1600, 800);
                             this.screen.putImageData(
-                                imgData,
+                                this.cacheImg,
                                 -frame * 20, 0,
                                 frame * 20, 0,
                                 800 - frame * 20, 800,
                             );
                             this.screen.putImageData(
-                                imgData,
+                                this.cacheImg,
                                 frame * 20, 0,
                                 800, 0,
                                 800 - frame * 20, 800,
@@ -572,19 +571,19 @@ class Minesweeper {
                         } else if (frame <= 1520) {
                             this.screen.fillRect(0, 0, 1600, 800);
                             this.screen.putImageData(
-                                imgData,
+                                this.cacheImg,
                                 -(1520 - frame) * 20, 0,
                                 (1520 - frame) * 20, 0,
                                 800 - (1520 - frame) * 20, 800,
                             );
                             this.screen.putImageData(
-                                imgData,
+                                this.cacheImg,
                                 (1520 - frame) * 20, 0,
                                 800, 0,
                                 800 - (1520 - frame) * 20, 800,
                             );
                         } else {
-                            clearInterval(animation);
+                            clearInterval(this.animationInterval);
                             resolve();
                         }
                         frame++;
@@ -596,15 +595,20 @@ class Minesweeper {
     }
 
     openCredit() {
-        let tmp = this.cellClickEnabled;
+        this.cellClickEnabled_tmp = this.cellClickEnabled;
         this.cellClickEnabled = false
         this.menuClickEnabled = false;
         this.animateCredit().then(
-            () => {
-                this.cellClickEnabled = tmp;
-                this.menuClickEnabled = true;
-            }
+            this.closeCredit.bind(this)
         );
+    }
+
+    closeCredit() {
+        clearInterval(this.animationInterval);
+        this.creditOpen = false;
+        this.screen.putImageData(this.cacheImg, 0, 0)
+        this.cellClickEnabled = this.cellClickEnabled_tmp;
+        this.menuClickEnabled = true;
     }
 
     openHelp() {
@@ -703,6 +707,40 @@ class Minesweeper {
         }
 
         this.renderCell(i, j);
+    }
+
+    _guaranteeFirstClick(i, j) {
+        console.log("first click");
+        let key = i * Minesweeper.COL + j;
+        if ( this.mines.has(key) ) {
+            this.mines.delete(key);
+            this.state[i][j] = 0;
+            this.runAround(
+                i, 
+                j,
+                (a, b, i_=i, j_=j) => {
+                    if (this.state[a][b] < 0) {
+                        this.state[i_][j_]++;
+                    }
+                }
+            );
+            let index = this.difficulty + Math.random() * (
+                Minesweeper.COL * Minesweeper.ROW - this.difficulty
+            ) | 0;
+            let newKey = this.spaces[index];
+            let x = 0 | newKey / Minesweeper.COL;
+            let y = newKey % Minesweeper.COL;
+            this.mines.add(newKey);
+            this.runAround(
+                x,
+                y,
+                (a, b) => {
+                    if (this.state[a][b] >= 0) {
+                        this.state[a][b]++;
+                    }
+                }
+            );
+        }
     }
 
     renderCell(i, j) {
@@ -1834,6 +1872,10 @@ class Minesweeper {
             
             this.helpClick();
 
+        } else if (this.creditOpen) {
+
+            this.closeCredit();
+
         } else if (this.settingsOpen) {
 
             this.settingsClick();
@@ -1848,7 +1890,16 @@ class Minesweeper {
                 this.dualClickCell(i, j);
 
             } else if (this.leftMouseDown) {
-                
+
+                if (!this.gameStarted) {
+                    this.timerInterval = setInterval(
+                        () => {
+                            this.timer++;
+                            this.renderTimer();
+                        },
+                        1000,
+                    );
+                }
                 this.leftClickCell(i, j);
       
             } else if (this.rightMouseDown) {
@@ -1987,8 +2038,15 @@ class Minesweeper {
             return;
         }
 
-        if ( this.reveal(i, j) ) {
-            this.endGame();
+        if (!this.flags.has(i*Minesweeper.COL + j) && 
+            !this.qMarks.has(i*Minesweeper.COL + j)) {
+            if (!this.gameStarted) {
+                this._guaranteeFirstClick(i, j);
+                this.gameStarted = true;
+            }
+            if ( this.reveal(i, j) ){
+                this.endGame();
+            }
         }
     }
 

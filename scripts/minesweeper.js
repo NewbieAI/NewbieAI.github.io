@@ -713,7 +713,26 @@ class Minesweeper {
         console.log("first click");
         let key = i * Minesweeper.COL + j;
         if ( this.mines.has(key) ) {
+            
+            let index = this.difficulty + Math.random() * (
+                Minesweeper.COL * Minesweeper.ROW - this.difficulty
+            ) | 0;
+            let newKey = this.spaces[index];
             this.mines.delete(key);
+            this.mines.add(newKey);
+            
+            let x = 0 | newKey / Minesweeper.COL;
+            let y = newKey % Minesweeper.COL;
+            this.state[x][y] = -1;
+            this.runAround(
+                x,
+                y,
+                (a, b) => {
+                    if (this.state[a][b] >= 0) {
+                        this.state[a][b]++;
+                    }
+                }
+            );
             this.state[i][j] = 0;
             this.runAround(
                 i, 
@@ -721,22 +740,6 @@ class Minesweeper {
                 (a, b, i_=i, j_=j) => {
                     if (this.state[a][b] < 0) {
                         this.state[i_][j_]++;
-                    }
-                }
-            );
-            let index = this.difficulty + Math.random() * (
-                Minesweeper.COL * Minesweeper.ROW - this.difficulty
-            ) | 0;
-            let newKey = this.spaces[index];
-            let x = 0 | newKey / Minesweeper.COL;
-            let y = newKey % Minesweeper.COL;
-            this.mines.add(newKey);
-            this.runAround(
-                x,
-                y,
-                (a, b) => {
-                    if (this.state[a][b] >= 0) {
-                        this.state[a][b]++;
                     }
                 }
             );
